@@ -1,0 +1,61 @@
+.toolbelt {
+	overflow: visible;
+	margin-bottom: @baseLineHeight / 2;
+	min-height: @toolbeltHeight;
+}
+
+.toolbelt .btn,
+.toolbelt .btn-group {
+  .toolbeltVerticalAlign(30px); // Vertically center in navbar
+}
+.toolbelt .btn-group .btn,
+.toolbelt .input-prepend .btn,
+.toolbelt .input-append .btn,
+.toolbelt .input-prepend .btn-group,
+.toolbelt .input-append .btn-group {
+  margin-top: 0; // then undo the margin here so we don't accidentally double it
+}
+
+// Plain text in toolbelt
+// -------------------------
+.toolbelt-text {
+  margin-bottom: 0;
+  padding: 0 5px 0 10px;
+  line-height: @toolbeltHeight;
+  color: @toolbeltText;
+}
+
+
+.toolbelt .pull-right {
+	float: right;
+}
+
+// Navbar forms
+// -------------------------
+.toolbelt {
+  input,
+  select,
+  .radio,
+  .checkbox {
+    .toolbeltVerticalAlign(30px); // Vertically center in navbar
+  }
+  input,
+  select,
+  .btn {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+  input[type="image"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-top: 3px;
+  }
+  .input-append,
+  .input-prepend {
+    margin-bottom: 0px;
+    white-space: nowrap; // preven two  items from separating within a .navbar-form that has .pull-left
+    input {
+      margin-top: 0; // remove the margin on top since it's on the parent
+    }
+  }
+}

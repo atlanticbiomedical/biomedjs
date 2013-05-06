@@ -1,0 +1,22 @@
+Workorder ID:
+	%(biomedId)
+
+Customer:
+	%(client.name) (%(client.identifier))
+
+Phone:
+	%(client.contacts[0].phone)
+
+Address:
+	%(client.address.street1)
+	%(client.address.street2)
+	%(client.address.city), %(client.address.state). %(client.address.zip)
+
+Reason:
+	%(workorder.reason)
+
+Status:
+	%(workorder.status)
+
+Remarks:
+	%(workorder.remarks)

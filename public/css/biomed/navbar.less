@@ -1,0 +1,78 @@
+
+.navbar {
+	margin-bottom: 0;
+}
+
+.navbar-inner {
+	background: @navbarBackground;
+	border: none;
+	padding: 0;
+}
+
+.navbar .nav.pull-right > li {
+	border-left: 1px solid #363e48;
+}
+
+.navbar .nav > li > a {
+	text-shadow: none;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+// Active nav items
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:hover,
+.navbar .nav > .active > a:focus {
+  .box-shadow(none);
+}
+
+.navbar .brand {
+	background: url('/img/logo.svg') 0 0 no-repeat;
+	background-size: contain;
+
+	height: 50px;
+	width: 316.1290322580645px;
+	padding: 0;
+	margin: 0;
+
+	line-height: 600px;
+	overflow: hidden;
+}
+
+.navbar-secondary {
+	
+	.navbar-inner {
+		background-color: @navbarSecondaryBackground;
+		min-height: auto;
+	}
+
+	.nav > li {
+		border-right: 1px solid #41bedd;
+	}
+
+	.nav > li > a {
+		padding: 10px;
+
+	    color: @navbarSecondaryLinkColor;
+	    &:hover,
+	    &:focus {
+	      color: @navbarSecondaryLinkColorHover;
+	    }
+	}
+
+	// Hover/focus
+	.nav > li > a:focus,
+	.nav > li > a:hover {
+		background-color: @navbarSecondaryLinkBackgroundHover;
+		color: @navbarSecondaryLinkColorHover;
+		text-decoration: none;
+	}
+
+	// Active nav items
+	.nav > .active > a,
+	.nav > .active > a:hover,
+	.nav > .active > a:focus {
+		color: @navbarSecondaryLinkColorActive;
+		background-color: @navbarSecondaryLinkBackgroundActive;
+	}
+}

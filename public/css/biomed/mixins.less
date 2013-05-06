@@ -1,0 +1,23 @@
+// Toolbelt vertical align
+// -------------------------
+// Vertically center elements in the toolbelt.
+// Example: an element has a height of 30px, so write out `.toolbeltVerticalAlign(30px);` to calculate the appropriate top margin.
+.toolbeltVerticalAlign(@elementHeight) {
+  margin-top: (@toolbeltHeight - @elementHeight) / 2;
+}
+
+// Button backgrounds
+// ------------------
+.buttonBackground(@startColor, @endColor, @textColor: #fff, @textShadow: 0 -1px 0 rgba(0,0,0,.25)) {
+	background-color: @startColor;
+	color: @textColor;
+
+	&:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
+		background-color: lighten(@startColor, 10%);
+	}
+
+	&:active,
+	&.active {
+		background-color: darken(@startColor, 10%);
+	}
+}

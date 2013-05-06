@@ -1,0 +1,42 @@
+.bio-nav {
+	.clearfix();
+}
+
+.bio-nav .nav {
+	position: relative;
+	left: 0;
+	display: block;
+	float: left;
+	margin: 0;
+}
+
+.bio-nav .nav > li {
+	float: left;
+	border-left: 1px solid @bioNavLinkBorder;
+	padding: 10px;
+}
+
+.bio-nav .nav > li > a {
+	float: none;
+	color: @bioNavLinkColor;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.bio-nav .nav > li > a > i {
+	background-image: url("@{iconWhiteSpritePath}");
+}
+
+.bio-nav .nav > li > a > .text {
+	margin: 0 2px 0 5px;
+}
+
+.bio-nav .nav > li:focus,
+.bio-nav .nav > li:hover,
+.bio-nav .nav > li.active {
+  background-color: @bioNavBackgroundHover;
+
+  > a {
+  	background-color: transparent;
+  }
+}

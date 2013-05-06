@@ -1,0 +1,24 @@
+{
+	"name":	"biomed-portal",
+	"version": "0.0.1",
+	"author": "Dobie Wollert",
+	"description": "Atlantic Biomedical Portal",
+	"private": true,
+	"dependencies": {
+		"express": "",
+		"mongoose": "",
+		"mongoose-pureautoinc": "",
+		"passport": "",
+		"passport-google-oauth": "",
+		"piler": "",
+		"less": "",
+		"socket.io": "",
+		"jade": "",
+		"googleapis": "",
+		"sprintf": "",
+		"emailjs": ""
+	},
+	"devDependencies": {
+		"supervisor": ""
+	}
+}

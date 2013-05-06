@@ -1,0 +1,332 @@
+[
+  {
+    "id": 65,
+    "email":"al.spell@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Al",
+      "last":"Spell"
+    }
+  },
+  {
+    "id": 7,
+    "email":"allan.cooke@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed", "ice"
+    ],
+    "perms":[
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Allan",
+      "last":"Cooke"
+    }
+  },
+  {
+    "id": 50,
+    "email":"andrew.gibson@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Andrew",
+      "last":"Gibson"
+    }
+  },
+  {
+    "id": 11,
+    "email":"carl.endres@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed", "ice", "other"
+    ],
+    "perms":[
+      "system.login",
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Carl",
+      "last":"Endres"
+    }
+  },
+  {
+    "email":"charles.timms@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "ice"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Charles",
+      "last":"Timms"
+    }
+  },
+  {
+    "id": [ 10, 27 ],
+    "email":"chris.endres@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "sales", "ice", "other"
+    ],
+    "perms":[
+      "system.login",
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Chris",
+      "last":"Endres"
+    }
+  },
+  {
+    "id": 47,
+    "email":"frank.insley@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Frank",
+      "last":"Insley"
+    }
+  },
+  {
+    "id": 64,
+    "email":"jake.jones@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed", "ice"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Jake",
+      "last":"Jones"
+    }
+  },
+  {
+    "id": 63,
+    "email":"jay.mcclure@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "other"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Jay",
+      "last":"Mcclure"
+    }
+  },
+  {
+    "id": 31,
+    "email":"jon.hass@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Jon",
+      "last":"Hass"
+    }
+  },
+  {
+    "id": 59,
+    "email":"kelli.kirk@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+    ],
+    "perms":[
+      "system.login",
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Kevin",
+      "last":"Murphy"
+    }
+  },
+  {
+    "email":"kelly.scalia@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+    ],
+    "perms":[
+      "system.login",
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Kelly",
+      "last":"Scalia"
+    }
+  },
+  {
+    "id": 71,
+    "email":"kevin.murphy@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "sales", "other"
+    ],
+    "perms":[
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Kevin",
+      "last":"Murphy"
+    }
+  },
+  {
+    "id": 61,
+    "email":"matthew.kolenda@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Matt",
+      "last":"Kolenda"
+    }
+  },
+  {
+    "id": 34,
+    "email":"michael.bingel@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Michael",
+      "last":"Bingle"
+    }
+  },
+  {
+    "id": 67,
+    "email":"mike.szabo@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "biomed"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Mike",
+      "last":"Szabo"
+    }
+  },
+  {
+    "id": 60,
+    "email":"norma.thomas@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+    ],
+    "perms":[
+      "system.login"
+    ],
+    "name":{
+      "first":"Norma",
+      "last":"Thomas"
+    }
+  },
+  {
+    "email":"ron.malin@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "ice"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Ron",
+      "last":"Malin"
+    }
+  },
+  {
+    "id": 32,
+    "email":"ryan.foley@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "sales", "ice", "other"
+    ],
+    "perms":[
+      "system.login",
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Ryan",
+      "last":"Foley"
+    }
+  },
+  {
+    "email":"scott.sowards@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "ice"
+    ],
+    "perms":[
+    ],
+    
+    "name":{
+      "first":"Scott",
+      "last":"Sowards"
+    }
+  },
+  {
+    "id": 36,
+    "email":"senate.fouty@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "ice"
+    ],
+    "perms":[
+    ],
+    "name":{
+      "first":"Senate",
+      "last":"Fouty"
+    }
+  },
+  {
+    "id": 69,
+    "email":"michelle.conley@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+    ],
+    "perms":[
+      "system.login",
+      "messages.receive"
+    ],
+    "name":{
+      "first":"Shelly",
+      "last":"Conley"
+    }
+  },
+  {
+    "email":"tim.bingel@atlanticbiomedical.com",
+    "deleted":false,
+    "groups":[
+      "all", "ice"
+    ],
+    "perms":[
+      "system.login"
+    ],
+    "name":{
+      "first":"Tim",
+      "last":"Bingel"
+    }
+  }
+]

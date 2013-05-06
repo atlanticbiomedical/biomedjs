@@ -1,0 +1,20 @@
+<div class="techpicker">
+	<div class="hour-labels">
+		<div ng-repeat="hour in hourMarkers" class="hour-label" ng-style="hour.style">
+			{{ hour.date | date:'h a'}}
+		</div>
+	</div>
+
+	<div class="schedule">
+		<div class="hour-markers">
+			<div ng-repeat="hour in hourMarkers" class="marker" ng-style="hour.style">
+				<div class="half-hour-marker"></div>
+			</div>
+		</div>
+		<div ng-repeat="(name, values) in data" class="tech">
+			<div class="tech-label">{{name}}</div>
+			<div class="enteries">
+				<div ng-repeat="entry in values" ng-style="entry.style" class="entry" ng-click="onEntryClick({entry: entry})" title="{{entry.workorder.client.name}} ({{entry.workorder.client.identifier}}) - {{entry.workorder.client.address.city}}">{{entry.workorder.client.identifier}}</div>
+			</div>
+		</div>
+</div>

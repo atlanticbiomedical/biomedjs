@@ -1,0 +1,30 @@
+
+.table {
+	th {
+		background-color: #efefef;
+	}
+
+	caption + thead tr:first-child th,
+	colgroup + thead tr:first-child th,
+	thead:first-child tr:first-child th {
+		border-top: 1px solid @tableBorder;
+	}
+
+	th:first-child {
+		border-left: 1px solid @tableBorder;
+	}
+
+	th:last-child {
+		border-right: 1px solid @tableBorder;
+	}
+
+	td.table-loading {
+	  text-align: center;
+	  padding: 30px;
+	}
+
+	td.table-message {
+	  text-align: center;
+	  font-style: italic;
+	}
+}

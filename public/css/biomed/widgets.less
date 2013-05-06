@@ -1,0 +1,269 @@
+
+.biomed-table {
+	.table;
+	.table-striped;
+	.table-condensed;
+}
+
+
+#loginbox {
+	width: 32%;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+
+	form {
+		background: #fff;
+	}
+}
+
+body.login-page {
+	background-color: #2E363F;
+	background-image: none;
+	margin-top: 10%;
+}
+
+#loginbox .brand-container {
+	background-color: #49CCED;
+}
+
+#loginbox .brand {
+	background: url('/img/logo.svg') 0 0 no-repeat;
+	background-size: contain;
+
+	height: 50px;
+	width: 316.1290322580645px;
+	padding: 0;
+	margin: 0;
+
+	line-height: 600px;
+	overflow: hidden;
+}
+
+#loginbox .alert {
+	margin-bottom: 0;
+	white-space: pre;
+}
+
+#loginbox form p {
+	margin: 20px
+}
+
+.loader {
+  width: 32px; height: 32px; display: inline-block;
+  background: transparent url(/img/loader.gif) no-repeat;
+  -webkit-animation: 'animation' 1s steps(10, end) infinite;
+  -moz-animation:    'animation' 1s steps(10, end) infinite;
+}
+
+@-webkit-keyframes animation  { from { background-position: 0 0; } to { background-position: 100% 0; } }
+@-moz-keyframes animation { from { background-position: 0 0; } to { background-position: 100% 0; } }
+
+header {
+	margin-bottom: 20px;
+
+	h1 {
+		margin: 0;
+		line-height: 30px;
+	}
+
+	.lead {
+		font-size: 11px;
+		line-height: 20px;
+		font-weight: 500;
+		color: #999999;
+		margin: 0;
+	}
+}
+
+.form .form-section {
+	padding: 15px 0;
+	border-bottom: 1px solid #eee;
+	.makeRow;
+}
+
+.form .form-section:first-child {
+	padding: 0 0 15px 0;
+}
+
+.form .form-preview {
+}
+
+.form .section-label {
+	.makeColumn(2);
+	.muted;
+}
+
+.form .section-container {
+	.makeColumn(10);
+}
+
+.form .form-editor {
+	.form-horizontal;
+
+	background-color: #f9f9f9;
+	border: 1px solid #cdcdcd;
+	padding-top: 20px;
+
+	.form-actions {
+		margin-bottom: 0;
+	}
+}
+
+.form a.disabled {
+	color: #999;
+
+	&:hover {
+		color: #999;
+		text-decoration: none;
+	}
+}
+
+.frequency {
+	width: auto;
+
+	.name {
+		text-align: right;
+	}
+
+	th {
+		background: transparent;
+		border: 0 !important;
+		text-align: center;
+	}
+
+	td {
+		text-align: center;
+	}
+
+	a {
+		padding: 20px;
+		corsor: pointer;
+	}
+
+	i {
+		opacity: 0.7;
+	}
+
+	.false {
+		.icon {
+			.icon-remove;
+		}
+	}
+
+	.true {
+		background-color: #DFF0D8;
+
+		.icon {
+			.icon-ok;
+		}
+	}
+}
+
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis line {
+        stroke: lightgrey;
+      }
+      
+.x.axis .minor {
+  stroke-opacity: .5;
+}
+
+.highlighter line {
+  fill: none;
+  stroke: red;
+  stroke-opacity: .5;
+  shape-rendering: crispEdges;  
+}
+
+.highlighter rect {
+  fill: red;
+  fill-opacity: .1;
+}
+
+.fade {
+  fill-opacity: .1;  
+}
+
+.axis text {
+  font-size: 10px;
+}
+
+
+.techpicker {
+	position: relative;
+	margin: 20px;
+
+	.hour-labels {
+		position: relative;
+		margin-left: 150px;
+		height: @baseLineHeight;
+		font-size: 11px;
+	}
+
+	.hour-labels .hour-label {
+		position: absolute;
+		text-align: left;
+		margin-right: 5px;
+	}
+
+	.schedule {
+		position: relative;
+	}
+
+	.hour-markers {
+		position: absolute;
+		margin-left: 150px;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		border: 1px solid #aaaaaa;
+	}
+
+	.hour-markers .marker {
+		position: absolute;
+		height: 100%;
+		border-right: 1px solid #dddddd;
+	}
+
+	.hour-markers .half-hour-marker {
+		height: 100%;
+		width: 50%;
+		border-right: 1px dashed #dddddd;
+	}
+
+	.tech {
+		padding: 1px 0;
+		.clearfix();
+	}
+
+	.tech-label {
+		float: left;
+	}
+
+	.enteries {
+		margin-left: 150px;
+		position: relative;
+	}
+
+	.entry {
+		position: absolute;
+		height: 20px;
+		box-sizing: border-box;
+		border-right: 2px solid white;
+		padding-left: 5px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		cursor: pointer;
+	}
+}

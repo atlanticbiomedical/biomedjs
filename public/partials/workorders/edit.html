@@ -1,0 +1,207 @@
+<ul class="breadcrumb">
+	<li><a href="/clients"><i class="icon-briefcase"></i> Workorders</a><span class="divider"></span><li>
+	<li ng-hide="loading" class="active">#{{master.biomedId}} - {{master.reason}}<li>
+</ul>
+<i ng-show="loading" class="loader"></i>
+<header ng-hide="loading">
+	<h1>#{{master.biomedId}} - {{master.reason}}</h1>
+	<p class="lead"><a ng-href="/clients/{{master.client._id}}">{{master.client.name}} ({{master.client.identifier}})</a></p>
+</header>
+<div ng-hide="loading" class="tabbable">
+	<div class="tab-content">
+		<div class="tab-pane active form" title="Details">
+			<div class="form-section">
+				<div class="section-label">Status</div>
+				<div class="section-container">
+					<div ng-hide="status.visible" class="form-preview">
+						{{master.status}}<br>
+						<a ng-click="status.edit()" ng-class="{disabled: editing}">Edit</a>
+					</div>
+					<div ng-show="status.visible" class="form-editor">
+						<div class="control-group">
+							<label class="control-label">Status</label>
+							<div class="controls">
+								<select ng-model="status.model.status" name="status" class="input-xlarge">
+									<option value="scheduled">Scheduled</option>
+									<option value="invoiced">Invoiced</option>
+									<option value="paid">Paid</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-actions">
+							<button ng-click="status.save()" type="button" class="btn btn-primary">Save</button>
+							<button ng-click="status.reset()" type="button" class="btn">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-section">
+				<div class="section-label">Remarks</div>
+				<div class="section-container">
+					<div ng-hide="remarks.visible" class="form-preview">
+						{{master.remarks}}<br>
+						<a ng-click="remarks.edit()" ng-class="{disabled: editing}">Edit</a>
+					</div>
+					<div ng-show="remarks.visible" class="form-editor">
+						<div class="control-group">
+							<label class="control-label">Reason</label>
+							<div class="controls">
+								<select ng-model="remarks.model.reason" name="reason" class="input-xlarge">
+									<option value="Add New Equipment">Add New Equipment</option>
+									<option value="As Directed">As Directed</option>
+									<option value="Autoclave Repair">Autoclave Repair</option>
+									<option value="Calibration">Calibration</option>
+									<option value="Delivery">Delivery</option>
+									<option value="Diagnose Problem">Diagnose Problem</option>
+									<option value="Install Parts">Install Parts</option>
+									<option value="Off">Off</option>
+									<option value="PM Reschedule">PM Reschedule</option>
+									<option value="Preventive Maintenance">Preventive Maintenance</option>
+									<option value="Printer Failure">Printer Failure</option>
+									<option value="Repair">Repair</option>
+								</select>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Remarks</label>
+							<div class="controls">
+								<textarea ng-model="remarks.model.remarks" name="remarks" rows="5" class="input-xxlarge"></textarea>
+							</div>
+						</div>
+						<div class="form-actions">
+							<button ng-click="remarks.save()" type="button" class="btn btn-primary">Save</button>
+							<button ng-click="remarks.reset()" type="button" class="btn">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-section">
+				<div class="section-label">Scheduling</div>
+				<div class="section-container">
+					<div ng-hide="scheduling.visible" class="form-preview">
+						<strong>{{master.scheduling.start | date}}</strong><br>
+						From <strong>{{master.scheduling.start | time}}</strong> to <strong>{{master.scheduling.end | time}}</strong><br>
+						Techs: <strong>{{ master.techs | techs }}</strong><br>
+						<a ng-click="scheduling.edit()">Edit</a>
+					</div>
+					<div ng-show="scheduling.visible" class="form-editor">
+						<div class="control-group">
+							<label class="control-label">Date</label>
+							<div class="controls">
+								<input ng-model="scheduling.date" datepicker type="text" class="input-small">
+								<select ng-model="scheduling.start" name="start" class="input-small">
+									<option value="05:00:00">5:00am</option>
+									<option value="05:30:00">5:30am</option>
+									<option value="06:00:00">6:00am</option>
+									<option value="06:30:00">6:30am</option>
+									<option value="07:00:00">7:00am</option>
+									<option value="07:30:00">7:30am</option>
+									<option value="08:00:00">8:00am</option>
+									<option value="08:30:00">8:30am</option>
+									<option value="09:00:00">9:00am</option>
+									<option value="09:30:00">9:30am</option>
+									<option value="10:00:00">10:00am</option>
+									<option value="10:30:00">10:30am</option>
+									<option value="11:00:00">11:00am</option>
+									<option value="11:30:00">11:30am</option>
+									<option value="12:00:00">12:00pm</option>
+									<option value="12:30:00">12:30pm</option>
+									<option value="13:00:00">1:00pm</option>
+									<option value="13:30:00">1:30pm</option>
+									<option value="14:00:00">2:00pm</option>
+									<option value="14:30:00">2:30pm</option>
+									<option value="15:00:00">3:00pm</option>
+									<option value="15:30:00">3:30pm</option>
+									<option value="16:00:00">4:00pm</option>
+									<option value="16:30:00">4:30pm</option>
+									<option value="17:00:00">5:00pm</option>
+									<option value="17:30:00">5:30pm</option>
+									<option value="18:00:00">6:00pm</option>
+									<option value="18:30:00">6:30pm</option>
+									<option value="19:00:00">7:00pm</option>
+									<option value="19:30:00">7:30pm</option>
+									<option value="20:00:00">8:00pm</option>
+									<option value="20:30:00">8:30pm</option>
+									<option value="21:00:00">9:00pm</option>
+									<option value="21:30:00">9:30pm</option>
+									<option value="22:00:00">10:00pm</option>
+								</select>
+								<span>to</span>
+								<select ng-model="scheduling.end" name="end" class="input-small">
+									<option value="06:00:00">6:00am</option>
+									<option value="06:30:00">6:30am</option>
+									<option value="07:00:00">7:00am</option>
+									<option value="07:30:00">7:30am</option>
+									<option value="08:00:00">8:00am</option>
+									<option value="08:30:00">8:30am</option>
+									<option value="09:00:00">9:00am</option>
+									<option value="09:30:00">9:30am</option>
+									<option value="10:00:00">10:00am</option>
+									<option value="10:30:00">10:30am</option>
+									<option value="11:00:00">11:00am</option>
+									<option value="11:30:00">11:30am</option>
+									<option value="12:00:00">12:00pm</option>
+									<option value="12:30:00">12:30pm</option>
+									<option value="13:00:00">1:00pm</option>
+									<option value="13:30:00">1:30pm</option>
+									<option value="14:00:00">2:00pm</option>
+									<option value="14:30:00">2:30pm</option>
+									<option value="15:00:00">3:00pm</option>
+									<option value="15:30:00">3:30pm</option>
+									<option value="16:00:00">4:00pm</option>
+									<option value="16:30:00">4:30pm</option>
+									<option value="17:00:00">5:00pm</option>
+									<option value="17:30:00">5:30pm</option>
+									<option value="18:00:00">6:00pm</option>
+									<option value="18:30:00">6:30pm</option>
+									<option value="19:00:00">7:00pm</option>
+									<option value="19:30:00">7:30pm</option>
+									<option value="20:00:00">8:00pm</option>
+									<option value="20:30:00">8:30pm</option>
+									<option value="21:00:00">9:00pm</option>
+									<option value="21:30:00">9:30pm</option>
+									<option value="22:00:00">10:00pm</option>
+								</select>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Techs</label>
+							<div class="controls">
+								<select multiple ui-select2 ng-model="scheduling.techs" data-placeholder="Choose a Tech"  class="input-xxlarge">
+									<option ng-repeat="tech in allUsers" value="{{tech._id}}">{{tech.name.first}} {{tech.name.last}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="toolbelt" style="margin: 20px">
+							<div class="pull-right">
+					            <span class="toolbelt-text">Group: </span>
+								<select ng-model="group" name="group" class="input-medium">
+									<option ng-repeat="(key, value) in TECH_GROUPS" value="{{key}}">{{value}}</option>
+								</select>
+							</div>
+						</div>
+						<techpicker
+							users="users"
+							schedule="scheduling.schedule"
+							date="scheduling.date"
+							start="scheduling.start"
+							end="scheduling.end"></techpicker>
+						<div class="form-actions">
+							<button ng-click="scheduling.save()" type="button" class="btn btn-primary">Save</button>
+							<button ng-click="scheduling.reset()" type="button" class="btn">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-section">
+				<div class="section-label">Other</div>
+				<div class="section-container">
+					<button ng-click="destroy()" type="button" class="btn btn-danger">Remove workorder</button>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane form" title="History">
+			No history is currently available.
+		</div>
+	</div>
+</div>

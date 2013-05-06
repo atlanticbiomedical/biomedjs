@@ -1,0 +1,43 @@
+.breadcrumb {
+  margin: 0;
+  padding: 0 7px;
+  list-style: none;
+  background-color: #fff;
+  border-bottom: 1px solid #e3ebed;
+
+  > li {
+    display: inline-block;
+    .ie7-inline-block();
+
+    padding: 8px 0;
+    font-size: 11px;
+
+    > a {
+      color: #666666;
+
+      &:hover {
+        color: #333333;
+
+        i {
+          opacity: 1;
+        }
+      }
+
+      i {
+        margin: 0 5px;
+        opacity: .6;
+      }
+    }
+
+    > .divider {
+      background-image: url("../../img/breadcrumb.png");
+      background-position: center center;
+      background-repeat: no-repeat;
+      padding: 0 15px;
+    }
+  }
+  > .active {
+    font-weight: bold;
+    color: #444444;
+  }
+}

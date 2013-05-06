@@ -1,0 +1,18 @@
+doctype 5
+html(lang="en")
+	head
+		title Atlantic Biomedical - Login
+		!{css}
+	body.login-page
+		.container-fluid
+			#loginbox
+				.brand-container
+					.brand Atlantic Biomedical
+				form
+					.alert.alert-error
+						| You are not authorized to access this site.
+						| Please contact your site administrator to request access.
+					p
+						| Please login with your Google Apps account to continue.
+					.form-actions
+						a.btn.btn-danger(href='/auth') Login with Google Apps

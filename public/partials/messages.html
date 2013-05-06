@@ -1,0 +1,75 @@
+<div class="modal-header">
+	<h1>Send a message</h1>
+</div>
+<div class="modal-body form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="user">Message For:</label>
+
+        <div class="controls">
+          <select ng-model="model.user">
+            <option ng-repeat="user in users" value="{{user._id}}">{{user.name.first}} {{user.name.last}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="name">Name:</label>
+
+        <div class="controls">
+          <input type="text" class="input-large" ng-model="model.name" />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="name">Company:</label>
+
+        <div class="controls">
+          <input type="text" class="input-large" ng-model="model.company" />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="phone">Phone:</label>
+
+        <div class="controls">
+          <input type="text" class="input-large" ng-model="model.phone" placeholder="(999) 999-9999" />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="extension">Extension:</label>
+
+        <div class="controls">
+          <input type="text" class="input-large" ng-model="model.extension" />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="time">Time to return call:</label>
+
+        <div class="controls">
+          <input type="text" class="input-large" ng-model="model.returnTime" />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls controls-row">
+          <label ng-repeat="message in model.messages">
+            <input type="checkbox" value="{{message.message}}" ng-checked="message.checked" ng-model="message.checked">
+            <span>{{message.message}}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="time">Notes:</label>
+
+        <div class="controls">
+          <textarea class="gwt-TextArea input-large" ng-model="model.notes"></textarea>
+        </div>
+      </div>
+</div>
+<div class="modal-footer">
+	<button ng-click="send()" class="btn btn-primary" >Send</button>
+	<button ng-click="cancel()" class="btn" >Cancel</button>
+</div>

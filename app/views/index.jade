@@ -1,0 +1,50 @@
+doctype 5
+html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
+	head
+		title Atlantic Biomedical
+		!{css}
+	body
+		error-panel
+		.navbar
+			.navbar-inner
+				a.brand(href='/', target='_self') Atlantic Biomedical
+				progress-panel
+				ul.nav.pull-right(ng-controller='biomed.AccountCtrl')
+					li
+						a(href='http://atlanticbiomedical.com/ticket/', target='_blank')
+							i.icon-fire
+							|  Tickets
+					li
+						a(ng-click="openDialog()")
+							i.icon-envelope
+							|  Messages
+					li
+						a(href='/logout', target='_self')
+							i.icon-share-alt
+							|  Logout
+					li(ng-show='account.name')
+						a(href='#')
+							i.icon-user
+							|  {{account.name.first}} {{account.name.last}}
+					li.photo(ng-show='account.picture', ns-show='account.picture')
+						img(ng-src='{{account.picture}}?sz=50')
+		.navbar.navbar-secondary(bio-navbar)
+			.navbar-inner
+				ul.nav
+					li(data-match-route='/schedule.*')
+						a(href='/schedule')
+							i.icon-calendar
+							|  Schedule
+
+					li(data-match-route='/client.*')
+						a(href='/clients')
+							i.icon-briefcase
+							|  Clients
+
+					li(data-match-route='/workorder.*')
+						a(href='/workorders')
+							i.icon-wrench
+							|  Workorders
+		.container-fluid
+			ng-view
+		!{js}
