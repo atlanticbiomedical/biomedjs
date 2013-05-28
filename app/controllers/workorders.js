@@ -240,7 +240,8 @@ function generateDescription(client, workorder) {
 		"Customer:\n" +
 		"	%(name)s (%(identifier)s)\n" +
 		"\n" +
-		"Phone:\n" +
+		"Contact:\n" +
+		"	%(contact)s\n" +
 		"	%(phone)s\n" +
 		"\n" +
 		"Address:\n" +
@@ -269,11 +270,13 @@ function generateDescription(client, workorder) {
 		reason: workorder.reason || '',
 		status: workorder.status || '',
 		remarks: workorder.remarks || '',
-		phone: ''
+		phone: '',
+		contact: ''
 	};
 
 	if (client.contacts[0]) {
 		resources.phone = client.contacts[0].phone || '';
+		resources.contact = client.contacts[0].name || '';
 	}
 
 	return sprintf(template, resources);
