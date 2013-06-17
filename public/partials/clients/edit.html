@@ -239,7 +239,7 @@
 						<tr ng-hide="workorders.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
 						<tr ng-repeat="pm in pms">
 							<td>
-								<a ng-href="/workorders/add?clientId={{master._id}}&amp;reason=Preventive%20Maintenance&amp;remarks={{pm}}">Preventive Maintenance ({{pm}})</a><br>
+								<a ng-href="/workorders/add?workorderType=pm&clientId={{master._id}}&amp;type={{pm}}">Preventive Maintenance ({{pm}})</a><br>
 							</td>
 							<td>This Month</td>
 							<td>PM Due</td>

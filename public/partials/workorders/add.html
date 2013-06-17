@@ -29,7 +29,7 @@
 				<div class="control-group">
 					<label class="control-label">Reason</label>
 					<div class="controls">
-						<select ng-model="model.reason" name="reason" class="input-xlarge">
+						<select ng-model="model.reason" name="reason" class="input-xlarge" ng-disabled="{{workorderType == 'pm'}}">
 							<option value="Add New Equipment">Add New Equipment</option>
 							<option value="As Directed">As Directed</option>
 							<option value="Autoclave Repair">Autoclave Repair</option>
@@ -42,6 +42,25 @@
 							<option value="Preventive Maintenance">Preventive Maintenance</option>
 							<option value="Printer Failure">Printer Failure</option>
 							<option value="Repair">Repair</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group" ng-show="model.reason == 'Preventive Maintenance'">
+					<label class="control-label">Maintenance Type</label>
+					<div class="controls">
+						<select ng-model="model.maintenanceType" name="maintenanceType" class="input-xlarge" ng-disabled="{{workorderType == 'pm'}}">
+							<option value="anesthesia">anesthesia</option>
+							<option value="annual">annual</option>
+							<option value="ert">ert</option>
+							<option value="imaging">imaging</option>
+							<option value="medgas">medgas</option>
+							<option value="neptune">neptune</option>
+							<option value="quarterly">quarterly</option>
+							<option value="rae">rae</option>
+							<option value="semi">semi</option>
+							<option value="sterilizer">sterilizer</option>
+							<option value="tg">tg</option>
+							<option value="legacy" disabled>legacy</option>
 						</select>
 					</div>
 				</div>

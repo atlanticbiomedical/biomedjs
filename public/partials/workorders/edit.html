@@ -40,6 +40,7 @@
 				<div class="section-label">Remarks</div>
 				<div class="section-container">
 					<div ng-hide="remarks.visible" class="form-preview">
+						{{master.reason}}<br>
 						{{master.remarks}}<br>
 						<a ng-click="remarks.edit()" ng-class="{disabled: editing}">Edit</a>
 					</div>
@@ -63,6 +64,26 @@
 								</select>
 							</div>
 						</div>
+                                		<div class="control-group" ng-show="remarks.model.reason == 'Preventive Maintenance'">
+                                        		<label class="control-label">Maintenance Type</label>
+                                        		<div class="controls">
+                                                		<select ng-model="remarks.model.maintenanceType" name="maintenanceType" class="input-xlarge">
+                                                        		<option value="anesthesia">anesthesia</option>
+                                                        		<option value="annual">annual</option>
+                                                        		<option value="ert">ert</option>
+                                                        		<option value="imaging">imaging</option>
+                                                        		<option value="medgas">medgas</option>
+                                                        		<option value="neptune">neptune</option>
+                                                        		<option value="quarterly">quarterly</option>
+                                                        		<option value="rae">rae</option>
+                                                        		<option value="semi">semi</option>
+                                              		          	<option value="sterilizer">sterilizer</option>
+                                                		        <option value="tg">tg</option>
+                                		                        <option value="legacy" disabled>legacy</option>
+                		                                </select>
+		                                        </div>
+		                                </div>
+
 						<div class="control-group">
 							<label class="control-label">Remarks</label>
 							<div class="controls">

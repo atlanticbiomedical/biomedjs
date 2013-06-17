@@ -5,7 +5,7 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 		$rootScope.TECH_GROUPS = {
 			all: 'All',
 			biomed: 'Biomed',
-			ice: 'Ice',
+			ice: 'ICE',
 			sales: 'Sales',
 			other: 'Others'
 		};

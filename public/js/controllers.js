@@ -300,16 +300,24 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 
 	var search = $location.search();
 
-	if (search.clientId) {
+	if (search.workorderType == 'pm') {
 		$scope.model.client = search.clientId;
-	}
+		$scope.model.reason = "Preventive Maintenance";
+		$scope.model.maintenanceType = search.type;
 
-	if (search.reason) {
-		$scope.model.reason = search.reason;
-	}
+		$scope.workorderType = 'pm';
+	} else {
+		if (search.clientId) {
+			$scope.model.client = search.clientId;
+		}
 
-	if (search.remarks) {
-		$scope.model.remarks = search.remarks;
+		if (search.reason) {
+			$scope.model.reason = search.reason;
+		}
+
+		if (search.remarks) {
+			$scope.model.remarks = search.remarks;
+		}
 	}
 
 	updateAllUsers();

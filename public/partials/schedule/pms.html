@@ -43,7 +43,7 @@
 				<tr ng-show="loading"><td colspan="4" class="table-loading"><i class="loader"></i></td></tr>
 				<tr ng-hide="loading || pms.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
 				<tr ng-hide="loading" ng-repeat="pm in pms">
-					<td><a ng-href="/workorders/add?clientId={{pm.client._id}}&amp;reason=Preventive%20Maintenance&amp;remarks={{pm.reason}}">{{pm.client.name}} ({{pm.client.identifier | uppercase}})</a><br>
+					<td><a ng-href="/workorders/add?workorderType=pm&amp;clientId={{pm.client._id}}&amp;type={{pm.reason}}">{{pm.client.name}} ({{pm.client.identifier | uppercase}})</a><br>
 					<td>{{pm.reason}}</td>
 					<td>{{pm.client.contacts[0].name}}</td>
 					<td>{{pm.lient.contacts[0].phone}}</td>

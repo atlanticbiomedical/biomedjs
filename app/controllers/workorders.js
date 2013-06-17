@@ -52,6 +52,7 @@ module.exports = function(calendar) {
 				createdOn: new Date(),
 				createdBy: req.user,
 				reason: req.body.reason,
+				maintenanceType: req.body.maintenanceType || "",
 				remarks: req.body.remarks || "",
 				status: req.body.status,
 				scheduling: req.body.scheduling,
@@ -144,6 +145,7 @@ module.exports = function(calendar) {
 						workorder = result;
 
 						workorder.reason = req.body.reason;
+						maintenanceType: req.body.maintenanceType || "";
 						workorder.remarks = req.body.remarks;
 						workorder.scheduling = req.body.scheduling;
 						workorder.status = req.body.status;
