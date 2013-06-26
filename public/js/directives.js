@@ -141,7 +141,7 @@ angular.module('biomed.directives', [])
   var isTouch = 'ontouchstart' in window && !window.navigator.userAgent.match(/PhantomJS/i);
 
   return {
-    restrict: 'A',
+    restrict: 'AC',
     require: '?ngModel',
     link: function postLink(scope, element, attrs, controller) {
 
@@ -310,6 +310,7 @@ angular.module('biomed.directives', [])
   var options = {};
 
   return {
+    restrict: 'AC',
     require: '?ngModel',
     compile: function (tElm, tAttrs) {
       var watch,

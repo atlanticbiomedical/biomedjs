@@ -1,0 +1,105 @@
+doctype 5
+html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
+	head
+		title Atlantic Biomedical
+		!{css}
+		script(type='text/javascript')
+			window.payload = !{JSON.stringify(payload)};
+	body
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-resource.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js')
+		script(type='text/javascript', src='/js/lib/select2.js')
+		script(type='text/javascript', src='/js/lib/bootstrap-datepicker.js')
+		script(type='text/javascript', src='/js/lib/moment.js')
+		script(type='text/javascript', src='/js/directives.js')
+		script(type='text/javascript', src='/tags/app.js')
+
+		error-panel
+		.navbar
+			.navbar-inner
+				a.brand(href='/', target='_self') Atlantic Biomedical
+				progress-panel
+				ul.nav.pull-right(ng-show='user')
+					li(ng-show='user.name')
+						a(href='#')
+							i.icon-user
+							|  {{user.name.first}} {{user.name.last}}
+					li.photo(ng-show='user.picture', ns-show='user.picture')
+						img(ng-src='{{user.picture}}?sz=50')
+		.navbar.navbar-secondary
+			.navbar-inner
+				ul.nav
+					li
+						a(href='http://www.atlanticbiomedical.com')
+							i.icon-wrench
+							|  Contact Us
+		.container-fluid
+			h1(ng-show='tag') Device Tag
+			h1(ng-hide='tag') Create Tag
+			div(ng-hide='user')
+				dl.dl-horizontal(ng-show='tag')
+					dt Client
+					dd &nbsp;{{payload.tag.client.name}} ({{payload.tag.client.identifier}})
+					dt Device
+					dd &nbsp;{{tag.device}}
+					dt Make
+					dd &nbsp;{{tag.make}}
+					dt Model
+					dd &nbsp;{{tag.model}}
+					dt Serial Number
+					dd &nbsp;{{tag.serialNumber}}
+					dt Purchase Date
+					dd &nbsp;{{tag.purchaseDate}}
+					dt Test
+					dd &nbsp;{{tag.test}}
+					dt Room #
+					dd &nbsp;{{tag.roomNumber}}
+
+				a.btn.btn-primary(href='/auth', ng-show='tag')
+					| Edit Tag
+
+				a.btn.btn-primary(href='/auth', ng-hide='tag')
+					| Create Tag
+
+			div(ng-show='user')
+				form.form-horizontal
+					.control-group
+						label.control-label Client
+						.controls
+							select(ng-model='client', required='required', ng-options='client._id as client.name + " (" + client.identifier + ")" for client in clients')
+						</select>
+
+								
+
+
+					.control-group
+						label.control-label Device
+						.controls
+							input.text(ng-model='tag.device')
+					.control-group
+						label.control-label Make
+						.controls
+							input.text(ng-model='tag.make')
+					.control-group
+						label.control-label Model
+						.controls
+							input.text(ng-model='tag.model')
+					.control-group
+						label.control-label Serial Number
+						.controls
+							input.text(ng-model='tag.serialNumber')
+					.control-group
+						label.control-label Purchase Date
+						.controls
+							input.text(type='date', ng-model='tag.purchaseDate')
+					.control-group
+						label.control-label Test
+						.controls
+							input.text(ng-model='tag.test')
+					.control-group
+						label.control-label Room #
+						.controls
+							input.text(ng-model='tag.roomNumber')
+					.control-group
+						button.btn.btn-primary(ng-click='save()') Save

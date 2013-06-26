@@ -16,7 +16,9 @@
 		"jade": "",
 		"googleapis": "",
 		"sprintf": "",
-		"emailjs": ""
+		"emailjs": "",
+		"moment": "",
+		"async": ""
 	},
 	"devDependencies": {
 		"supervisor": ""

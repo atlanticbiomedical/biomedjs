@@ -48,12 +48,16 @@ module.exports = function(app, auth, piler, calendar, config) {
 	var messages = require('../app/controllers/messages')(config);
 	app.post('/api/messages/send', messages.send);
 
+	var tags = require('../app/controllers/tags')(piler);
+	app.post('/api/tags', tags.post);
+
 	var login = require('../app/controllers/login')(piler);
 	app.get('/login', login.login);
 	app.get('/login/error', login.error);
 	app.get('/logout', login.logout);
 
 	var home = require('../app/controllers/home')(piler);
-	app.get('/', auth.requiresUiLogin, home.index);
-	app.get('*', auth.requiresUiLogin, home.index);
+
+	app.get('/', tags.index, auth.requiresUiLogin, home.index);
+	app.get('*', tags.index, auth.requiresUiLogin, home.index);
 };

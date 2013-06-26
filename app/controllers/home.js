@@ -5,6 +5,6 @@ module.exports = function(piler) {
 				js: piler.js.renderTags(),
 				css: piler.css.renderTags()
 			});
-		}
+		},
 	};
 };
