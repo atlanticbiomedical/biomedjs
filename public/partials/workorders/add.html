@@ -37,6 +37,7 @@
 							<option value="Delivery">Delivery</option>
 							<option value="Diagnose Problem">Diagnose Problem</option>
 							<option value="Install Parts">Install Parts</option>
+							<option value="New Opportunity">New Opportunity</option>
 							<option value="Off">Off</option>
 							<option value="PM Reschedule">PM Reschedule</option>
 							<option value="Preventive Maintenance">Preventive Maintenance</option>
@@ -159,7 +160,7 @@
 				<div class="control-group">
 					<label class="control-label">Techs</label>
 					<div class="controls">
-						<select multiple ui-select2 ng-model="model.techs" data-placeholder="Choose a Tech"  class="input-xxlarge">
+						<select multiple ui-select2 ng-model="model.techs" data-placeholder="Choose a Tech - Check the schedule below before scheduling."  class="input-xxlarge">
 							<option ng-repeat="tech in allUsers" value="{{tech._id}}">{{tech.name.first}} {{tech.name.last}}</option>
 						</select>
 					</div>

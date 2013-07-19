@@ -41,6 +41,8 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 				dl.dl-horizontal(ng-show='tag')
 					dt Client
 					dd &nbsp;{{payload.tag.client.name}} ({{payload.tag.client.identifier}})
+					dt Client Device ID
+					dd &nbsp;{{tag.clientDeviceId}}
 					dt Device
 					dd &nbsp;{{tag.device}}
 					dt Make
@@ -51,10 +53,14 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 					dd &nbsp;{{tag.serialNumber}}
 					dt Purchase Date
 					dd &nbsp;{{tag.purchaseDate}}
+					dt Warranty Expiration
+					dd &nbsp;{{tag.deviceWarrantyExpiration}}
 					dt Test
 					dd &nbsp;{{tag.test}}
 					dt Room #
 					dd &nbsp;{{tag.roomNumber}}
+					dt PO Number
+					dd &nbsp;{{tag.poNumber}}
 
 				a.btn.btn-primary(href='/auth', ng-show='tag')
 					| Edit Tag
@@ -70,8 +76,10 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 							select(ng-model='client', required='required', ng-options='client._id as client.name + " (" + client.identifier + ")" for client in clients')
 						</select>
 
-								
-
+					.control-group
+						label.control-label Client Device ID
+						.controls
+							input.text(ng-model='tag.clientDeviceId')
 
 					.control-group
 						label.control-label Device
@@ -94,6 +102,11 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 						.controls
 							input.text(type='date', ng-model='tag.purchaseDate')
 					.control-group
+						label.control-label Device Warranty Expiration
+						.controls
+							input.text(type='date', ng-model='deviceWarrantyExpiration')
+
+					.control-group
 						label.control-label Test
 						.controls
 							input.text(ng-model='tag.test')
@@ -101,5 +114,11 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 						label.control-label Room #
 						.controls
 							input.text(ng-model='tag.roomNumber')
+
+					.control-group
+						label.control-label PO Number
+						.controls
+							input.text(ng-model='tag.poNumber')
+
 					.control-group
 						button.btn.btn-primary(ng-click='save()') Save

@@ -4,8 +4,7 @@ var mongoose = require('mongoose'),
 module.exports = function(piler) {
 	return {
 		index: function(req, res, next) {
-
-			host = String(req.headers.host);
+			host = String(req.headers['x-forwarded-host']);
 			host = host.split(':')[0];
 
 			if (host != 'n.atlb.co') {

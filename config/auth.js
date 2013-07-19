@@ -8,7 +8,11 @@ module.exports = function(app, passport) {
 		]}));
 
 	app.get('/auth/callback', function(req, res, next) {
-		passport.authenticate('google', function(err, user, info) {
+		var options = {
+			callbackURL: 'http://' + req.headers['x-forwarded-host'] + '/auth/callback'
+		};
+		console.log(options);
+		passport.authenticate('google', options, function(err, user, info) {
 			var redirectUrl = '/';
 
 			if (err) { return next(err); }

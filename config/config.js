@@ -2,7 +2,7 @@ module.exports = {
 	development: {
 		root: require('path').normalize(__dirname + '/..'),
 		debug: true,
-		database: 'mongodb://biomed.akira.gs/biomed_devel2',
+		database: 'mongodb://wootbox.wootroot.me/biomed_devel2',
 		auth: {
 			clientId: '223145213165.apps.googleusercontent.com',
 			clientSecret: '8MRNar9E_pRTOGTQonPzYOW_',
