@@ -18,7 +18,8 @@
 		"sprintf": "",
 		"emailjs": "",
 		"moment": "",
-		"async": ""
+		"async": "",
+		"passport-oauth": ""
 	},
 	"devDependencies": {
 		"supervisor": ""

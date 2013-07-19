@@ -25,6 +25,7 @@ module.exports = function(app, auth, piler, calendar, config) {
 	app.get('/api/clients/frequencies', clients.frequencies);
 	app.get('/api/clients/:client_id', clients.get);
 	app.get('/api/clients/:client_id/workorders', clients.workorders);
+	app.get('/api/clients/:client_id/tags', clients.tags);
 	app.post('/api/clients', clients.create);
 	app.post('/api/clients/:client_id', clients.update);
 	app.del('/api/clients/:client_id', clients.destroy);

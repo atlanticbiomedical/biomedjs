@@ -122,6 +122,10 @@ biomed.ClientEditCtrl = function($scope, $routeParams, Clients) {
 		updatePms();
 	});
 
+	$scope.tags = Clients.tags($routeParams, function() {
+
+	});
+
 	$scope.identification = createController();
 	$scope.address = createController();
 	$scope.primaryContact = createContactController(0);

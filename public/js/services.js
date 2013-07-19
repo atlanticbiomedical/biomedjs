@@ -9,7 +9,8 @@ angular.module('biomed.services', [])
 			create:  	{ method: 'POST', params: {} },
 			update:  	{ method: 'POST', params: { id: 0} },
 			destroy: 	{ method: 'DELETE', params: { id: 0 } },
-			workorders: { method: 'GET', params: { id: 0, cmd: 'workorders' }, isArray: true }
+			workorders: { method: 'GET', params: { id: 0, cmd: 'workorders' }, isArray: true },
+			tags:       { method: 'GET', params: { id: 0, cmd: 'tags' }, isArray: true }
 		});
 })
 .factory("Workorders", function($resource) {

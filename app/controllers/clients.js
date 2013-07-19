@@ -1,7 +1,8 @@
 
 var mongoose = require('mongoose'),
 	Client = mongoose.model('Client'),
-	Workorder = mongoose.model('Workorder');
+	Workorder = mongoose.model('Workorder'),
+	Tag = mongoose.model('Tag');
 
 var frequencies = ["annual","semi","quarterly","sterilizer","tg","ert","rae","medgas","imaging","neptune","anesthesia"];
 
@@ -56,6 +57,18 @@ exports.workorders = function(req, res, next) {
 
 		res.json(workorders);
 	});
+};
+
+exports.tags = function(req, res, next) {
+	var id = req.param('client_id');
+
+	Tag.find({ client: id })
+		.exec(function(err, tags) {
+			if (err) return next(err);
+			if (!tags) return next(new Error('Failed to load tags ' + id));
+
+			res.json(tags);
+		});
 };
 
 exports.create = function(req, res, next) {

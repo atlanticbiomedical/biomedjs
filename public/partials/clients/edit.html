@@ -285,4 +285,37 @@
 			</tbody>
 		</table>
 	</div>
+	<div class="tab-pane" title="Tags">
+		<div class="row-fluid">
+			<div class="span12">
+				<table class="biomed-table">
+					<thead>
+						<tr>
+							<th style="width: 10%">Tag</th>
+							<th style="width: 10%">Device ID</th>
+							<th style="width: 15%">Device</th>
+							<th style="width: 15%">Make</th>
+							<th style="width: 15%">Model</th>
+							<th style="width: 15%">Serial No.</th>
+							<th style="width: 20%">Purchase Date</th>
+							<th style="width: 20%">Warranty Exp.</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-hide="tags.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
+						<tr ng-repeat="tag in tags">
+							<td>{{tag._id}}</td>
+							<td>{{tag.data.clientDeviceId}}</td>							
+							<td>{{tag.data.device}}</td>							
+							<td>{{tag.data.make}}</td>
+							<td>{{tag.data.model}}</td>
+							<td>{{tag.data.serialNumber}}</td>
+							<td>{{tag.data.purchaseDate|date}}</td>
+							<td>{{tag.data.deviceWarrantyExpiration|date}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
