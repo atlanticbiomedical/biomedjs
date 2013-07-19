@@ -18,6 +18,8 @@ tags.PageCtrl = function($scope, $window, Tag, Clients) {
 
 	$scope.tag = payload.tag ? payload.tag.data : undefined;
 
+	$scope.isChrome = navigator.userAgent.indexOf('Chrome') !== -1;
+
 	if (payload.user) {
 		$scope.user = payload.user;
 		$scope.clients = Clients.index(function() {
@@ -32,6 +34,8 @@ tags.PageCtrl = function($scope, $window, Tag, Clients) {
 			tag_id: $window.payload.id,
 			client: $scope.client,
 			data: $scope.tag
+		}, function() {
+			alert('Your changes have been saved.');
 		});
 	}
 }

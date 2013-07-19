@@ -3,8 +3,10 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 	head
 		title Atlantic Biomedical
 		!{css}
+		link(rel='stylesheet', href='/css/tags.css')
 		script(type='text/javascript')
 			window.payload = !{JSON.stringify(payload)};
+		meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0')
 	body
 		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.js')
 		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-resource.js')
@@ -20,13 +22,6 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 			.navbar-inner
 				a.brand(href='/', target='_self') Atlantic Biomedical
 				progress-panel
-				ul.nav.pull-right(ng-show='user')
-					li(ng-show='user.name')
-						a(href='#')
-							i.icon-user
-							|  {{user.name.first}} {{user.name.last}}
-					li.photo(ng-show='user.picture', ns-show='user.picture')
-						img(ng-src='{{user.picture}}?sz=50')
 		.navbar.navbar-secondary
 			.navbar-inner
 				ul.nav
@@ -37,6 +32,12 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 		.container-fluid
 			h1(ng-show='tag') Device Tag
 			h1(ng-hide='tag') Create Tag
+			div.alert.alert-error(ng-show='user && !isChrome')
+				strong
+					| Warning - 
+				| Your browser is unsupported, 
+				a(href='https://play.google.com/store/apps/details?id=com.android.chrome')
+					|  Download Chrome.
 			div(ng-hide='user')
 				dl.dl-horizontal(ng-show='tag')
 					dt Client
@@ -69,7 +70,7 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 					| Create Tag
 
 			div(ng-show='user')
-				form.form-horizontal
+				form
 					.control-group
 						label.control-label Client
 						.controls
