@@ -8,6 +8,7 @@ var workorderSchema = new Schema({
 	createdOn: Date,
 	createdBy: { type: ObjectId, ref: 'User' },
 	reason: String,
+	maintenanceType: String,
 	remarks: String,
 	status: String,
 	scheduling: {

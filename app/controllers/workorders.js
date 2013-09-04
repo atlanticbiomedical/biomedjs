@@ -47,9 +47,12 @@ module.exports = function(calendar) {
 		},
 
 		create: function(req, res, next) {
+			console.log(req.body);
+			var date = new Date();
+
 			var workorder = new Workorder({
 				client: req.body.client,
-				createdOn: new Date(),
+				createdOn: date,
 				createdBy: req.user,
 				reason: req.body.reason,
 				maintenanceType: req.body.maintenanceType || "",
@@ -105,7 +108,9 @@ module.exports = function(calendar) {
 						end: workorder.scheduling.end,
 						attendees: generateAttendees(techs)
 					}, function(err, result) {
-						workorder.calendarId = result.id;
+						if (result) {
+							workorder.calendarId = result.id;
+						}
 						callback(err);
 					});
 				},
@@ -119,7 +124,18 @@ module.exports = function(calendar) {
 
 					Client.findByIdAndUpdate(req.body.client, { $push: { 'workorders': result.id } },
 						function(err, ignored) { callback(err, result) });
-				}
+				},
+				function(result, callback) {
+					console.log("Update Client - Pms");
+					if (workorder.maintenanceType) {
+						console.log("Is PM");
+						var key = 'pms.' + date.getFullYear() + '-' + date.getMonth() + '.' + workorder.maintenanceType;
+						var cmd = { $inc: {} };
+						cmd.$inc[key] = 1;
+						console.log(cmd);
+						Client.findByIdAndUpdate(req.body.client, cmd, function(err, ignored) { callback(err, result) });
+					}
+				},
 			],
 			function(err, result) {
 				if (!err) {
@@ -145,11 +161,13 @@ module.exports = function(calendar) {
 						workorder = result;
 
 						workorder.reason = req.body.reason;
-						maintenanceType: req.body.maintenanceType || "";
+						workorder.maintenanceType = req.body.maintenanceType || "";
 						workorder.remarks = req.body.remarks;
 						workorder.scheduling = req.body.scheduling;
 						workorder.status = req.body.status;
-						workorder.techs = req.body.techs.map(function(t) { return t._id; });
+						workorder.techs = req.body.techs
+							.filter(function(e) { return e; })
+							.map(function(t) { return t._id; });
 
 						callback(err);
 					});
@@ -214,11 +232,17 @@ module.exports = function(calendar) {
 				return workorder.save(function(err) {
 					if (!err) {
 						console.log("deleted");
+						calendar.deleteEvent(workorder.calendarId, function(err) {
+							if (!err) {
+								console.log("Calendar event removed.");
+							}
+
+							return res.json(workorder);
+						});
 					} else {
 						console.log("error");
+						return res.json(workorder);
 					}
-
-					return res.json(workorder);
 				})
 			});
 		}
@@ -231,7 +255,15 @@ function generateSummary(client) {
 }
 
 function generateLocation(client) {
-	return sprintf("%(street1)s %(street2)s %(city)s, %(state)s. %(zip)s", client.address);
+	var data = {
+		street1: client.address.street1 || '',
+		street2: client.address.street2 || '',
+		city: client.address.city || '',
+		state: client.address.state || '',
+		zip: client.address.zip || ''		
+	};
+
+	return sprintf("%(street1)s %(street2)s %(city)s, %(state)s. %(zip)s", data);
 }
 
 function generateDescription(client, workorder) {

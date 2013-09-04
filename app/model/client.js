@@ -18,6 +18,7 @@ var clientSchema = new Schema({
 		email: String
 	}],
 	frequencies: {},
+	pms: {},
 	workorders: [{ type: ObjectId, ref: 'Workorder' }],
 	deleted: { type: Boolean, default: false }
 });

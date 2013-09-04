@@ -26,9 +26,20 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 			.navbar-inner
 				ul.nav
 					li
-						a(href='http://www.atlanticbiomedical.com')
-							i.icon-wrench
-							|  Contact Us
+						a(href='#')
+							| Contact:
+					li
+						a(href='tel://1-800-550-8310')
+							i.icon-user
+							|  Call
+					li
+						a(href='mailto:service@atlanticbiomedical.com')
+							i.icon-envelope
+							|    Email
+					li
+						a(href='http://atlb.co/feature.html')
+							i.icon-list-alt
+							|    History
 		.container-fluid
 			h1(ng-show='tag') Device Tag
 			h1(ng-hide='tag') Create Tag
@@ -46,7 +57,7 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 					dd &nbsp;{{tag.clientDeviceId}}
 					dt Device
 					dd &nbsp;{{tag.device}}
-					dt Make
+					dt Manufacturer
 					dd &nbsp;{{tag.make}}
 					dt Model
 					dd &nbsp;{{tag.model}}
@@ -56,12 +67,14 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 					dd &nbsp;{{tag.purchaseDate}}
 					dt Warranty Expiration
 					dd &nbsp;{{tag.deviceWarrantyExpiration}}
-					dt Test
+					dt PM Test
 					dd &nbsp;{{tag.test}}
 					dt Room #
 					dd &nbsp;{{tag.roomNumber}}
 					dt PO Number
 					dd &nbsp;{{tag.poNumber}}
+					dt Move To
+					dd &nbsp;{{tag.MoveTo}}
 
 				a.btn.btn-primary(href='/auth', ng-show='tag')
 					| Edit Tag
@@ -87,7 +100,7 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 						.controls
 							input.text(ng-model='tag.device')
 					.control-group
-						label.control-label Make
+						label.control-label Manufacturer
 						.controls
 							input.text(ng-model='tag.make')
 					.control-group
@@ -108,7 +121,7 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 							input.text(type='date', ng-model='tag.deviceWarrantyExpiration')
 
 					.control-group
-						label.control-label Test
+						label.control-label PM Test
 						.controls
 							input.text(ng-model='tag.test')
 					.control-group
@@ -120,6 +133,11 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 						label.control-label PO Number
 						.controls
 							input.text(ng-model='tag.poNumber')
+					
+					.control-group
+						label.control-label Move To
+						.controls
+							input.text(ng-model='tag.MoveTo')
 
 					.control-group
 						button.btn.btn-primary(ng-click='save()') Save

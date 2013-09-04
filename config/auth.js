@@ -1,11 +1,16 @@
 module.exports = function(app, passport) {
-	app.get('/auth', passport.authenticate('google', {
+	app.get('/auth', function(req, res, next) {
+		console.dir(req.headers);
+		req.session.redirectUrl = req.headers['referer'];
+
+		passport.authenticate('google', {
 		accessType: 'offline',
 		scope: [
 			'https://www.googleapis.com/auth/userinfo.profile',
 			'https://www.googleapis.com/auth/userinfo.email',
 			'https://www.googleapis.com/auth/calendar'	
-		]}));
+		]})(req, res, next);
+	});
 
 	app.get('/auth/callback', function(req, res, next) {
 		var options = {
@@ -23,6 +28,10 @@ module.exports = function(app, passport) {
 				req.session.redirectUrl = null;
 			}
 
+			if (redirectUrl.indexOf('/login') != -1) {
+				redirectUrl = '/';
+			}
+
 			req.logIn(user, function(err) {
 				if (err) { return next(err); }
 			});
@@ -34,7 +43,7 @@ module.exports = function(app, passport) {
 	return {
 		requiresUiLogin: function(req, res, next) {
 			if (!req.isAuthenticated()) {
-				req.session.redirectUrl = req.url;
+//				req.session.redirectUrl = req.url;
 				return res.redirect('/login');
 			}
 			next();

@@ -16,22 +16,36 @@ module.exports = function(config) {
 
 	var opts = { baseDiscoveryUrl: 'https://www.googleapis.com/discovery/v1/apis/' };
 
+	function toIsoDate(d) {
+		function pad(n) { return n < 10 ? '0' + n : n }
+		return d.getUTCFullYear()+'-'
+		      + pad(d.getUTCMonth()+1)+'-'
+		      + pad(d.getUTCDate())+'T'
+		      + pad(d.getUTCHours())+':'
+		      + pad(d.getUTCMinutes())+':'
+		      + pad(d.getUTCSeconds())+'Z';
+	}
+
 	return {
 		scheduleEvent: function(event, callback) {
 			console.log("schedule event");
 		
 			api(function(client, callback) {
 
-				var resource = buildResource(event, {});
 				console.log("Insert Google Calendar");
-				console.log(resource);
 
-				var request = client.calendar.events.insert({
+				var params = {
 					calendarId: 'primary',
-					resource: resource
-				});
+				};
+
+				var resource = buildResource(event, { sequence: 1 });
+
+				var request = client.calendar.events.insert(params, resource);
 
 				request.withAuthClient(oauth2Client).execute(function(err, result) {
+					console.log("in request callback");
+					console.dir(err);
+					console.dir(result);
 					callback(err, result);
 				});
 			}, callback);
@@ -57,24 +71,32 @@ module.exports = function(config) {
 						resource.sequence = 1;
 					}
 					
-					var updateRequest = client.calendar.events.update({
+					var updateRequest = client.calendar.events.patch({
 						calendarId: 'primary',
-						eventId: event.eventId,
-						resource: buildResource(event, result)
-					});
+						eventId: event.eventId
+					}, buildResource(event, result));
 
 					updateRequest.withAuthClient(oauth2Client).execute(function(err, result) {
 						callback(err, result);
 					});
 				});
 			}, callback);
+		},
+
+		deleteEvent: function(eventId, callback) {
+			api(function(client, callback) {
+				var request = client.calendar.events.delete({
+					calendarId: 'primary',
+					eventId: eventId
+				});
+				request.withAuthClient(oauth2Client).execute(function(err, result) {
+					callback(err, result);
+				});
+			}, callback);
 		}
 	};
 
 	function buildResource(event, resource) {
-		console.log(event.start);
-		console.log(event.end);
-
 		resource.summary = event.summary;
 		resource.description = event.description;
 		resource.location = event.location;

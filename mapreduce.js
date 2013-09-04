@@ -86,8 +86,12 @@ var workorders_command = {
 mongoose.connection.db.executeDbCommand(clients_command, function(err, dbres) {
 	if (err) throw err;
 
+	console.log("Clients Done");
+
 	mongoose.connection.db.executeDbCommand(workorders_command, function(err, dbres) {
 		if (err) throw err;
+
+		console.log("Workorders Done");
 
 		process.exit();
 	});

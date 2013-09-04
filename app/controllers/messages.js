@@ -14,8 +14,7 @@ module.exports = function(config) {
 
 	return {
 		send: function(req, res) {			
-			console.log(req.body);
-
+			console.log(req);
 			var userId = req.body.user;
 			if (!userId) {
 				return res.json(404, null);
@@ -25,8 +24,10 @@ module.exports = function(config) {
 			User.findById(userId, function(err, user) {
 				if (err) return res.json(500, err);
 
+				var sender = req.user;
+
 				server.send({
-						text: generateMessage(user, req.body),
+						text: generateMessage(sender, user, req.body),
 						from: config.email.user,
 						to: generateToLine(user),
 						subject: 'Message from portal'
@@ -47,8 +48,9 @@ function generateToLine(user) {
 	return user.name.first + " " + user.name.last + " <" + user.email + ">";
 }
 
-function generateMessage(user, message) {
+function generateMessage(sender, user, message) {
 	var template =
+		"From: %(sender)s\n" +
 		"Message For: %(user)s\n" +
 		"\n" +
 		"Name: %(name)s\n" +
@@ -60,6 +62,7 @@ function generateMessage(user, message) {
 		"%(notes)s\n";
 
 	var resources = {
+		sender: sender.name.first + " " + sender.name.last,
 		user: user.name.first + " " + user.name.last,
 		name: message.name || '',
 		company: message.company || '',
