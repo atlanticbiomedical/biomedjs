@@ -20,7 +20,11 @@ var clientSchema = new Schema({
 	frequencies: {},
 	pms: {},
 	workorders: [{ type: ObjectId, ref: 'Workorder' }],
-	deleted: { type: Boolean, default: false }
+	deleted: { type: Boolean, default: false },
+	notes: {
+		internal: String,
+		tech: String
+	}
 });
 
 module.exports = mongoose.model('Client', clientSchema);

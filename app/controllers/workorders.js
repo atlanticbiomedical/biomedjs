@@ -134,6 +134,8 @@ module.exports = function(calendar) {
 						cmd.$inc[key] = 1;
 						console.log(cmd);
 						Client.findByIdAndUpdate(req.body.client, cmd, function(err, ignored) { callback(err, result) });
+					} else {
+						callback(null, result);
 					}
 				},
 			],

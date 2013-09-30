@@ -6,6 +6,7 @@
 <header ng-hide="loading">
 	<h1>{{master.name}}</h1>
 	<p class="lead">{{master.identifier}}</p>
+	<a href="/workorders/add?clientId={{master._id}}">Create new Workorder</a>	
 </header>
 <div ng-hide="loading" class="tabbable">
 	<div class="tab-content">
@@ -224,9 +225,6 @@
 	<div class="tab-pane" title="Workorders">
 		<div class="row-fluid">
 			<div class="span12">
-				<div class="toolbelt">
-					<a href="/workorders/add?clientId={{master._id}}" class="btn btn-primary">Create new Workorder</a>
-				</div>
 				<table class="biomed-table">
 					<thead>
 						<tr>
@@ -312,4 +310,51 @@
 			</div>
 		</div>
 	</div>
+
+<div class="tab-pane form" title="Notes">
+			<div class="form-section">
+				<div class="section-label">Internal Notes</div>
+				<div class="section-container">
+					<div ng-hide="internalNotes.visible" class="form-preview">
+						{{master.notes.internal}}<br ng-show="master.notes.internal">
+						<a ng-click="internalNotes.edit()" ng-class="{disabled: editing}">Edit</a>
+					</div>
+					<div ng-show="internalNotes.visible" class="form-editor">
+						<div class="control-group">
+							<label class="control-label">Notes</label>
+							<div class="controls">
+								<textarea ng-model="internalNotes.model.notes.internal" class="input-xlarge"></textarea> 
+							</div>
+						</div>
+						<div class="form-actions">
+							<button ng-click="internalNotes.save()" type="button" class="btn btn-primary">Save</button>
+							<button ng-click="internalNotes.reset()" type="button" class="btn">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-section">
+				<div class="section-label">Tech Notes</div>
+				<div class="section-container">
+					<div ng-hide="techNotes.visible" class="form-preview">
+						{{master.notes.tech}}<br ng-show="master.notes.tech">
+						<a ng-click="techNotes.edit()" ng-class="{disabled: editing}">Edit</a>
+					</div>
+					<div ng-show="techNotes.visible" class="form-editor">
+						<div class="control-group">
+							<label class="control-label">Notes</label>
+							<div class="controls">
+								<textarea ng-model="techNotes.model.notes.tech" class="input-xlarge"></textarea> 
+							</div>
+						</div>
+						<div class="form-actions">
+							<button ng-click="techNotes.save()" type="button" class="btn btn-primary">Save</button>
+							<button ng-click="techNotes.reset()" type="button" class="btn">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+</div>
+
 </div>

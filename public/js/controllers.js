@@ -131,7 +131,8 @@ biomed.ClientEditCtrl = function($scope, $routeParams, Clients) {
 	$scope.primaryContact = createContactController(0);
 	$scope.secondaryContact = createContactController(1);
 	$scope.other = createOtherController();
-
+	$scope.internalNotes = createController();
+	$scope.techNotes = createController();
 	function updatePms() {
 		var currentMonth = new Date().getMonth();
 

@@ -8,7 +8,7 @@ var frequencies = ["annual","semi","quarterly","sterilizer","tg","ert","rae","me
 
 exports.index = function(req, res) {
 	var query = Client.find({ deleted: false })
-		.select('name identifier')
+		.select('name identifier address')
 		.slice('contacts', 1)
 		.sort('name')
 		.exec(function(err, results) {
@@ -79,6 +79,7 @@ exports.create = function(req, res, next) {
 		identifier: req.body.identifier,
 		contacts: req.body.contacts,
 		address: req.body.address,
+		notes: req.body.notes,
 		frequencies: {}
 	});
 
@@ -108,6 +109,7 @@ exports.update = function(req, res, next) {
 		client.contacts = req.body.contacts;
 		client.address = req.body.address;
 		client.frequencies = req.body.frequencies;
+		client.notes = req.body.notes;
 
 		return client.save(function(err) {
 			if (!err) {
