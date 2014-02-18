@@ -4,9 +4,12 @@ var mongoose = require('mongoose'),
 	Workorder = mongoose.model('Workorder'),
 	Tag = mongoose.model('Tag');
 
+var log = require('log4node');
+
 var frequencies = ["annual","semi","quarterly","sterilizer","tg","ert","rae","medgas","imaging","neptune","anesthesia"];
 
 exports.index = function(req, res) {
+	log.info("clients.index");
 	var query = Client.find({ deleted: false })
 		.select('name identifier address')
 		.slice('contacts', 1)
@@ -23,6 +26,7 @@ exports.index = function(req, res) {
 exports.get = function(req, res, next) {
 	var id = req.param('client_id');
 
+	log.info("clients.get %s", id);
 	Client.findById(id)
 		.exec(function(err, client) {
 			if (err) return next(err);
@@ -33,6 +37,8 @@ exports.get = function(req, res, next) {
 }
 
 exports.frequencies = function(req, res, next) {
+	log.info("clients.frequencies");
+
 	var query = Client.find({ deleted: false })
 		.select('name identifier frequencies')
 		.slice('contacts', 1)
@@ -48,6 +54,8 @@ exports.frequencies = function(req, res, next) {
 
 exports.workorders = function(req, res, next) {
 	var id = req.param('client_id');
+	log.info("clients.workorders %s", id);
+
 	Workorder.find({ client: id, deleted: false })
 		.populate({path: 'techs', select: 'name'})
 		.sort('-scheduling.start')
@@ -61,6 +69,7 @@ exports.workorders = function(req, res, next) {
 
 exports.tags = function(req, res, next) {
 	var id = req.param('client_id');
+	log.info("clients.tags %s", id);
 
 	Tag.find({ client: id })
 		.exec(function(err, tags) {
@@ -72,7 +81,7 @@ exports.tags = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
-	console.log(req.body);
+	log.info("clients.create %j", req.body);
 
 	var client = new Client({
 		name: req.body.name,
@@ -90,11 +99,8 @@ exports.create = function(req, res, next) {
 	}
 
 	return client.save(function(err) {
-		if (!err) {
-			console.log("saved");
-		} else {
-			console.log("error");
-		}
+		if (err)
+			log.error("Error: %s", err);
 
 		return res.json(client);
 	})
@@ -102,6 +108,7 @@ exports.create = function(req, res, next) {
 
 exports.update = function(req, res, next) {
 	var id = req.param('client_id');
+	log.info("clients.update %s %j", id, req.body);
 
 	return Client.findById(id, function(err, client) {
 		client.name = req.body.name;
@@ -112,11 +119,8 @@ exports.update = function(req, res, next) {
 		client.notes = req.body.notes;
 
 		return client.save(function(err) {
-			if (!err) {
-				console.log("updated");
-			} else {
-				console.log("error");
-			}
+			if (err)
+				log.error("Error: %s", err);
 
 			return res.json(client);
 		});
@@ -126,15 +130,14 @@ exports.update = function(req, res, next) {
 exports.destroy = function(req, res, next) {
 	var id = req.param('client_id');
 
+	log.info("clients.destroy %s", id);
+
 	return Client.findById(id, function(err, client) {
 		client.deleted = true;
 
 		return client.save(function(err) {
-			if (!err) {
-				console.log("deleted");
-			} else {
-				console.log("error");
-			}
+			if (err)
+				log.error("Error: %s", err);
 
 			return res.json(client);
 		})

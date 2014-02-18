@@ -11,7 +11,8 @@ exports.index = function(req, res) {
 	Workorder
 		.find({
 			deleted: false,
-			'scheduling.start': { '$gte': start, '$lt': end }
+			'scheduling.start': { '$lte': end },
+			'scheduling.end': { '$gte': start }
 		})
 		.populate('techs', 'name')
 		.populate('client', 'name identifier address')

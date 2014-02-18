@@ -1,5 +1,7 @@
+var log = require('log4node');
 
 var mongoose = require('mongoose'),
+	email = require('emailjs'),
 	moment = require('moment'),
 	async = require('async'),
 	sprintf = require('sprintf').sprintf,
@@ -8,10 +10,12 @@ var mongoose = require('mongoose'),
 	Counter = mongoose.model('Counter'),
 	User = mongoose.model('User');
 
-module.exports = function(calendar) {
+module.exports = function(config, calendar) {
 	return {
 		index: function(req, res) {
 
+			log.info("workorders.index %j", req.query);
+			
 			var start = moment(req.query.start).toDate();
 			var end = moment(req.query.end).add('days', 1).toDate();
 
@@ -34,10 +38,13 @@ module.exports = function(calendar) {
 
 		get: function(req, res, next) {
 			var id = req.param('workorder_id');
+			log.info("workorders.get %s", id);
 
 			Workorder.findById(id)
 				.populate('client', 'name identifier')
 				.populate('techs', 'name')
+				.populate('createdBy', 'name')
+				.populate('modifiedBy', 'name')
 				.exec(function(err, workorder) {
 					if (err) return next(err);
 					if (!workorder) return next(new Error('Failed to load workorder ' + id));
@@ -47,7 +54,15 @@ module.exports = function(calendar) {
 		},
 
 		create: function(req, res, next) {
-			console.log(req.body);
+			log.info("workoreders.create %j", req.body);
+
+                        var server = email.server.connect({
+                                user: config.email.user,
+                                password: config.email.password,
+                                host: 'smtp.gmail.com',
+                                ssl: true
+                        });
+
 			var date = new Date();
 
 			var workorder = new Workorder({
@@ -62,13 +77,14 @@ module.exports = function(calendar) {
 				techs: req.body.techs
 			});
 
+			var notify = req.body._notify || "";
+
 			var client;
 			var techs;
 			var jsonResult;
 
 			async.waterfall([
 				function(callback) {
-					console.log("Get next workorder id.");
 					Counter.collection.findAndModify(
 						{ name: 'workorder' },
 						[],
@@ -80,29 +96,24 @@ module.exports = function(calendar) {
 						});
 				},
 				function(callback) {
-					console.log("Get Client");
 					Client.findById(req.body.client, function(err, result) {
 						client = result;
 						callback(err);
 					});
 				},
 				function(callback) {
-					console.log('Get Techs');
 					User.find({
 							'_id': { $in: workorder.techs }
 						},
 						function(err, result) {
-							console.log(result);
 							techs = result;
 							callback(err);
 						});
 				},
 				function(callback) {
-					console.log("Create Calendar Event")
-
 					calendar.scheduleEvent({
 						summary: generateSummary(client),
-						description: generateDescription(client, workorder),
+						description: generateDescription(client, workorder, req.user),
 						location: generateLocation(client),
 						start: workorder.scheduling.start,
 						end: workorder.scheduling.end,
@@ -114,25 +125,37 @@ module.exports = function(calendar) {
 						callback(err);
 					});
 				},
+                                function(callback) {
+					if (!notify)
+						return callback(null);
+
+					var to = generateToLine(techs);
+					if (!to)
+						return callback(null);
+
+					server.send({
+						text: generateDescription(client, workorder, req.user, null, techs),
+						from: config.email.user,
+						to: to,
+						subject: 'Workorder created: ' + workorder.biomedId
+					}, function(err, message) {
+						callback(err);
+					});
+                                },
 				function(callback) {
-					console.log("Save Workorder");
 					workorder.save(function(err, result) { callback(err, result); });
 				},
 				function(result, callback) {
-					console.log("Update Client")
 					jsonResult = result;
 
 					Client.findByIdAndUpdate(req.body.client, { $push: { 'workorders': result.id } },
 						function(err, ignored) { callback(err, result) });
 				},
 				function(result, callback) {
-					console.log("Update Client - Pms");
 					if (workorder.maintenanceType) {
-						console.log("Is PM");
 						var key = 'pms.' + date.getFullYear() + '-' + date.getMonth() + '.' + workorder.maintenanceType;
 						var cmd = { $inc: {} };
 						cmd.$inc[key] = 1;
-						console.log(cmd);
 						Client.findByIdAndUpdate(req.body.client, cmd, function(err, ignored) { callback(err, result) });
 					} else {
 						callback(null, result);
@@ -143,25 +166,39 @@ module.exports = function(calendar) {
 				if (!err) {
 					res.json(jsonResult);
 				} else {
-					console.log(err);
 					throw err;
 				}
 			});
 		},
 
 		update: function(req, res, next) {
+			var server = email.server.connect({
+				user: config.email.user,
+				password: config.email.password,
+				host: 'smtp.gmail.com',
+				ssl: true
+			});
+
+			var modifiedOn = new Date();
 			var id = req.param('workorder_id');
+
+			log.info("workorders.update %s %j", id, req.body);
 
 			var workorder;
 			var client;
 			var techs;
+			var createdBy;
+			var modifiedBy;
+
+			var notify = req.body._notify || "";
 
 			async.waterfall([
 				function(callback) {
-					console.log("Get Workorder");
 					Workorder.findById(id, function(err, result) {
 						workorder = result;
 
+						workorder.modifiedBy = req.user;
+						workorder.modifiedOn = modifiedOn;
 						workorder.reason = req.body.reason;
 						workorder.maintenanceType = req.body.maintenanceType || "";
 						workorder.remarks = req.body.remarks;
@@ -175,26 +212,41 @@ module.exports = function(calendar) {
 					});
 				},
 				function(callback) {
-					console.log("Get Client");
 					Client.findById(workorder.client, function(err, result) {
 						client = result;
 						callback(err);
 					});
 				},
 				function(callback) {
-					console.log('Get Techs');
+					if (workorder.createdBy) {
+						User.findById(workorder.createdBy, function(err, result) {
+							createdBy = result;
+							callback(err);
+						});
+					} else {
+						callback(null);
+					}
+				},
+				function(callback) {
+					if (workorder.modifiedBy) {
+						User.findById(workorder.modifiedBy, function(err, result) {
+							modifiedBy = result;
+							callback(err);
+						});
+					} else {
+						callback(null);
+					}
+				},
+				function(callback) {
 					User.find({
 							'_id': { $in: workorder.techs }
 						},
 						function(err, result) {
-							console.log(result);
 							techs = result;
 							callback(err);
 						});
 				},
 				function(callback) {
-					console.log("Update Calendar Event")
-
 					calendar.updateEvent({
 						summary: generateSummary(client),
 						description: generateDescription(client, workorder),
@@ -208,18 +260,31 @@ module.exports = function(calendar) {
 					});
 				},
 				function(callback) {
+					if (!notify)
+						return callback(null);
+
+					var to = generateToLine(techs);			
+					if (!to)
+						return callback(null);
+					
+					server.send({
+						text: generateDescription(client, workorder, createdBy, modifiedBy, techs),
+						from: config.email.user,
+						to: to,
+						subject: 'Workorder updated: ' + workorder.biomedId
+					}, function(err, message) {
+						callback(err);
+					});
+				},
+				function(callback) {
 					workorder.save(function(err) {
 						callback(err);
 					})
 				}
 			],
 			function(err) {
-				if (!err) {
-					console.log('updated');
-				} else {
-					console.log('error');
-					console.log(err);
-				}
+				if (err)
+					log.error("Error: %s", err);
 
 				res.json(workorder);
 			});
@@ -228,21 +293,18 @@ module.exports = function(calendar) {
 		destroy: function(req, res, next) {
 			var id = req.param('workorder_id');
 
+			log.info("workorders.destroy %s", id);
+
 			return Workorder.findById(id, function(err, workorder) {
 				workorder.deleted = true;
 
 				return workorder.save(function(err) {
 					if (!err) {
-						console.log("deleted");
 						calendar.deleteEvent(workorder.calendarId, function(err) {
-							if (!err) {
-								console.log("Calendar event removed.");
-							}
-
 							return res.json(workorder);
 						});
 					} else {
-						console.log("error");
+						log.warn("Error: %s", err);
 						return res.json(workorder);
 					}
 				})
@@ -268,10 +330,16 @@ function generateLocation(client) {
 	return sprintf("%(street1)s %(street2)s %(city)s, %(state)s. %(zip)s", data);
 }
 
-function generateDescription(client, workorder) {
+function generateDescription(client, workorder, createdBy, modifiedBy) {
 	var template = 
 		"Workorder ID:\n" +
 		"	%(biomedId)s\n" +
+		"\n" +
+		"Created By:\n" +
+                "	%(createdBy)s\n" +
+ 		"\n" +
+		"Last Edited By:\n" +
+		"	%(modifiedBy)s\n" +
 		"\n" +
 		"Customer:\n" +
 		"	%(name)s (%(identifier)s)\n" +
@@ -307,7 +375,9 @@ function generateDescription(client, workorder) {
 		status: workorder.status || '',
 		remarks: workorder.remarks || '',
 		phone: '',
-		contact: ''
+		contact: '',
+		createdBy: '',
+		modifiedBy: '',
 	};
 
 	if (client.contacts[0]) {
@@ -315,9 +385,35 @@ function generateDescription(client, workorder) {
 		resources.contact = client.contacts[0].name || '';
 	}
 
+	if (createdBy) {
+		resources.createdBy = createdBy.name.first + " " + createdBy.name.last;
+	}
+
+	if (modifiedBy) {
+		resources.modifiedBy = modifiedBy.name.first + " " + modifiedBy.name.last;
+	}
+
 	return sprintf(template, resources);
 }
 
 function generateAttendees(techs) {
 	return techs.map(function(t) { return t.email; });
+}
+
+function generateToLine(techs) {
+	if (!techs) {
+		return null;
+	}
+
+	var result = '';
+	for (var i in techs) {
+		var tech = techs[i]
+
+		if (i > 0) {
+			result += ", ";
+		}
+
+		result += tech.name.first + " " + tech.name.last + " <" + tech.email + ">"
+	}	
+	return result;
 }

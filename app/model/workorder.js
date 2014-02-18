@@ -7,6 +7,7 @@ var workorderSchema = new Schema({
 	client: { type: ObjectId, ref: 'Client' },
 	createdOn: Date,
 	createdBy: { type: ObjectId, ref: 'User' },
+        modifiedBy: { type: ObjectId, ref: 'User' },
 	reason: String,
 	maintenanceType: String,
 	remarks: String,
