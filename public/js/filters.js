@@ -12,5 +12,13 @@ angular.module('biomed.filters', [])
 	return function(time) {
 		return moment(time).format('h:mma');
 	};
+})
+.filter('email', function() {
+	return function(email) {
+		var parts = email.split("@", 2);
+		if (parts[1].toLowerCase() == "atlanticbiomedical.com")
+			return parts[0] + "@";
+		else
+			return email;
+	}
 });
-

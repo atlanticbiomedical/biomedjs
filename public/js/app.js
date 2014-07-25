@@ -22,8 +22,9 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 				data = data.replace(PROTECTION_PREFIX, '');
 		        if (JSON_START.test(data) && JSON_END.test(data)) {
 		        	data = JSON.parse(data, function(key, val) {
-		        		if (DATE_MATCHER.test(val))
-		        			return new Date(val);
+		        		if (DATE_MATCHER.test(val)) {
+		        			return new moment(val).zone(-5).toDate();
+					}
 		        		return val;
 		        	})
 		        }
@@ -67,6 +68,15 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 			.when('/workorders/:id', {
 				templateUrl: '/partials/workorders/edit.html',
 				controller: biomed.WorkorderEditCtrl
+			})
+			.when('/techs/:id', {
+				templateUrl: '/partials/techs/schedule.html',
+				controller: biomed.TechScheduleCtrl
+			})
+			.when('/admin', {
+				templateUrl: '/partials/users/index.html',
+				controller: biomed.UsersIndexCtrl,
+				reloadOnSearch: false
 			})
 			.otherwise({
 				redirectTo: '/schedule'

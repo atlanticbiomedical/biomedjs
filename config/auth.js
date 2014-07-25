@@ -1,3 +1,5 @@
+var log = require('log4node');
+
 module.exports = function(app, passport) {
 	app.get('/auth', function(req, res, next) {
 		console.dir(req.headers);
@@ -16,12 +18,14 @@ module.exports = function(app, passport) {
 		var options = {
 			callbackURL: 'http://' + req.headers['x-forwarded-host'] + '/auth/callback'
 		};
-		console.log(options);
 		passport.authenticate('google', options, function(err, user, info) {
 			var redirectUrl = '/';
 
 			if (err) { return next(err); }
 			if (!user) { return res.redirect('/login/error'); }
+
+			log.setPrefix("[%d] %l ");
+			log.info("User Logged In: %s %s", user.name.first, user.name.last);
 
 			if (req.session.redirectUrl) {
 				redirectUrl = req.session.redirectUrl;
@@ -43,15 +47,22 @@ module.exports = function(app, passport) {
 	return {
 		requiresUiLogin: function(req, res, next) {
 			if (!req.isAuthenticated()) {
-//				req.session.redirectUrl = req.url;
 				return res.redirect('/login');
 			}
+
+                        log.setPrefix(function(level) {
+                                return '[' + new Date().toUTCString() + '] ' + level.toUpperCase() + ' ' + req.user.name.first + ' ' + req.user.name.last + ' | ';
+                        });
 			next();
 		},
 		requiresApiAccess: function(req, res, next) {
 			if (!req.isAuthenticated()) {
 				return res.send(403);
 			}
+
+                        log.setPrefix(function(level) {
+                                return '[' + new Date().toUTCString() + '] ' + level.toUpperCase() + ' ' + req.user.name.first + ' ' + req.user.name.last + ' | ';
+                        });
 			next();
 		}	
 	};

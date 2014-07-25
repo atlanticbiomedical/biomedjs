@@ -6,7 +6,8 @@
 <header ng-hide="loading">
 	<h1>{{master.name}}</h1>
 	<p class="lead">{{master.identifier}}</p>
-	<a href="/workorders/add?clientId={{master._id}}">Create new Workorder</a>	
+	<a class="btn btn-primary" href="/workorders/add?clientId={{master._id}}">Create new Workorder</a>
+	<a class="btn" href="/workorders/add?workorderType=meeting&clientId={{master._id}}">Create new Meeting</a>
 </header>
 <div ng-hide="loading" class="tabbable">
 	<div class="tab-content">
@@ -214,7 +215,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-section">
+			<div class="form-section" ng-show="accountHasPermission('system.admin')">
 				<div class="section-label">Other</div>
 				<div class="section-container">
 					<button ng-click="other.destroy()" type="button" class="btn btn-danger">Remove client</button>
@@ -289,21 +290,33 @@
 				<table class="biomed-table">
 					<thead>
 						<tr>
-							<th style="width: 10%">Device ID</th>
-							<th style="width: 15%">Device</th>
-							<th style="width: 15%">Make</th>
-							<th style="width: 15%">Model</th>
-							<th style="width: 15%">Serial No.</th>
+							<th style="width: 7%">Device ID</th>
+							<th style="width: 6%">Device</th>
+							<th style="width: 5%">Make</th>
+							<th style="width: 5%">Model</th>
+							<th style="width: 5%">Serial No.</th>
+							<th style="width: 8%">Purchase Date</th>
+							<th style="width: 6%">Warranty Expiration</th>
+							<th style="width: 8%">PM Test</th>
+							<th style="width: 4%">Room #</th>
+							<th style="width: 4%">PO Number</th>
+							<th style="width: 4%">Move to</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-hide="tags.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
+						<tr ng-hide="tags.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
 						<tr ng-repeat="tag in tags">
 							<td><a href="http://n.atlb.co/{{tag._id}}">{{tag.data.clientDeviceId}} - (Tag:{{tag._id}})</a></td>							
 							<td>{{tag.data.device}}</td>							
 							<td>{{tag.data.make}}</td>
 							<td>{{tag.data.model}}</td>
 							<td>{{tag.data.serialNumber}}</td>
+							<td>{{tag.data.purchaseDate}}</td>
+							<td>{{tag.data.deviceWarrantyExpiration}}</td>
+							<td>{{tag.data.test}}</td>
+							<td>{{tag.data.roomNumber}}</td>
+							<td>{{tag.data.poNumber}}</td>
+							<td>{{tag.data.MoveTo}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -355,6 +368,6 @@
 					</div>
 				</div>
 			</div>
-</div>
-
+				<b>Notice:</b>
+				<p>Changes to the notes for a client does not automatically update every workorder that currently exists for the client. Only new workorders will contain the changed / updated notes. If you need to update the notes for a specific workorder you should go to the work order and re-save the workorder. This will push the updated notes to the techs calendar.</p>
 </div>

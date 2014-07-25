@@ -73,6 +73,7 @@ header {
 		font-weight: 500;
 		color: #999999;
 		margin: 0;
+		margin-bottom: 10px;
 	}
 }
 
@@ -157,6 +158,42 @@ header {
 		.icon {
 			.icon-ok;
 		}
+	}
+}
+
+.users {
+	th, td {
+		text-align: center;
+	}
+
+	.group-start {
+		border-left: 1px solid #dddddd;
+	}
+
+	.name, .email { text-align: left; white-space: nowrap; }
+
+	.false {
+		.icon {
+			.icon-remove;
+		}
+	}
+
+	.true {
+		background-color: #DFF0D8 !important;
+
+		.icon {
+			.icon-ok;
+		}
+	}
+
+	.new {
+		background-color: #49cced;
+		color: white;
+		font-size: 10px;
+		padding: 2px 5px;
+		margin: 2px;
+		.border-radius(2px);
+		vertical-align: middle;
 	}
 }
 
@@ -248,6 +285,7 @@ header {
 
 	.tech-label {
 		float: left;
+		width: 140px;
 	}
 
 	.enteries {

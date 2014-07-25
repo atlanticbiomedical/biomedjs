@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
 var workorderSchema = new Schema({
 	biomedId: Number,
 	client: { type: ObjectId, ref: 'Client' },
+        emails: [String],
 	createdOn: Date,
 	createdBy: { type: ObjectId, ref: 'User' },
         modifiedBy: { type: ObjectId, ref: 'User' },

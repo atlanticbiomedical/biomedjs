@@ -4,16 +4,34 @@ var mongoose = require('mongoose'),
 	Workorder = mongoose.model('Workorder');
 
 exports.index = function(req, res) {
-	var date = moment(req.query.date);
-	var start = date.clone().startOf('day').toDate();
-	var end = date.clone().endOf('day').toDate();
+
+	var start, end;
+
+
+	if (req.query.start && req.query.end) {
+		start = moment(req.query.start).toDate();
+		end = moment(req.query.end).toDate();
+	} else {
+		var date = moment(req.query.date);
+		start = date.clone().startOf('day').toDate();
+		end = date.clone().endOf('day').toDate();
+	}
+
+	var tech = req.query.tech;
+
+	var query = {
+		deleted: false,
+		'scheduling.start': { '$lte': end },
+		'scheduling.end': { '$gte': start }
+	};
+
+	if (tech) {
+		query['techs'] = tech;
+	}
+
 
 	Workorder
-		.find({
-			deleted: false,
-			'scheduling.start': { '$lte': end },
-			'scheduling.end': { '$gte': start }
-		})
+		.find(query)
 		.populate('techs', 'name')
 		.populate('client', 'name identifier address')
 		.select('scheduling techs client')

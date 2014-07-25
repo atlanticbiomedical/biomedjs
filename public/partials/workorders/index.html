@@ -6,7 +6,8 @@
 <div class="row-fluid">
 	<div class="span12">
     	<div class="toolbelt">
-			<a href="/workorders/add" class="btn btn-primary">Create new workorder</a>
+		<a href="/workorders/add" class="btn btn-primary">Create new workorder</a>
+		<a href="/workorders/add?workorderType=meeting" class="btn">Create new meeting</a>	
     		<div class="pull-right">
 	            <div class="input-append">
 	                <input type="text" ng-model="query" class="input-large" placeholder="Search">
@@ -42,7 +43,7 @@
 						<strong>Techs:</strong> {{ workorder.techs | techs }}<br>
 						{{workorder.remarks}}
 					</td>
-					<td>{{workorder.client.name}} ({{workorder.client.identifier}})</td>
+					<td><a ng-href="/clients/{{workorder.client._id}}">{{workorder.client.name}} ({{workorder.client.identifier}})</a></td>
 					<td>{{workorder.scheduling.start | date}}</td>
 					<td>{{workorder.status}}</td>
 				</tr>

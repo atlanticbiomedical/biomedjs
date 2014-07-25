@@ -25,9 +25,13 @@ angular.module('biomed.services', [])
 		});
 })
 .factory("Users", function($resource) {
-	return $resource('/api/users', { },
+	return $resource('/api/users/:id/:cmd',
+		{ id: "@id", cmd: "@cmd" },
 		{
 			index: 	 	{ method: 'GET', isArray: true },
+			details:	{ method: 'GET', params: { cmd: 'details' }, isArray: true },
+			create:		{ method: 'POST', params: {} },
+			update:		{ method: 'POST', params: { id: 0 } },
 		});
 })
 .factory("Schedule", function($resource) {

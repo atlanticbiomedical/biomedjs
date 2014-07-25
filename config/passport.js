@@ -16,17 +16,22 @@ module.exports = function(passport, config) {
 	passport.use(new GoogleStrategy({
 		clientID: config.auth.clientId,
 		clientSecret: config.auth.clientSecret,
-//		callbackURL: config.auth.callback
+//		callbackURL: config.auth.callback,
+		passReqToCallback: true
 	},
-	function(accessToken, refreshToken, profile, done) {
-		console.log(profile);
-		console.log(accessToken);
-		console.log(refreshToken);
-
+	function(req, accessToken, refreshToken, profile, done) {
 		profile = profile._json;
 		User.findOne({ email: profile.email.toLowerCase() }, function(err, user) {
 			if (err) { return done(err); }
-			if (!user || !user.hasPermission("system.login")) {
+
+			var source = req.headers['x-forwarded-host'];
+		
+
+			if (
+				!user ||
+				(source == 'portal.atlanticbiomedical.com' && !user.hasPermission("system.login")) ||
+				(source == 'n.atlb.co' && !user.hasPermission("system.tags"))
+			) {
 				return done(null, false, { message: "You are not authorized to access this portal." });
 			}
 

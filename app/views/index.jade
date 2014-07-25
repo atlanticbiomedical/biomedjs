@@ -9,7 +9,7 @@ html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
 			.navbar-inner
 				a.brand(href='/', target='_self') Atlantic Biomedical
 				progress-panel
-				ul.nav.pull-right(ng-controller='biomed.AccountCtrl')
+				ul.nav.pull-right
 					li
 						a(href='https://docs.google.com/a/atlanticbiomedical.com/forms/d/1i7CyNR2lcrz7bOL7u9ssKiMB2iBmXqOdvVKC0GRzRtY/viewform', target='_blank')
 							i.icon-shopping-cart
@@ -23,9 +23,9 @@ html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
 							i.icon-fire
 							|  Tickets
 					li
-						a(ng-click="openDialog()")
+						a(ng-click="disabledopenDialog()")
 							i.icon-envelope
-							|  Messages
+							|  Messages (disabled)
 					li
 						a(href='/logout', target='_self')
 							i.icon-share-alt
@@ -53,6 +53,11 @@ html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
 						a(href='/workorders')
 							i.icon-wrench
 							|  Workorders
+
+					li(data-match-route='/admin.*', ng-show="accountHasPermission('system.admin')")
+						a(href='/admin')
+							i.icon-wrench
+							| Admin
 		.container-fluid
 			ng-view
 		!{js}

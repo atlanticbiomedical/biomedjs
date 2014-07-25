@@ -1,0 +1,24 @@
+<ul class="breadcrumb">
+	<li><a href="/clients"><i class="icon-calendar"></i> Schedule</a><li>
+</ul>
+<header>
+	<h1>Schedule for {{tech.name.first}} {{tech.name.last}}</h1>
+</header>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="toolbelt">
+			<div class="pull-right"
+	            <span class="toolbelt-text">Date: </span>
+	            <div class="input-append">
+	            	<input ng-model="date" datepicker type="text" class="input-medium">
+		            <span class="add-on"><i class="icon-calendar"></i></span>
+	            </div>
+			</div>
+		</div>
+		<techschedule
+			schedule="schedule"
+			date="date"
+			on-entry-click="onEntryClick(entry)"></techschedule>
+	</div>
+</div>

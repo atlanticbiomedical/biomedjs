@@ -67,6 +67,7 @@ module.exports = function(config, calendar) {
 
 			var workorder = new Workorder({
 				client: req.body.client,
+				emails: req.body.emails,
 				createdOn: date,
 				createdBy: req.user,
 				reason: req.body.reason,
@@ -117,7 +118,7 @@ module.exports = function(config, calendar) {
 						location: generateLocation(client),
 						start: workorder.scheduling.start,
 						end: workorder.scheduling.end,
-						attendees: generateAttendees(techs)
+						attendees: generateAttendees(techs, workorder)
 					}, function(err, result) {
 						if (result) {
 							workorder.calendarId = result.id;
@@ -129,7 +130,7 @@ module.exports = function(config, calendar) {
 					if (!notify)
 						return callback(null);
 
-					var to = generateToLine(techs);
+					var to = generateToLine(techs).concat(req.body.emails);
 					if (!to)
 						return callback(null);
 
@@ -197,6 +198,7 @@ module.exports = function(config, calendar) {
 					Workorder.findById(id, function(err, result) {
 						workorder = result;
 
+						workorder.emails = req.body.emails;
 						workorder.modifiedBy = req.user;
 						workorder.modifiedOn = modifiedOn;
 						workorder.reason = req.body.reason;
@@ -253,7 +255,7 @@ module.exports = function(config, calendar) {
 						location: generateLocation(client),
 						start: workorder.scheduling.start,
 						end: workorder.scheduling.end,
-						attendees: generateAttendees(techs),
+						attendees: generateAttendees(techs, workorder),
 						eventId: workorder.calendarId
 					}, function(err, result) {
 						callback(err);
@@ -335,6 +337,9 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 		"Workorder ID:\n" +
 		"	%(biomedId)s\n" +
 		"\n" +
+		"Scheduled Time:\n" +
+		"	%(scheduleStart)s - %(scheduleEnd)s\n" +
+		"\n" +
 		"Created By:\n" +
                 "	%(createdBy)s\n" +
  		"\n" +
@@ -362,6 +367,11 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 		"Remarks:\n" +
 		"	%(remarks)s\n";
 
+	var format = "MMMM Do YYYY, h:mm a"
+
+	var scheduleStart = moment(workorder.scheduling.start).format(format);
+	var scheduleEnd = moment(workorder.scheduling.end).format(format);
+
 	var resources = {
 		biomedId: workorder.biomedId || '',
 		name: client.name || '',
@@ -374,6 +384,8 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 		reason: workorder.reason || '',
 		status: workorder.status || '',
 		remarks: workorder.remarks || '',
+		scheduleStart: scheduleStart,
+		scheduleEnd: scheduleEnd,
 		phone: '',
 		contact: '',
 		createdBy: '',
@@ -396,8 +408,9 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 	return sprintf(template, resources);
 }
 
-function generateAttendees(techs) {
-	return techs.map(function(t) { return t.email; });
+function generateAttendees(techs, workorder) {
+	console.log('here');
+	return techs.map(function(t) { return t.email; }).concat(workorder.emails);
 }
 
 function generateToLine(techs) {

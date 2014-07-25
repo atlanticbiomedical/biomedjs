@@ -1,21 +1,10 @@
 var env = process.env.NODE_ENV || 'development',
-	config = require('./config/config')[env],
-	fs = require('fs'),
-	calendar = require('./config/calendar')(config),
-	moment = require('moment');
+	config = require('./config/config')[env];
 
-var event = {
-	summary: 'Summary',
-	location: 'Location',
-	start: moment().hour(5).minute(30).toDate(),
-	end: moment().hour(6).minute(0).toDate(),
-	attendees: [ 'akirayasha@gmail.com' ]
-};
+config.auth.accessToken = "ya29.1.AADtN_Xjt0PK6YVs8q5csiQFXQg2ZDtrVhsH6P4a5zm0mHqhGx0Nnjx4Jk68Gw";
+config.auth.refreshToken = "1/_5SkDLYmsi4XNaQyAzld-W5-GEqEqt5byH6VkI-j5QI";
 
-console.log(event);
+var directory = require('./config/directory')(config);
 
-calendar.scheduleEvent(event, function(err, res) {
-	console.log("Result");
-	console.log(err);
-	console.log(res);
-});
+
+directory.listUsers(function(err, result) { console.log(result); console.log(err); console.log('Done.'); });

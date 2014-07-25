@@ -1,5 +1,29 @@
-biomed.AccountCtrl = function($scope, Account) {
-	$scope.account = Account.get();
+
+biomed.TechScheduleCtrl = function($scope, $routeParams, $location, Schedule, Users, LocationBinder) {
+
+	if (!$scope.date) {
+		$scope.date = new Date();
+	}
+
+	Users.index({userid: $routeParams.id}, function(result) {
+		$scope.tech = result[0];	
+	});
+
+	$scope.$watch('date', updateDate);
+
+        $scope.onEntryClick = function(entry) {
+                $location.path('/workorders/' + entry.workorder._id);
+        };
+
+	function updateDate() {
+		Schedule.index({
+			tech: $routeParams.id,
+			start: $scope.date.toJSON(),
+			end: moment($scope.date).add('days', 7).toDate().toJSON()
+		}, function(result) {
+			$scope.schedule = result;
+		});
+	}
 };
 
 biomed.ScheduleIndexCtrl = function($scope, $location, Users, Schedule, LocationBinder) {
@@ -62,6 +86,90 @@ biomed.SchedulePmsCtrl = function($scope, Clients) {
 	}
 
 	$scope.$watch('month', filter);
+};
+
+biomed.UsersIndexCtrl = function($scope, $filter, $routeParams, $location, Users, LocationBinder) {
+	$scope.loading = true;
+
+	$scope.account.$then(function(value) {
+		if (!$scope.accountHasPermission('system.admin'))
+			return $location.path('/');
+	});
+
+
+	var allData = Users.details(function() {
+		$scope.loading = false;
+		$scope.filter();
+	});
+
+	var filteredData = [];
+	var index = 0;
+	var initialPageSize = 100;
+	var pageSize = 5;
+
+	$scope.canLoad = true;
+	$scope.$watch('query', function() {
+		$scope.filter();
+	});
+
+	LocationBinder($scope, ['query']);
+
+	$scope.filter = function() {
+		filteredData = $filter('filter')(allData, $scope.query);
+		index = initialPageSize;
+		$scope.canLoad = true;
+		$scope.users = filteredData.slice(0, initialPageSize);
+	};
+
+	$scope.addItems = function() {
+		$scope.users = $scope.users.concat(filteredData.slice(index, index + pageSize));
+		index += pageSize;
+		$scope.canLoad = index < filteredData.length;
+	};
+
+	function save(user) {
+		if ('_id' in user) {
+			Users.update({id: user._id}, user, function(result) {
+				angular.copy(result, user);
+			});
+		} else {
+			Users.create(user, function(result) {
+				angular.copy(result, user);
+			});
+		}
+	}
+
+	$scope.toggleGroup = function(user, group) {
+		var index = user.groups.indexOf(group);
+		if (index > -1) 
+			user.groups.splice(index, 1);
+		else
+			user.groups.push(group);
+
+		save(user);
+	}
+
+	$scope.checkGroup = function(user, group) {
+		return $.inArray(group, user.groups) > -1;
+	};
+
+	$scope.togglePerm = function(user, perm) {
+		var index = user.perms.indexOf(perm);
+		if (index > -1)
+			user.perms.splice(index, 1);
+		else
+			user.perms.push(perm);
+
+		save(user);
+	};
+	
+	$scope.checkPerm = function(user, perm) {
+		return $.inArray(perm, user.perms) > -1;
+	};
+
+	$scope.isNew = function(user) {
+		return !('_id' in user);
+	};
 };
 
 biomed.ClientIndexCtrl = function($scope, $filter, $routeParams, Clients, LocationBinder) {
@@ -295,13 +403,21 @@ biomed.WorkorderIndexCtrl = function($scope, $filter, $routeParams, Workorders, 
 
 biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clients, Users) {
 
+        $scope.emailsOptions = {
+		'multiple': true,
+		'simple_tags': true,
+		'tags': [],
+		'formatNoMatches': function() { return 'Type an e-mail address and press return to add it.'; }
+	};
+
 	$scope.group = 'all';
 	$scope.model = {};
 	$scope.picker = {
-		start: '09:00:00',
-		end: '17:00:00'
+		startTime: '09:00:00',
+		endTime: '09:45:00'
 	};
-	$scope.picker.date = new Date();
+	$scope.picker.startDate = new Date();
+	$scope.picker.endDate = new Date();
 
 	var search = $location.search();
 
@@ -311,6 +427,13 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 		$scope.model.maintenanceType = search.type;
 
 		$scope.workorderType = 'pm';
+	} else if (search.workorderType == "meeting") {
+		$scope.model.reason = "Meeting";
+		$scope.workorderType = 'meeting';
+
+		if (search.clientId) {
+			$scope.model.client = search.clientId;
+		}
 	} else {
 		if (search.clientId) {
 			$scope.model.client = search.clientId;
@@ -334,23 +457,94 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 		$scope.clients = result;
 	});
 
-	$scope.$watch('picker.date', function() {
+	function convertToDate(date, time) {
+		return moment(moment(date).format('YYYY-MM-DD') + 'T' + time).toDate();
+	}
+
+	function datesOverlap() {
+		var start = convertToDate($scope.picker.startDate, $scope.picker.startTime);
+		var end = convertToDate($scope.picker.endDate, $scope.picker.endTime);
+		return start >= end;
+	}
+
+                function updateDuration() {
+                        var start = convertToDate($scope.picker.startDate, $scope.picker.startTime);
+                        var end = convertToDate($scope.picker.endDate, $scope.picker.endTime);
+
+                        var duration = moment.duration(end - start);
+
+                        var days = duration.days()
+                        var hours = duration.hours();
+                        var minutes = duration.minutes();
+
+                        var result = "";
+
+                        if (days == 1) {
+                                result += "1 Day ";
+                        }
+                        if (days > 1) {
+                                result += days + " Days ";
+                        }
+                        if (hours == 1) {
+                                result += "1 Hour ";
+                        }
+                        if (hours > 1) {
+                                result += hours + " Hours ";
+                        }
+                        if (minutes > 0) {
+                                result += minutes + " Minutes";
+                        }
+
+                        $scope.picker.duration = result;
+                }
+
+
+	$scope.$watch('picker.startDate', function() {
 		Schedule.index({
-			date: $scope.picker.date.toJSON()
+			date: $scope.picker.startDate.toJSON()
 		}, function(result) {
 			$scope.schedule = result;
 		});
+
+		if (datesOverlap()) {
+			$scope.picker.endDate = $scope.picker.startDate;
+		}
+		updateDuration();
 	});
 
-	$scope.save = function() {
+	$scope.$watch('picker.endDate', function() {
+		if (datesOverlap()) {
+			$scope.picker.startDate = $scope.picker.endDate;
+		}
+		updateDuration();
+	});
+
+	$scope.$watch('picker.startTime', function() {
+		$scope.picker.endTime = moment($scope.picker.startTime, "HH:mm:ss").add('minutes', 45).format("HH:mm:ss");
+		$scope.picker.endDate = $scope.picker.startDate;
+		updateDuration();
+	});
+
+	$scope.$watch('picker.endTime', function() {
+		if (datesOverlap()) {
+			$scope.picker.startTime = moment($scope.picker.endTime, "HH:mm:ss").subtract('minutes', 15).format("HH:mm:ss");
+		}
+		updateDuration();
+	});
+
+	$scope.save = function(notify) {
 		var picker = $scope.picker;
 		var model = $scope.model;
 
-		var date = moment(picker.date).format('YYYY-MM-DD');
+		var startDate = moment(picker.startDate).format('YYYY-MM-DD');
+		var endDate = moment(picker.endDate).format('YYYY-MM-DD');
+
 		model.status = 'scheduled';
 		model.scheduling = {};
-		model.scheduling.start = moment(date + 'T' + picker.start).toDate();
-		model.scheduling.end = moment(date + 'T' + picker.end).toDate();
+		model.scheduling.start = moment(startDate + 'T' + picker.startTime).toDate();
+		model.scheduling.end = moment(endDate + 'T' + picker.endTime).toDate();
+
+		model._notify = notify;
 
 		Workorders.create(model, function(result) {
 			$location.path("/workorders/" + result._id);
@@ -368,6 +562,14 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 		var criteria = {};
 
 		Users.index(criteria, function(result) {
+			result.sort(function(a,b) {
+				var r = a.name.first.localeCompare(b.name.first);
+				if (r == 0) {
+					r = a.name.last.localeCompare(b.name.last);
+				}
+				return r;
+			});
+
 			$scope.allUsers = result;
 
 			$scope.usersMap = {};
@@ -379,6 +581,13 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 }
 
 biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, Users) {
+        $scope.emailsOptions = {
+                'multiple': true,
+                'simple_tags': true,
+                'tags': [],
+                'formatNoMatches': function() { return 'Type an e-mail address and press return to add it.'; }
+        };
+
 	$scope.group = 'all';
 	$scope.route = $routeParams;
 	$scope.loading = true;
@@ -390,8 +599,13 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 
 	$scope.master = Workorders.get($routeParams, function() {
 		$scope.loading = false;
+
+		if ($scope.master.reason == "Meeting") {
+			$scope.workorderType = "meeting";
+		}
 	});
 
+	$scope.emails = createController();
 	$scope.status = createController();
 	$scope.remarks = createController();
 	$scope.scheduling = createSchedulingController();
@@ -410,7 +624,9 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 					$scope.editing = true;
 				}
 			},
-			save: function() {
+			save: function(notify) {
+				controller.model._notify = notify;
+
 				Workorders.update({id: $scope.master._id}, controller.model);
 				angular.copy(controller.model, $scope.master);
 				controller.visible = false;
@@ -434,9 +650,11 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 				if (!$scope.editing) {
 					angular.copy($scope.master, controller.model);
 
-					controller.date = moment(controller.model.scheduling.start).startOf('day').toDate();
-					controller.start = moment(controller.model.scheduling.start).format('HH:mm:ss');
-					controller.end = moment(controller.model.scheduling.end).format('HH:mm:ss');
+					controller.startDate = moment(controller.model.scheduling.start).startOf('day').toDate();
+					controller.endDate = moment(controller.model.scheduling.end).startOf('day').toDate();
+					
+					controller.startTime = moment(controller.model.scheduling.start).format('HH:mm:ss');
+					controller.endTime = moment(controller.model.scheduling.end).format('HH:mm:ss');
 
 					controller.techs = controller.model.techs.map(function(t) { return t._id; });
 
@@ -444,12 +662,16 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 					$scope.editing = true;
 				}
 			},
-			save: function() {
-				var date = moment(controller.date).format('YYYY-MM-DD');
-				controller.model.scheduling.start = moment(date + 'T' + controller.start).toDate();
-				controller.model.scheduling.end = moment(date + 'T' + controller.end).toDate();
+			save: function(notify) {
+				var startDate = moment(controller.startDate).format('YYYY-MM-DD');
+				var endDate = moment(controller.endDate).format('YYYY-MM-DD');
+
+				controller.model.scheduling.start = moment(startDate + 'T' + controller.startTime).toDate();
+				controller.model.scheduling.end = moment(endDate + 'T' + controller.endTime).toDate();
 
 				controller.model.techs = controller.techs.map(function(t) { return $scope.usersMap[t]; });
+
+				controller.model._notify = notify;
 
 				Workorders.update({id: $scope.master._id}, controller.model);
 				angular.copy(controller.model, $scope.master);
@@ -466,14 +688,79 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 		};
 
 
-		$scope.$watch('scheduling.date', function() {
+	        function convertToDate(date, time) {
+	                return moment(moment(date).format('YYYY-MM-DD') + 'T' + time).toDate();
+	        }
+	
+	        function datesOverlap() {
+	                var start = convertToDate($scope.scheduling.startDate, $scope.scheduling.startTime);
+	                var end = convertToDate($scope.scheduling.endDate, $scope.scheduling.endTime);
+	                return start >= end;
+	        }
 
+		function updateDuration() {
+			var start = convertToDate($scope.scheduling.startDate, $scope.scheduling.startTime);
+			var end = convertToDate($scope.scheduling.endDate, $scope.scheduling.endTime);
+
+			var duration = moment.duration(end - start);
+
+			var days = duration.days()
+			var hours = duration.hours();
+			var minutes = duration.minutes();
+
+			var result = "";
+	
+			if (days == 1) {
+				result += "1 Day ";
+			}
+			if (days > 1) {
+				result += days + " Days ";
+			}
+			if (hours == 1) {
+				result += "1 Hour ";
+			}
+			if (hours > 1) {
+				result += hours + " Hours ";
+			}
+			if (minutes > 0) {
+				result += minutes + " Minutes";
+			}
+
+			$scope.scheduling.duration = result;
+		}
+
+		$scope.$watch('scheduling.startDate', function() {
 			Schedule.index({
-				date: $scope.scheduling.date.toJSON()
+				date: $scope.scheduling.startDate.toJSON()
 			}, function(result) {
 				$scope.scheduling.schedule = result;
 			});
+
+			if (datesOverlap()) {
+				$scope.scheduling.endDate = $scope.scheduling.startDate;
+			}
+			updateDuration();
 		});
+
+	        $scope.$watch('scheduling.endDate', function() {
+	                if (datesOverlap()) {
+	                        $scope.scheduling.startDate = $scope.scheduling.endDate;
+	                }
+			updateDuration();
+	        });
+
+	        $scope.$watch('scheduling.startTime', function() {
+                        $scope.scheduling.endTime = moment($scope.scheduling.startTime, "HH:mm:ss").add('minutes', 45).format("HH:mm:ss");
+			$scope.scheduling.endDate = $scope.scheduling.startDate;
+			updateDuration();
+	        });
+
+	        $scope.$watch('scheduling.endTime', function() {
+	                if (datesOverlap()) {
+	                        $scope.scheduling.startTime = moment($scope.scheduling.endTime, "HH:mm:ss").subtract('minutes', 15).format("HH:mm:ss");
+	                }
+			updateDuration();
+	        });
 
 		return controller;
 	}
@@ -488,6 +775,14 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 		var criteria = {};
 
 		Users.index(criteria, function(result) {
+                        result.sort(function(a,b) {
+                                var r = a.name.first.localeCompare(b.name.first);
+                                if (r == 0) {
+                                        r = a.name.last.localeCompare(b.name.last);
+                                }
+                                return r;
+                        });
+
 			$scope.allUsers = result;
 
 			$scope.usersMap = {};
@@ -499,7 +794,7 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 };
 
 
-biomed.PageCtrl = function($scope, $dialog) {
+biomed.PageCtrl = function($scope, $dialog, Account) {
 	$scope.opts = {
 		backdrop: true,
 		keyboard: true,
@@ -514,6 +809,17 @@ biomed.PageCtrl = function($scope, $dialog) {
 		var d = $dialog.dialog($scope.opts);
 		d.open();
 	};
+
+	$scope.accountHasPermission = function(perm) {
+		console.log($scope);
+		if ($scope.account && $scope.account.perms) {
+			return $scope.account.perms.indexOf(perm) > -1;
+		}
+
+		return false;
+	};
+
+	$scope.account = Account.get();
 };
 
 biomed.MessagesCtrl = function($scope, dialog, Users, Messages) {

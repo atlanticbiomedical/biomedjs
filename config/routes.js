@@ -1,5 +1,6 @@
+var log = require('log4node');
 
-module.exports = function(app, auth, piler, calendar, config) {
+module.exports = function(app, auth, piler, calendar, directory, config) {
 
 	piler.addCssUrl("//fonts.googleapis.com/css?family=Open+Sans:400,300");
 	piler.addCssFile("/css/biomed.less");
@@ -30,7 +31,7 @@ module.exports = function(app, auth, piler, calendar, config) {
 	app.post('/api/clients/:client_id', clients.update);
 	app.del('/api/clients/:client_id', clients.destroy);
 
-	var workorders = require('../app/controllers/workorders')(calendar);
+	var workorders = require('../app/controllers/workorders')(config, calendar);
 	app.get('/api/workorders', workorders.index);
 	app.get('/api/workorders/:workorder_id', workorders.get);
 	app.post('/api/workorders', workorders.create);
@@ -40,8 +41,11 @@ module.exports = function(app, auth, piler, calendar, config) {
 	var schedule = require('../app/controllers/schedule');
 	app.get('/api/schedule', schedule.index);
 
-	var users = require('../app/controllers/users');
+	var users = require('../app/controllers/users')(config, directory);
 	app.get('/api/users', users.index);
+	app.get('/api/users/details', users.details);
+	app.post('/api/users', users.create);
+	app.post('/api/users/:user_id', users.update);
 
 	var account = require('../app/controllers/account');
 	app.get('/api/account', account.profile);

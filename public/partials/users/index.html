@@ -1,0 +1,61 @@
+<ul class="breadcrumb">
+	<li><a href="/users"><i class="icon-briefcase"></i> Admin</a><li>
+</ul>
+<header>
+	<h1>Admin</h1>
+</header>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="toolbelt">
+			<div class="pull-right">
+				<span class="toolbelt-text">Search:</span>
+	            <div class="input-append">
+	                <input type="text" ng-model="query" class="input-large" placeholder="Search">
+		            <span class="add-on"><i class="icon-search"></i></span>
+	            </div>
+			</div>
+		</div>
+		<table class="biomed-table users" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
+			<thead>
+				<tr>
+					<th colspan="2"></th>
+					<th colspan="5">Groups</th>
+					<th colspan="4">Permissions</th>
+				</tr>
+				<tr>
+					<th style="width: 15%">Name</th>
+					<th style="width: 7%">E-Mail</th>
+					<th style="width: 5%" class="group-start">All</th>
+					<th style="width: 5%">Biomed</th>
+					<th style="width: 5%">Ice</th>
+					<th style="width: 5%">Others</th>
+					<th style="width: 5%">Sales</th>
+					<th style="width: 5%" class="group-start">Portal</th>
+					<th style="width: 5%">Tags</th>
+					<th style="width: 5%">Messages</th>
+					<th style="width: 5%">Admin</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-show="loading"><td colspan="11" class="table-loading"><i class="loader"></i></td></tr>
+				<tr ng-hide="loading || users.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
+				<tr ng-hide="loading" ng-repeat="user in users">
+					<td class="name">{{user.name.first}} {{user.name.last}} <span class="new" ng-show="isNew(user)">NEW</span></td>
+					<td class="email"><a href="mailto:{{user.email}}">{{user.email | email}}</a></td>
+
+					<td class="group-start {{ checkGroup(user, 'all') }}"><a ng-click="toggleGroup(user, 'all')"><i ng-class="{ 'icon-ok': checkGroup(user, 'all'), 'icon-remove': !checkGroup(user, 'all')}"></i></a></td>
+					<td class="{{ checkGroup(user, 'biomed') }}"><a ng-click="toggleGroup(user, 'biomed')"><i ng-class="{ 'icon-ok': checkGroup(user, 'biomed'), 'icon-remove': !checkGroup(user, 'biomed')}"></i></a></td>
+					<td class="{{ checkGroup(user, 'ice') }}"><a ng-click="toggleGroup(user, 'ice')"><i ng-class="{ 'icon-ok': checkGroup(user, 'ice'), 'icon-remove': !checkGroup(user, 'ice')}"></i></a></td>
+					<td class="{{ checkGroup(user, 'others') }}"><a ng-click="toggleGroup(user, 'others')"><i ng-class="{ 'icon-ok': checkGroup(user, 'others'), 'icon-remove': !checkGroup(user, 'others')}"></i></a></td>
+					<td class="{{ checkGroup(user, 'sales') }}"><a ng-click="toggleGroup(user, 'sales')"><i ng-class="{ 'icon-ok': checkGroup(user, 'sales'), 'icon-remove': !checkGroup(user, 'sales')}"></i></a></td>
+					<td class="group-start {{ checkPerm(user, 'system.login') }}"><a ng-click="togglePerm(user, 'system.login')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.login'), 'icon-remove': !checkPerm(user, 'system.login')}"></i></a></td>
+					<td class="{{ checkPerm(user, 'system.tags') }}"><a ng-click="togglePerm(user, 'system.tags')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.tags'), 'icon-remove': !checkPerm(user, 'system.tags')}"></i></a></td>
+					<td class="{{ checkPerm(user, 'messages.receive') }}"><a ng-click="togglePerm(user, 'messages.receive')"><i ng-class="{ 'icon-ok': checkPerm(user, 'messages.receive'), 'icon-remove': !checkPerm(user, 'messages.receive')}"></i></a></td>
+					<td class="{{ checkPerm(user, 'system.admin') }}"><a ng-click="togglePerm(user, 'system.admin')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.admin'), 'icon-remove': !checkPerm(user, 'system.admin')}"></i></a></td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

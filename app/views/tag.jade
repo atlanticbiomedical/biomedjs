@@ -55,6 +55,10 @@ html(lang="en", ng-app="tags", ng-controller="tags.PageCtrl")
 					dd &nbsp;{{payload.tag.client.name}} ({{payload.tag.client.identifier}})
 					dt Client Device ID
 					dd &nbsp;{{tag.clientDeviceId}}
+					span(ng-repeat='field in fields')
+						dt(ng-show='{{field.value}}') {{field.label}}
+						dt(ng-show='{{field.value}}') &nbsp;{{field.value}}
+
 					dt Device
 					dd &nbsp;{{tag.device}}
 					dt Manufacturer

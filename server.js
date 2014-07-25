@@ -6,6 +6,13 @@ var env = process.env.NODE_ENV || 'development',
 	config = require('./config/config')[env],
 	mongoose = require('mongoose');
 
+var log = require('log4node');
+log.reconfigure({
+	level: 'info',
+	file: 'server.log'
+});
+
+log.info("----- Server Started -----");
 
 // bootstrap db connection
 mongoose.set('debug', config.debug);
@@ -34,8 +41,10 @@ var auth = require('./config/auth')(app, passport);
 
 var calendar = require('./config/calendar')(config);
 
+var directory = require('./config/directory')(config);
+
 // Bootstrap routes
-require('./config/routes')(app, auth, piler, calendar, config);
+require('./config/routes')(app, auth, piler, calendar, directory, config);
 
 GLOBAL.health = 'OK'
 
