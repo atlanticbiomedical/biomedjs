@@ -78,6 +78,10 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 				controller: biomed.UsersIndexCtrl,
 				reloadOnSearch: false
 			})
+			.when('/admin/users/:id', {
+				templateUrl: '/partials/users/clock.html',
+				controller: biomed.UserClockCtrl
+			})
 			.otherwise({
 				redirectTo: '/schedule'
 			});

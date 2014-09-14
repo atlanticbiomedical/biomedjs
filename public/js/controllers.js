@@ -172,6 +172,15 @@ biomed.UsersIndexCtrl = function($scope, $filter, $routeParams, $location, Users
 	};
 };
 
+biomed.UserClockCtrl = function($scope, $routeParams, Users) {
+        Users.index({userid: $routeParams.id}, function(result) {
+		console.log(result);
+                $scope.tech = result[0];
+        });
+
+	$scope.clocks = Users.clocks($routeParams);
+};
+
 biomed.ClientIndexCtrl = function($scope, $filter, $routeParams, Clients, LocationBinder) {
 	$scope.loading = true;
 

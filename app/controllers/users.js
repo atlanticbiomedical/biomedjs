@@ -1,7 +1,8 @@
 
 var mongoose = require('mongoose'),
 	async = require('async'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	Clock = mongoose.model('Clock');
 
 var log = require('log4node');
 
@@ -163,6 +164,24 @@ module.exports = function(config, directory) {
 					return res.json(user);
 				});
 			});
+		},
+
+		clocks: function(req, res) {
+			var id = req.param('user_id');
+
+			var criteria = {
+				tech: id
+			};
+
+                        var query = Clock.find(criteria)
+				.sort('-dt')
+                                .exec(function(err, results) {
+                                        if (err) {
+                                                res.json(500, err);
+                                        } else {
+                                                res.json(results);
+                                        }
+                                });
 		}
 	};
 };

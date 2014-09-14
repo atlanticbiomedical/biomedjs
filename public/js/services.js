@@ -32,6 +32,7 @@ angular.module('biomed.services', [])
 			details:	{ method: 'GET', params: { cmd: 'details' }, isArray: true },
 			create:		{ method: 'POST', params: {} },
 			update:		{ method: 'POST', params: { id: 0 } },
+			clocks:		{ method: 'GET', params: { id: 0, cmd: 'clocks' }, isArray: true }
 		});
 })
 .factory("Schedule", function($resource) {

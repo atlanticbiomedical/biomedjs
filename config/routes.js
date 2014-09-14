@@ -46,6 +46,7 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.get('/api/users/details', users.details);
 	app.post('/api/users', users.create);
 	app.post('/api/users/:user_id', users.update);
+	app.get('/api/users/:user_id/clocks', users.clocks);
 
 	var account = require('../app/controllers/account');
 	app.get('/api/account', account.profile);
@@ -56,6 +57,9 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	var tags = require('../app/controllers/tags')(piler);
 	app.post('/api/tags', tags.post);
 
+	var clock = require('../app/controllers/clock')(piler);
+	app.post('/api/clock', clock.post);
+
 	var login = require('../app/controllers/login')(piler);
 	app.get('/login', login.login);
 	app.get('/login/error', login.error);
@@ -63,6 +67,6 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 
 	var home = require('../app/controllers/home')(piler);
 
-	app.get('/', tags.index, auth.requiresUiLogin, home.index);
-	app.get('*', tags.index, auth.requiresUiLogin, home.index);
+	app.get('/', tags.index, auth.requiresUiLogin, clock.index, home.index);
+	app.get('*', tags.index, auth.requiresUiLogin, clock.index, home.index);
 };

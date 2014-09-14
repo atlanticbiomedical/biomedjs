@@ -1,0 +1,40 @@
+doctype 5
+html(lang="en", ng-app="clock", ng-controller="clock.PageCtrl")
+	head
+		title Atlantic Biomedical
+		!{css}
+		link(rel='stylesheet', href='/css/clock.css')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0')
+	body
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-resource.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js')
+		script(type='text/javascript', src='/clock/app.js')
+
+		error-panel
+		.navbar
+			.navbar-inner
+				a.brand(href='/', target='_self') Atlantic Biomedical
+				progress-panel
+
+		.container-fluid
+			h1 Time Clock
+
+			div.loading(ng-show='working')
+				i.loader
+				br
+				| Detecting your location
+
+			div(ng-hide='working')
+				div.error(ng-show='error')
+					{{ error }}
+
+				div.success(ng-show='success')
+					{{ success }}
+
+				div(ng-hide='error || success')
+					.control-group
+						button.btn.btn-primary(ng-click='clockIn()') Clock In
+						button.btn.btn-primary(ng-click='clockOut()') Clock Out
+					div.mapOuter
+						gmap.mapInner(size='600x600', markers='markers', sensor='false', zoom='14')

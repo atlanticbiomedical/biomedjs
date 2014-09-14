@@ -1,0 +1,31 @@
+<ul class="breadcrumb">
+	<li><a href="/users"><i class="icon-briefcase"></i> Admin</a><li>
+</ul>
+<header>
+	<h1>{{tech.name.first}} {{tech.name.last}}</h1>
+</header>
+
+<div class="row-fluid">
+	<div class="span12">
+		<table class="biomed-table" threshold="300">
+			<thead>
+				<tr>
+					<th>Action</th>
+					<th>Date</th>
+					<th>Location</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-show="loading"><td colspan="11" class="table-loading"><i class="loader"></i></td></tr>
+				<tr ng-hide="loading || clocks.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
+				<tr ng-hide="loading" ng-repeat="clock in clocks">
+					<td>{{clock.action}}</td>
+					<td>{{clock.dt | date:'medium'}}</td>
+					<td>{{clock.lat}},{{clock.long}}</td>
+					<td><a href="https://www.google.com.au/maps/preview/?q={{clock.lat}},{{clock.long}}" target="_blank">View in Google Maps</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

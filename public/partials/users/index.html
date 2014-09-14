@@ -41,7 +41,7 @@
 				<tr ng-show="loading"><td colspan="11" class="table-loading"><i class="loader"></i></td></tr>
 				<tr ng-hide="loading || users.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
 				<tr ng-hide="loading" ng-repeat="user in users">
-					<td class="name">{{user.name.first}} {{user.name.last}} <span class="new" ng-show="isNew(user)">NEW</span></td>
+					<td class="name"><a href="/admin/users/{{user._id}}">{{user.name.first}} {{user.name.last}}</a> <span class="new" ng-show="isNew(user)">NEW</span></td>
 					<td class="email"><a href="mailto:{{user.email}}">{{user.email | email}}</a></td>
 
 					<td class="group-start {{ checkGroup(user, 'all') }}"><a ng-click="toggleGroup(user, 'all')"><i ng-class="{ 'icon-ok': checkGroup(user, 'all'), 'icon-remove': !checkGroup(user, 'all')}"></i></a></td>
