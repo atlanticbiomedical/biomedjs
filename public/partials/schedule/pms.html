@@ -8,7 +8,7 @@
 <div class="row-fluid">
 	<div class="span12">
 		<div class="toolbelt">
-			<a href="/clients/add" class="btn btn-primary">Create new Workorder</a>
+			<a href="/clients/add" class="btn btn-primary"  ng-show="accountHasPermission('system.edit')">Create new Workorder</a>
 			<div class="pull-right">
 				<span class="toolbelt-text">Month:</span>
 	            <div class="input-append">

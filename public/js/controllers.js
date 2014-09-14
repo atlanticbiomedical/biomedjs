@@ -347,10 +347,12 @@ biomed.ClientEditCtrl = function($scope, $routeParams, Clients) {
 	}
 
 	$scope.toggleFrequency = function(frequency, month) {
-		$scope.master.frequencies[frequency][month] =! $scope.master.frequencies[frequency][month];
-		Clients.update({id: $scope.master._id}, $scope.master, function() {
-			updatePms();
-		});
+		if (accountHasPermission('system.edit')) {
+			$scope.master.frequencies[frequency][month] =! $scope.master.frequencies[frequency][month];
+			Clients.update({id: $scope.master._id}, $scope.master, function() {
+				updatePms();
+			});
+		}
 	}
 };
 

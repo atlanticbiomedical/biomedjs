@@ -17,7 +17,7 @@
 				<div class="section-container">
 					<div ng-hide="status.visible" class="form-preview">
 						{{master.status}}<br>
-						<a ng-click="status.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="status.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-show="status.visible" class="form-editor">
 						<div class="control-group">
@@ -46,7 +46,7 @@
                                 <div class="section-container">
                                         <div ng-hide="emails.visible" class="form-preview">
 						<span ng-repeat="email in master.emails"><b>{{email}}</b><span ng-show="!$last">, </span></span>
-                                                <a ng-click="emails.edit()" ng-class="{disabled: editing}">Edit</a>
+                                                <a ng-click="emails.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
                                         </div>
                                         <div ng-show="emails.visible" class="form-editor">
                                                 <div class="control-group">
@@ -70,7 +70,7 @@
 					<div ng-hide="remarks.visible" class="form-preview">
 						{{master.reason}}<br>
 						{{master.remarks}}<br>
-						<a ng-click="remarks.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="remarks.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-show="remarks.visible" class="form-editor">
 						<div class="control-group">
@@ -139,7 +139,7 @@
 					<div ng-hide="scheduling.visible" class="form-preview">
 						From <strong>{{master.scheduling.start | date}} {{master.scheduling.start | time}}</strong> to <strong>{{master.scheduling.end | date}} {{master.scheduling.end | time}}</strong><br>
 						<span ng-show="workorderType != 'meeting'">Techs</span><span ng-show="workorderType == 'meeting'">Attendees</span>: <strong>{{ master.techs | techs }}</strong><br>
-						<a ng-click="scheduling.edit()">Edit</a>
+						<a ng-click="scheduling.edit()" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-show="scheduling.visible" class="form-editor">
 						<div class="control-group">

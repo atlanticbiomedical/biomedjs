@@ -6,8 +6,8 @@
 <div class="row-fluid">
 	<div class="span12">
     	<div class="toolbelt">
-		<a href="/workorders/add" class="btn btn-primary">Create new workorder</a>
-		<a href="/workorders/add?workorderType=meeting" class="btn">Create new meeting</a>	
+		<a href="/workorders/add" class="btn btn-primary" ng-show="accountHasPermission('system.edit')">Create new workorder</a>
+		<a href="/workorders/add?workorderType=meeting" class="btn" ng-show="accountHasPermission('system.edit')">Create new meeting</a>	
     		<div class="pull-right">
 	            <div class="input-append">
 	                <input type="text" ng-model="query" class="input-large" placeholder="Search">

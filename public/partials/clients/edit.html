@@ -6,8 +6,8 @@
 <header ng-hide="loading">
 	<h1>{{master.name}}</h1>
 	<p class="lead">{{master.identifier}}</p>
-	<a class="btn btn-primary" href="/workorders/add?clientId={{master._id}}">Create new Workorder</a>
-	<a class="btn" href="/workorders/add?workorderType=meeting&clientId={{master._id}}">Create new Meeting</a>
+	<a class="btn btn-primary" href="/workorders/add?clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Create new Workorder</a>
+	<a class="btn" href="/workorders/add?workorderType=meeting&clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Create new Meeting</a>
 </header>
 <div ng-hide="loading" class="tabbable">
 	<div class="tab-content">
@@ -18,7 +18,7 @@
 					<div ng-hide="identification.visible" class="form-preview">
 						{{master.name}}<br>
 						{{master.identifier}}<br>
-						<a ng-click="identification.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="identification.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-form="identificationForm" ng-show="identification.visible" class="form-editor">
 						<div ng-class="{error: identificationForm.name.$invalid}" class="control-group">
@@ -49,7 +49,7 @@
 						{{master.address.street1}}<br>
 						{{master.address.street2}}<br ng-show="master.address.street2">
 						{{master.address.city}}, {{master.address.state}}. {{master.address.zip}}<br>
-						<a ng-click="address.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="address.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-form="addressForm" ng-show="address.visible" class="form-editor">
 						<div ng-class="{error: addressForm.street1.$invalid}" class="control-group">
@@ -152,7 +152,7 @@
 						{{master.contacts[0].name}}<br ng-show="master.contacts[0].name">
 						{{master.contacts[0].phone}}<br ng-show="master.contacts[0].phone">
 						<a href="mailto:{{master.contacts[0].email}}">{{master.contacts[0].email}}</a><br ng-show="master.contacts[0].email">
-						<a ng-click="primaryContact.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="primaryContact.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-show="primaryContact.visible" class="form-editor">
 						<div class="control-group">
@@ -187,7 +187,7 @@
 						{{master.contacts[1].name}}<br ng-show="master.contacts[1].name">
 						{{master.contacts[1].phone}}<br ng-show="master.contacts[1].phone">
 						{{master.contacts[1].email}}<br ng-show="master.contacts[1].email">
-						<a ng-click="secondaryContact.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="secondaryContact.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-show="secondaryContact.visible" class="form-editor">
 						<div class="control-group">
@@ -330,7 +330,7 @@
 				<div class="section-container">
 					<div ng-hide="internalNotes.visible" class="form-preview">
 						{{master.notes.internal}}<br ng-show="master.notes.internal">
-						<a ng-click="internalNotes.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="internalNotes.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-show="internalNotes.visible" class="form-editor">
 						<div class="control-group">
@@ -352,7 +352,7 @@
 				<div class="section-container">
 					<div ng-hide="techNotes.visible" class="form-preview">
 						{{master.notes.tech}}<br ng-show="master.notes.tech">
-						<a ng-click="techNotes.edit()" ng-class="{disabled: editing}">Edit</a>
+						<a ng-click="techNotes.edit()" ng-class="{disabled: editing}" ng-show="accountHasPermission('system.edit')">Edit</a>
 					</div>
 					<div ng-show="techNotes.visible" class="form-editor">
 						<div class="control-group">
