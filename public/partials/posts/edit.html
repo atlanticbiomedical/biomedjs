@@ -1,0 +1,62 @@
+<ul class="breadcrumb">
+	<li><a href="/posts"><i class="icon-briefcase"></i> Posts</a><span class="divider"></span><li>
+	<li class="active">New Post<li>
+</ul>
+<header>
+	<h1>Edit Post</h1>
+</header>
+
+<div class="form">
+	<div class="form-section">
+		<div class="section-label">Post</div>
+		<div class="section-container">
+			<div class="form-editor">
+				<div class="control-group">
+					<label class="control-label">Title</label>
+					<div class="controls">
+						<input ng-model="model.title" class="input-xlarge">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Body</label>
+					<div class="controls">
+						<textarea ng-model="model.preview" class="input-xlarge"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Extended</label>
+					<div class="controls">
+						<textarea ng-model="model.details" class="input-xlarge"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-section">
+		<div class="section-label">Images</div>
+		<div class="section-container">
+			<div class="form-editor">
+				<div class="control-group">
+					<label class="control-label">Title Image</label>
+					<div class="controls">
+						<div class="dropzone" dropzone="titleImageOptions" existing="existingTitleImages"></div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Gallery</label>
+					<div class="controls">
+						<div class="dropzone" dropzone="galleryImageOptions" existing="existingGalleryImages"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-section">
+		<div class="section-label">&nbsp;</div>
+		<div class="section-container">
+			<button ng-click="saveAsDraft()" type="button" class="btn btn-primary">Save as Draft</button>
+			<button ng-click="saveAsPosted()" type="button" class="btn">Save as Posted</button>			
+			<button ng-click="saveAsArchived()" type="button" class="btn">Save as Archived</button>
+		</div>
+	</div>
+</div>

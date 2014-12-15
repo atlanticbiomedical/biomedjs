@@ -27,6 +27,8 @@ module.exports = function(app, passport) {
 			log.setPrefix("[%d] %l ");
 			log.info("User Logged In: %s %s", user.name.first, user.name.last);
 
+			res.cookie('atlbid', JSON.stringify(user._id), {signed:true});
+			
 			if (req.session.redirectUrl) {
 				redirectUrl = req.session.redirectUrl;
 				req.session.redirectUrl = null;

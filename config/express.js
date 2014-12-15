@@ -10,7 +10,7 @@ module.exports = function(app, config, passport, piler) {
 
 	app.configure(function() {
 		// cookieParser should be above session
-		app.use(express.cookieParser());
+		app.use(express.cookieParser("atlbsecret"));
 
 		// bodyParser should be above methodOverride
 		app.use(express.bodyParser());

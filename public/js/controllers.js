@@ -174,12 +174,205 @@ biomed.UsersIndexCtrl = function($scope, $filter, $routeParams, $location, Users
 
 biomed.UserClockCtrl = function($scope, $routeParams, Users) {
         Users.index({userid: $routeParams.id}, function(result) {
-		console.log(result);
                 $scope.tech = result[0];
         });
 
 	$scope.clocks = Users.clocks($routeParams);
 };
+
+biomed.PostIndexCtrl = function($scope, $routeParams, Posts, LocationBinder) {
+	$scope.loading = true;
+
+	$scope.posts = Posts.index(function() {
+		$scope.loading = false;
+	});
+};
+
+biomed.PostAddCtrl = function($scope, Posts, $location) {
+
+	$scope.model = {
+		gallery: []
+	};
+
+	$scope.titleImageOptions = {
+		options: {
+			url: '/api/posts/upload',
+			maxFiles: 1,
+			addRemoveLinks: true
+		},
+		eventHandlers: {
+			success: function(file, response) {
+				console.log('adding file');
+				$scope.$apply(function() {
+					$scope.model.image = response.filename;
+				});
+			},
+			removedfile: function(file) {
+				console.log('removing file');
+				$scope.$apply(function() {
+					$scope.model.image = undefined;
+				});
+			},
+			maxfilesexceeded: function(file) {
+				this.removeAllFiles();
+				this.addFile(file);
+			}
+		}
+	};
+
+	var galleryImages = {};
+
+	$scope.galleryImageOptions = {
+		options: {
+			url: '/api/posts/upload',
+			addRemoveLinks: true
+		},
+		eventHandlers: {
+			success: function(file, response) {
+				console.log('Adding File');
+				file.filename = response.filename;
+
+				if (galleryImages[file.filename]) {
+					galleryImages[file.filename]++;
+					this.removeFile(file);
+				} else {
+					galleryImages[file.filename] = 1;
+				}
+			},
+                        removedfile: function(file) {
+                                console.log('Removing File');
+                                galleryImages[file.filename]--;
+
+				if (galleryImages[file.filename] <= 0) {
+					delete galleryImages[file.filename];
+				}
+                        }
+		}
+	};
+
+	var save = function(status) {
+		$scope.model.gallery = Object.keys(galleryImages);
+		$scope.model.status = status;
+		$scope.model.createdOn = new Date();
+
+		if (status === 'posted') {
+			$scope.model.postedOn = new Date();
+		}
+
+		Posts.create($scope.model, function(result) {
+			$location.path("/posts/" + result._id);
+		});
+	}
+
+	$scope.saveAsDraft = function() {
+		save('draft');
+	};
+
+	$scope.saveAsPosted = function() {
+		save('posted');
+	};
+};
+
+biomed.PostEditCtrl = function($scope, Posts, $routeParams, $location) {
+	var galleryImages = {};
+
+	$scope.model = Posts.get($routeParams, function() {
+		$scope.loading = false;
+
+		if ($scope.model.image) {
+			$scope.existingTitleImages = [$scope.model.image];
+		}
+
+		$scope.existingGalleryImages = $scope.model.gallery;
+		for (var i = 0; i < $scope.model.gallery.length; i++) {
+			galleryImages[$scope.model.gallery[i]] = 1;
+		}
+	});
+
+        $scope.titleImageOptions = {
+                options: {
+                        url: '/api/posts/upload',
+                        maxFiles: 1,
+                        addRemoveLinks: true,
+			existing: []
+                },
+                eventHandlers: {
+                        success: function(file, response) {
+                                console.log('adding file');
+                                $scope.$apply(function() {
+                                        $scope.model.image = response.filename;
+                                });
+                        },
+                        removedfile: function(file) {
+                                console.log('removing file');
+                                $scope.$apply(function() {
+                                        $scope.model.image = undefined;
+                                });
+                        },
+                        maxfilesexceeded: function(file) {
+                                this.removeAllFiles();
+                                this.addFile(file);
+                        }
+                }
+        };
+
+        $scope.galleryImageOptions = {
+                options: {
+                        url: '/api/posts/upload',
+                        addRemoveLinks: true,
+			existing: []
+                },
+                eventHandlers: {
+                        success: function(file, response) {
+                                console.log('Adding File');
+                                file.filename = response.filename;
+
+                                if (galleryImages[file.filename]) {
+                                        galleryImages[file.filename]++;
+                                        this.removeFile(file);
+                                } else {
+                                        galleryImages[file.filename] = 1;
+                                }
+                        },
+                        removedfile: function(file) {
+                                console.log('Removing File');
+                                galleryImages[file.filename]--;
+
+				if (galleryImages[file.filename] <= 0) {
+					delete galleryImages[file.filename];
+				}
+                        }
+                }
+        };
+
+        var save = function(status) {
+                $scope.model.gallery = Object.keys(galleryImages);
+                $scope.model.status = status;
+
+                if (status === 'posted') {
+                        $scope.model.postedOn = new Date();
+                } else {
+			$scope.model.postedOn = null;
+		}
+
+                Posts.update({id: $scope.model._id}, $scope.model, function(result) {
+                        $location.path("/posts/");
+                });
+        }
+
+        $scope.saveAsDraft = function() {
+                save('draft');
+        };
+
+        $scope.saveAsPosted = function() {
+                save('posted');
+        };
+
+        $scope.saveAsArchived = function() {
+                save('archived');
+        };
+};
+
 
 biomed.ClientIndexCtrl = function($scope, $filter, $routeParams, Clients, LocationBinder) {
 	$scope.loading = true;
@@ -347,7 +540,7 @@ biomed.ClientEditCtrl = function($scope, $routeParams, Clients) {
 	}
 
 	$scope.toggleFrequency = function(frequency, month) {
-		if (accountHasPermission('system.edit')) {
+		if ($scope.accountHasPermission('system.edit')) {
 			$scope.master.frequencies[frequency][month] =! $scope.master.frequencies[frequency][month];
 			Clients.update({id: $scope.master._id}, $scope.master, function() {
 				updatePms();
@@ -822,7 +1015,6 @@ biomed.PageCtrl = function($scope, $dialog, Account) {
 	};
 
 	$scope.accountHasPermission = function(perm) {
-		console.log($scope);
 		if ($scope.account && $scope.account.perms) {
 			return $scope.account.perms.indexOf(perm) > -1;
 		}

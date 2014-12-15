@@ -13,6 +13,7 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	piler.addJsFile("/js/lib/bootstrap-datepicker.js");
 	piler.addJsFile("/js/lib/dialog.js");
 	piler.addJsFile("/js/lib/select2.js");
+	piler.addJsFile("/js/lib/dropzone.js");
 	piler.addJsFile("/js/app.js");
 	piler.addJsFile("/js/controllers.js");
 	piler.addJsFile("/js/directives.js");
@@ -20,6 +21,14 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	piler.addJsFile("/js/services.js");
 
 	app.all('/api/*', auth.requiresApiAccess);
+
+	var posts = require('../app/controllers/posts');
+	app.get('/api/posts', posts.index);
+	app.get('/api/posts/:post_id', posts.get);
+	app.post('/api/posts', posts.create);
+	app.post('/api/posts/upload', posts.upload);
+	app.post('/api/posts/:post_id', posts.update);
+	app.del('/api/posts/:post_id', posts.destroy);
 
 	var clients = require('../app/controllers/clients');
 	app.get('/api/clients', clients.index);
@@ -60,6 +69,8 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	var clock = require('../app/controllers/clock')(piler);
 	app.post('/api/clock', clock.post);
 
+	var site = require('../app/controllers/site')(piler);
+	
 	var login = require('../app/controllers/login')(piler);
 	app.get('/login', login.login);
 	app.get('/login/error', login.error);
@@ -67,6 +78,6 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 
 	var home = require('../app/controllers/home')(piler);
 
-	app.get('/', tags.index, auth.requiresUiLogin, clock.index, home.index);
-	app.get('*', tags.index, auth.requiresUiLogin, clock.index, home.index);
+	app.get('/', tags.index, auth.requiresUiLogin, clock.index, site.index, home.index);
+	app.get('*', tags.index, auth.requiresUiLogin, clock.index, site.index, home.index);
 };

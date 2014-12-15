@@ -1,0 +1,53 @@
+doctype 5
+html(lang="en", ng-app="site", ng-controller="site.PageCtrl")
+	head
+		title Atlantic Biomedical
+		!{css}
+		link(rel='stylesheet', href='/css/site.css')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0')
+	body
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-resource.js')
+		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js')
+		script(type='text/javascript', src='/site/dropzone.js')
+		script(type='text/javascript', src='/site/app.js')
+
+		error-panel
+		.navbar
+			.navbar-inner
+				a.brand(href='/', target='_self') Atlantic Biomedical
+				progress-panel
+
+		.container-fluid(ng-hide='saved')
+			h1 New Post
+
+
+			form
+				.control-group
+					label.control-label Title
+					.controls
+						input.input-xlarge(ng-model='model.title')
+
+				.control-group
+					label.control-label Body
+					.controls
+						textarea.input-xlarge(ng-model='model.preview')
+
+				.control-group
+					label.control-label Header Image
+					.controls
+						.dropzone(dropzone='titleImageOptions')
+
+				.control-group
+					label.control-label Gallery
+					.controls
+						.dropzone(dropzone='galleryImageOptions')
+
+				.control-group
+					.controls
+						button.btn.btn-primary(ng-click='save()', type='button') Save
+	
+
+		.container-fluid(ng-show='saved')
+			h1.msg Your post has been saved
+			button.btn.btn-primary(ng-click='refresh()', type='button') Start new Post

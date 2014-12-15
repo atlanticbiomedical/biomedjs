@@ -204,6 +204,6 @@ var blacklist = [
 	"chris.sewell@atlanticbiomedical.com",
 	"devel@atlanticbiomedical.com",
 	"dobie@atlanticbiomedical.com",
-	"akirayasha@gmail.com",
+//	"akirayasha@gmail.com",
 	"receipts@atlanticbiomedical.com",
 ];

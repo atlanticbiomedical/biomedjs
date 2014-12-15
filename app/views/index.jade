@@ -19,7 +19,7 @@ html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
 							i.icon-thumbs-down
 							|  Incident
 					li
-						a(href='http://atlanticbiomedical.com/ticket/', target='_blank')
+						a(href='http://jira.devwr.com:9090/servicedesk/customer/portal/2', target='_blank')
 							i.icon-fire
 							|  Tickets
 					li
@@ -53,6 +53,11 @@ html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
 						a(href='/workorders')
 							i.icon-wrench
 							|  Workorders
+
+					li(data-match-route='/posts.*', ng-show="accountHasPermission('system.admin')")
+						a(href='/posts')
+							i.icon-wrench
+							|  Posts
 
 					li(data-match-route='/admin.*', ng-show="accountHasPermission('system.admin')")
 						a(href='/admin')

@@ -1,0 +1,41 @@
+<ul class="breadcrumb">
+	<li><a href="/posts"><i class="icon-briefcase"></i> Posts</a><li>
+</ul>
+<header>
+	<h1>Posts</h1>
+</header>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="toolbelt">
+			<a href="/posts/add" class="btn btn-primary">Create new Post</a>
+		</div>
+		<table class="biomed-table" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
+			<thead>
+				<tr>
+					<th style="width: 5%">Title</th>
+					<th style="width: 5%">Author</th>
+					<th style="width: 5%">Created on</th>
+					<th style="width: 5%">Posted on</th>
+					<th style="width: 5%">Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-show="loading"><td colspan="4" class="table-loading"><i class="loader"></i></td></tr>
+				<tr ng-hide="loading || posts.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
+				<tr ng-hide="loading" ng-repeat="post in posts">
+					<td>
+						<a href="/posts/{{post._id}}">
+							<span ng-show="post.title">{{post.title}}</span>
+							<span ng-hide="post.title"><i>Missing Title</i></span>
+						</a>
+					</td>
+					<td>{{post.author.name.first}} {{post.author.name.last}}</td>
+					<td>{{post.createdOn | date:'medium'}}</td>
+					<td>{{post.postedOn | date:'medium'}}</td>
+					<td>{{post.status}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,42 @@
+body {
+	min-width: initial;
+}
+
+input {
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+button {
+	width: 100% !important;
+}
+
+textarea {
+	width: 100% !important;
+	height: 300px;
+	box-sizing: border-box;
+}
+
+.dropzone {
+	min-height: initial !important;
+}
+
+.dz-message {
+	background-image: none !important;
+	position: initial !important;
+	width: initial !important;
+	height: initial !important;
+	margin-left: initial !important;
+	margin-top: initial !important;
+}
+
+.dz-message span {
+	display: block !important;
+	font-size: 24px;
+	text-align: center;
+}
+
+
+h1.msg {
+	text-align: center;
+}

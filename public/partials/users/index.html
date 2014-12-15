@@ -21,7 +21,7 @@
 				<tr>
 					<th colspan="2"></th>
 					<th colspan="5">Groups</th>
-					<th colspan="5">Permissions</th>
+					<th colspan="6">Permissions</th>
 				</tr>
 				<tr>
 					<th style="width: 15%">Name</th>
@@ -35,11 +35,12 @@
 					<th style="width: 5%">Tags</th>
 					<th style="width: 5%">Messages</th>
 					<th style="width: 5%">Edit</th>
+					<th style="width: 5%">Site</th>
 					<th style="width: 5%">Admin</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-show="loading"><td colspan="11" class="table-loading"><i class="loader"></i></td></tr>
+				<tr ng-show="loading"><td colspan="13" class="table-loading"><i class="loader"></i></td></tr>
 				<tr ng-hide="loading || users.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
 				<tr ng-hide="loading" ng-repeat="user in users">
 					<td class="name"><a href="/admin/users/{{user._id}}">{{user.name.first}} {{user.name.last}}</a> <span class="new" ng-show="isNew(user)">NEW</span></td>
@@ -54,6 +55,7 @@
 					<td class="{{ checkPerm(user, 'system.tags') }}"><a ng-click="togglePerm(user, 'system.tags')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.tags'), 'icon-remove': !checkPerm(user, 'system.tags')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'messages.receive') }}"><a ng-click="togglePerm(user, 'messages.receive')"><i ng-class="{ 'icon-ok': checkPerm(user, 'messages.receive'), 'icon-remove': !checkPerm(user, 'messages.receive')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'system.edit') }}"><a ng-click="togglePerm(user, 'system.edit')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.edit'), 'icon-remove': !checkPerm(user, 'system.edit')}"></i></a></td>
+					<td class="{{ checkPerm(user, 'system.site') }}"><a ng-click="togglePerm(user, 'system.site')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.site'), 'icon-remove': !checkPerm(user, 'system.site')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'system.admin') }}"><a ng-click="togglePerm(user, 'system.admin')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.admin'), 'icon-remove': !checkPerm(user, 'system.admin')}"></i></a></td>
 				</tr>
 			</tbody>

@@ -73,6 +73,18 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 				templateUrl: '/partials/techs/schedule.html',
 				controller: biomed.TechScheduleCtrl
 			})
+			.when('/posts', {
+				templateUrl: '/partials/posts/index.html',
+				controller: biomed.PostIndexCtrl
+			})
+			.when('/posts/add', {
+				templateUrl: '/partials/posts/add.html',
+				controller: biomed.PostAddCtrl
+			})
+			.when('/posts/:id', {
+				templateUrl: '/partials/posts/edit.html',
+				controller: biomed.PostEditCtrl
+			})
 			.when('/admin', {
 				templateUrl: '/partials/users/index.html',
 				controller: biomed.UsersIndexCtrl,

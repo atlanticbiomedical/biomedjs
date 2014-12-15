@@ -13,6 +13,17 @@ angular.module('biomed.services', [])
 			tags:       { method: 'GET', params: { id: 0, cmd: 'tags' }, isArray: true }
 		});
 })
+.factory("Posts", function($resource) {
+	return $resource('/api/posts/:id',
+		{ id: "@id" },
+		{
+			index: 	 	{ method: 'GET', params: {}, isArray: true },
+			get: 	 	{ method: 'GET', params: { id: 0} },
+			create:  	{ method: 'POST', params: {} },
+			update:  	{ method: 'POST', params: { id: 0} },
+			destroy: 	{ method: 'DELETE', params: { id: 0 } },
+		});
+})
 .factory("Workorders", function($resource) {
 	return $resource('/api/workorders/:id',
 		{ id: "@id" },
