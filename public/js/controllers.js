@@ -75,15 +75,29 @@ biomed.SchedulePmsCtrl = function($scope, Clients) {
 		$scope.pms = [];
 
 		angular.forEach(allData, function(client) {
-			angular.forEach(client.frequencies, function(value, key) {
+
+			var reason = [];
+
+			angular.forEach(client.frequencies, function(value, key) {				
 				if (value[$scope.month]) {
-					$scope.pms.push({
-						reason: key,
-						client: client
-					});
+					reason.push(key);
+
+//					$scope.pms.push({
+//						reason: key,
+//						client: client
+//					});
 				}
 			});
+
+			if (reason.length > 0) {
+				$scope.pms.push({
+					reason: reason,
+					client: client
+				});
+			}
 		});
+
+		console.log($scope.pms);
 	}
 
         $scope.sort = {
@@ -653,6 +667,80 @@ biomed.ClientEditCtrl = function($scope, $routeParams, Clients) {
 		}
 	}
 };
+
+biomed.AccountingIndexCtrl = function($scope, $filter, $routeParams, Workorders, LocationBinder) {
+	$scope.loading = true;
+
+	var data = {};
+
+	var defaultEnd = moment().toDate();
+	var defaultStart = moment(defaultEnd).subtract('days', 7).toDate();
+
+	LocationBinder($scope, ['query', 'start', 'end'], {
+		start: defaultStart,
+		end: defaultEnd
+	});
+
+	fetchData();
+
+
+	var filteredData = [];
+	var index = 0;
+	var initialPageSize = 100;
+	var pageSize = 5;
+
+	$scope.canLoad = true;
+
+	$scope.$watch('query', filter);
+
+	$scope.$watch('start', fetchData);
+
+	$scope.$watch('end', fetchData);
+
+	$scope.sort = {
+		column: 'scheduling.start',
+		descending: true
+	};
+
+	$scope.addItems = function() {
+		$scope.workorders = $scope.workorders.concat(filteredData.slice(index, index + pageSize));
+		index += pageSize;
+		$scope.canLoad = index < filteredData.length;
+	}
+
+	function filter() {
+		filteredData = $filter('filter')(data, $scope.query);
+		index = initialPageSize;
+		$scope.canLoad = true;
+		$scope.workorders = filteredData.slice(0, initialPageSize);
+	};
+
+	$scope.selectedCls = function(column) {
+		return column == $scope.sort.column && 'sort-' + $scope.sort.descending;
+	}
+
+	$scope.changeSorting = function(column) {
+		var sort = $scope.sort;
+		if (sort.column == column) {
+			sort.descending = !sort.descending;
+		} else {
+			sort.column = column;
+			sort.descending = false;
+		}
+	};
+
+	function fetchData() {
+		$scope.loading = true;
+
+		data = Workorders.index({
+			start: $scope.start.toJSON(),
+			end: $scope.end.toJSON()
+		}, function() {
+			$scope.loading = false;
+			filter();
+		});
+	}
+} 
 
 biomed.WorkorderIndexCtrl = function($scope, $filter, $routeParams, Workorders, LocationBinder) {
 	$scope.loading = true;

@@ -75,7 +75,8 @@ module.exports = function(config, calendar) {
 				remarks: req.body.remarks || "",
 				status: req.body.status,
 				scheduling: req.body.scheduling,
-				techs: req.body.techs
+				techs: req.body.techs,
+				alternativeContact: req.body.alternativeContact
 			});
 
 			var notify = req.body._notify || "";
@@ -238,6 +239,11 @@ module.exports = function(config, calendar) {
 						workorder.techs = req.body.techs
 							.filter(function(e) { return e; })
 							.map(function(t) { return t._id; });
+						workorder.invoiceNumber = req.body.invoiceNumber;
+						workorder.invoicedOn = req.body.invoicedOn;
+						workorder.checkNumber = req.body.checkNumber;
+						workorder.paidOn = req.body.paidOn;
+						workorder.alternativeContact = req.body.alternativeContact;
 
 						callback(err);
 					});

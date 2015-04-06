@@ -41,27 +41,30 @@ html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
 				ul.nav
 					li(data-match-route='/schedule.*')
 						a(href='/schedule')
-							i.icon-calendar
 							|  Schedule
+
+					li
+						a(href='/schedule/pms')
+							| PM
 
 					li(data-match-route='/client.*')
 						a(href='/clients')
-							i.icon-briefcase
 							|  Clients
 
 					li(data-match-route='/workorder.*')
 						a(href='/workorders')
-							i.icon-wrench
 							|  Workorders
+
+					li(data-match-route='/accounting.*')
+						a(href='/accounting')
+							|  Accounting
 
 					li(data-match-route='/posts.*', ng-show="accountHasPermission('system.admin')")
 						a(href='/posts')
-							i.icon-wrench
 							|  Posts
 
 					li(data-match-route='/admin.*', ng-show="accountHasPermission('system.admin')")
 						a(href='/admin')
-							i.icon-wrench
 							| Admin
 					li.day-of-year
 						{{dayOfYear}}

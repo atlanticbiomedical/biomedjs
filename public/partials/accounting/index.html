@@ -1,0 +1,59 @@
+<ul class="breadcrumb">
+	<li><a href="/clients"><i class="icon-wrench"></i> Accounting</a><li>
+</ul>
+<h1>Accounting</h1>
+
+<div class="row-fluid">
+	<div class="span12">
+    	<div class="toolbelt">
+		<div class="pull-left">
+	            <div class="input-append">
+	                <input type="text" ng-model="query" class="input-large" placeholder="Search">
+		            <span class="add-on"><i class="icon-search"></i></span>
+	            </div>
+		</div>
+    		<div class="pull-right">
+	            <span class="toolbelt-text">Start: </span>
+	            <div class="input-append">
+	            	<input ng-model="start" datepicker type="text" class="input-medium">
+		            <span class="add-on"><i class="icon-calendar"></i></span>
+	            </div>
+	            <span class="toolbelt-text">End: </span>
+	            <div class="input-append">
+	            	<input ng-model="end" datepicker type="text" class="input-medium">
+		            <span class="add-on"><i class="icon-calendar"></i></span>
+	            </div>
+            </div>
+    	</div>
+		<table class="biomed-table" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
+			<thead>
+				<tr>
+					<th style="width: 20%" ng-class="selectedCls('biomedId')"  ng-click="changeSorting('biomedId')">Workorder</th>
+					<th style="width: 30%" ng-class="selectedCls('client.name')" ng-click="changeSorting('client.name')">Client</th>
+					<th style="width: 10%" ng-class="selectedCls('scheduling.start')" ng-click="changeSorting('scheduling.start')">Date</th>
+					<th style="width: 10%" ng-class="selectedCls('invoiceNumber')" ng-click="changeSorting('invoiceNumber')">Invoice #</th>
+					<th style="width: 10%" ng-class="selectedCls('invoicedOn')" ng-click="changeSorting('invoicedOn')">Invoice Date</th>
+					<th style="width: 10%" ng-class="selectedCls('checkNumber')" ng-click="changeSorting('checkNumber')">Check #</th>
+					<th style="width: 10%" ng-class="selectedCls('paidOn')" ng-click="changeSorting('paidOn')">Paid Date</th>
+					<th style="width: 10%" ng-class="selectedCls('status')" ng-click="changeSorting('status')">Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-show="loading"><td colspan="8" class="table-loading"><i class="loader"></i></td></tr>
+				<tr ng-hide="loading || workorders.length"><td colspan="8" class="table-message">There is no information to display.</td></tr>
+				<tr ng-hide="loading" ng-repeat="workorder in workorders | orderBy : sort.column : sort.descending">
+					<td>
+						<a ng-href="/workorders/{{workorder._id}}">#{{workorder.biomedId}} - {{workorder.reason}}</a><br>
+					</td>
+					<td><a ng-href="/clients/{{workorder.client._id}}">{{workorder.client.name}} ({{workorder.client.identifier}})</a></td>
+					<td>{{workorder.scheduling.start | date}}</td>
+					<td>{{workorder.invoiceNumber}}</td>
+					<td>{{workorder.invoicedOn | date}}</td>
+					<td>{{workorder.checkNumber}}</td>
+					<td>{{workorder.paidOn | date}}</td>
+					<td>{{workorder.status}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -24,7 +24,12 @@ var workorderSchema = new Schema({
 		newValues: {},
 		modifiedBy: { type: ObjectId, ref: 'User' }
 	}],
-	deleted: { type: Boolean, default: false }
+	deleted: { type: Boolean, default: false },
+	invoiceNumber: String,
+	invoicedOn: Date,
+	checkNumber: String,
+	paidOn: Date,
+	alternativeContact: String
 });
 
 module.exports = mongoose.model('Workorder', workorderSchema);
