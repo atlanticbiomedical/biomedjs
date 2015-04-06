@@ -63,6 +63,8 @@ html(lang="en", ng-app="biomed", ng-controller="biomed.PageCtrl")
 						a(href='/admin')
 							i.icon-wrench
 							| Admin
+					li.day-of-year
+						{{dayOfYear}}
 		.container-fluid
 			ng-view
 		!{js}

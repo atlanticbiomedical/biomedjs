@@ -130,18 +130,47 @@ module.exports = function(config, calendar) {
 					if (!notify)
 						return callback(null);
 
-					var to = generateToLine(techs).concat(req.body.emails);
-					if (!to)
-						return callback(null);
+					var description = generateDescription(client, workorder, req.user, null, techs);
+					var techDescription = appendNotes(description, client);
 
-					server.send({
-						text: generateDescription(client, workorder, req.user, null, techs),
-						from: config.email.user,
-						to: to,
-						subject: 'Workorder created: ' + workorder.biomedId
-					}, function(err, message) {
-						callback(err);
-					});
+					var to = req.body.emails;
+					var techTo = generateToLine(techs);
+
+					var subject = 'Workorder created: ' + workorder.biomedId;
+
+					console.log('-------------------------');
+					console.log(to);
+
+					async.waterfall([
+						function(cb) {
+							if (to && to.length > 0) {
+								var msg = {
+									text: description,
+									from: config.email.user,
+									to: to,
+									subject: subject
+								};
+								console.log(msg);
+								server.send(msg, function(err, message) { cb(err); });
+							} else {
+								cb();
+							}
+						},
+						function(cb) {
+							if (techTo) {
+								var msg = {
+									text: techDescription,
+									from: config.email.user,
+									to: techTo,
+									subject: subject
+								};
+								console.log(msg);
+								server.send(msg, function(err, message) { cb(err); });
+							} else {
+								cb();
+							}
+						}
+					], callback);
                                 },
 				function(callback) {
 					workorder.save(function(err, result) { callback(err, result); });
@@ -265,18 +294,45 @@ module.exports = function(config, calendar) {
 					if (!notify)
 						return callback(null);
 
-					var to = generateToLine(techs);			
-					if (!to)
-						return callback(null);
-					
-					server.send({
-						text: generateDescription(client, workorder, createdBy, modifiedBy, techs),
-						from: config.email.user,
-						to: to,
-						subject: 'Workorder updated: ' + workorder.biomedId
-					}, function(err, message) {
-						callback(err);
-					});
+
+					var description = generateDescription(client, workorder, createdBy, modifiedBy, techs);
+					var techDescription = appendNotes(description, client);
+
+					var to = req.body.emails;
+					var techTo = generateToLine(techs);
+
+					var subject = 'Workorder updated: ' + workorder.biomedId;
+
+					async.waterfall([
+						function(cb) {
+							if (to && to.length > 0) {
+								var msg = {
+									text: description,
+									from: config.email.user,
+									to: to,
+									subject: subject
+								};
+								console.log(msg);
+								server.send(msg, function(err, message) { cb(err); });
+							} else {
+								cb();
+							}
+						},
+						function(cb) {
+							if (techTo) {
+								var msg = {
+									text: techDescription,
+									from: config.email.user,
+									to: techTo,
+									subject: subject
+								};
+								console.log(msg);
+								server.send(msg, function(err, message) { cb(err); });
+							} else {
+								cb();
+							}
+						}
+					], callback);
 				},
 				function(callback) {
 					workorder.save(function(err) {
@@ -330,6 +386,26 @@ function generateLocation(client) {
 	};
 
 	return sprintf("%(street1)s %(street2)s %(city)s, %(state)s. %(zip)s", data);
+}
+
+function appendNotes(message, client) {
+	var template =
+		"%(message)s\n" +
+		"Tech Notes:\n" +
+		"	%(notes)s\n" +
+		"\n";
+
+	if (client.notes && client.notes['tech']) {
+		var resources = {
+			message: message || '',
+			notes: client.notes['tech'] || ''
+		};
+
+		return sprintf(template, resources);
+	} else {
+		return message;
+	}
+
 }
 
 function generateDescription(client, workorder, createdBy, modifiedBy) {

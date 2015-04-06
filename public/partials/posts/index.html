@@ -9,20 +9,28 @@
 	<div class="span12">
 		<div class="toolbelt">
 			<a href="/posts/add" class="btn btn-primary">Create new Post</a>
+			<a ng-click="selectPage('')" class="btn">All</a>
+			<a ng-click="selectPage('front')" class="btn">Front Page</a>
+			<a ng-click="selectPage('about-us')" class="btn">About Us</a>
+			<a ng-click="selectPage('sales')" class="btn">Sales</a>
+			<a ng-click="selectPage('service')" class="btn">Service</a>
+			<div class="pull-right">
+				<span class="toolbelt-text">Total Published: {{posted}}</span>
+			</div>
 		</div>
 		<table class="biomed-table" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
 			<thead>
 				<tr>
-					<th style="width: 5%">Title</th>
-					<th style="width: 5%">Author</th>
-					<th style="width: 5%">Created on</th>
-					<th style="width: 5%">Posted on</th>
-					<th style="width: 5%">Status</th>
+					<th style="width: 45%">Title</th>
+					<th style="width: 15%">Author</th>
+					<th style="width: 15%">Created on</th>
+					<th style="width: 15%">Posted on</th>
+					<th style="width: 10%">Status</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-show="loading"><td colspan="4" class="table-loading"><i class="loader"></i></td></tr>
-				<tr ng-hide="loading || posts.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
+				<tr ng-show="loading"><td colspan="5" class="table-loading"><i class="loader"></i></td></tr>
+				<tr ng-hide="loading || posts.length"><td colspan="5" class="table-message">There is no information to display.</td></tr>
 				<tr ng-hide="loading" ng-repeat="post in posts">
 					<td>
 						<a href="/posts/{{post._id}}">

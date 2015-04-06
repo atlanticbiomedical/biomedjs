@@ -20,8 +20,10 @@
     "moment": "",
     "async": "",
     "passport-oauth": "",
+    "markdown": "",
     "node-uuid": "~1.4.1",
-    "MD5": "~1.2.1"
+    "MD5": "~1.2.1",
+    "pushover-notifications": "~0.2.2"
   },
   "devDependencies": {
     "supervisor": ""

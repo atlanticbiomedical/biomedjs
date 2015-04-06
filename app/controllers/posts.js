@@ -4,12 +4,18 @@ var mongoose = require('mongoose'),
 
 var md5 = require('MD5');
 var fs = require('fs');
-
+var markdown = require('markdown').markdown;
 var log = require('log4node');
 
 exports.index = function(req, res) {
+	var criteria = {};
+	var page = req.param('page');
+	if (page) {
+		criteria = { pages: page };
+	}
+
 	log.info('posts.index');
-	var query = Post.find()
+	var query = Post.find(criteria)
 		.populate('author', 'name')
 		.sort('-createdOn')
 		.exec(function(err, results) {
@@ -32,19 +38,64 @@ exports.get = function(req, res, next) {
 		});
 };
 
+function renderHtml(input) {
+	if (input) {
+		try {
+			return markdown.toHTML(input);
+		} catch (err) {
+			console.log('Failed to render html', err);
+			return input;
+		}
+	} else {
+		return input;
+	}
+}
+
+function cleanTags(tags) {
+        if (!tags) {
+                return [];
+        }
+
+        if (!Array.isArray(tags)) {
+                tags = [tags];
+        }
+
+        var results = [];
+
+        for (var i = 0; i < tags.length; i++) {
+                var tag = tags[i].toString()
+                        .replace(/^#/, '')
+                        .replace(/(\W|\d)/g, '$1 ')
+                        .replace(/\b\w+/g, function(txt) {
+                                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                        })
+                        .replace(/\s/g, '')
+
+                if (tag) {
+                        results.push(tag);
+                }
+        }
+
+        return results;
+}
+
 exports.create = function(req, res, next) {
 	log.info('posts.create %j', req.body);
 
 	var post = new Post({
 		title: 		req.body.title,
 		preview:	req.body.preview,
+		previewHtml:	renderHtml(req.body.preview),
 		details:	req.body.details,
+		detailsHtml:	renderHtml(req.body.details),
 		image:		req.body.image,
 		gallery:	req.body.gallery,
 		status:		req.body.status,
 		createdOn:	req.body.createdOn,
 		postedOn:	req.body.postedOn,
-		author:		req.user
+		author:		req.user,
+		pages:		req.body.pages,
+		tags:		cleanTags(req.body.tags),
 	});
 
 	return post.save(function(err) {
@@ -60,13 +111,17 @@ exports.update = function(req, res, next) {
 	console.log('updating post');
 	
 	return Post.findById(id, function(err, post) {
-		post.title	= req.body.title;
-		post.preview	= req.body.preview;
-		post.details	= req.body.details;
-		post.image	= req.body.image;
-		post.gallery	= req.body.gallery;
-		post.status	= req.body.status;
-		post.postedOn	= req.body.postedOn;
+		post.title		= req.body.title;
+		post.preview		= req.body.preview;
+		post.previewHtml	= renderHtml(req.body.preview);
+		post.details		= req.body.details;
+		post.detailsHtml	= renderHtml(req.body.details);
+		post.image		= req.body.image;
+		post.gallery		= req.body.gallery;
+		post.status		= req.body.status;
+		post.postedOn		= req.body.postedOn;
+		post.pages		= req.body.pages;
+		post.tags		= cleanTags(req.body.tags);
 
 		return post.save(function(err) {
 			if (err)

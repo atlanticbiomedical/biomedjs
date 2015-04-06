@@ -18,9 +18,10 @@ biomed.TechScheduleCtrl = function($scope, $routeParams, $location, Schedule, Us
 	function updateDate() {
 		Schedule.index({
 			tech: $routeParams.id,
-			start: $scope.date.toJSON(),
-			end: moment($scope.date).add('days', 7).toDate().toJSON()
+			start: moment($scope.date).subtract('days', 10).toDate().toJSON(),
+			end: moment($scope.date).add('days', 21).toDate().toJSON()
 		}, function(result) {
+			console.log(result);
 			$scope.schedule = result;
 		});
 	}
@@ -84,6 +85,25 @@ biomed.SchedulePmsCtrl = function($scope, Clients) {
 			});
 		});
 	}
+
+        $scope.sort = {
+                column: 'client.name',
+                descending: false
+        };
+
+        $scope.selectedCls = function(column) {
+                return column == $scope.sort.column && 'sort-' + $scope.sort.descending;
+        }
+
+        $scope.changeSorting = function(column) {
+                var sort = $scope.sort;
+                if (sort.column == column) {
+                        sort.descending = !sort.descending;
+                } else {
+                        sort.column = column;
+                        sort.descending = false;
+                }
+        };
 
 	$scope.$watch('month', filter);
 };
@@ -181,17 +201,60 @@ biomed.UserClockCtrl = function($scope, $routeParams, Users) {
 };
 
 biomed.PostIndexCtrl = function($scope, $routeParams, Posts, LocationBinder) {
-	$scope.loading = true;
+	var updatePosts = function() {
+		$scope.loading = true;
 
-	$scope.posts = Posts.index(function() {
-		$scope.loading = false;
-	});
+		$scope.posts = Posts.index(
+			{page: $scope.page},
+			function() {
+				$scope.loading = false;
+
+				$scope.posted = 0;
+
+				angular.forEach($scope.posts, function(value) {
+					if (value.status === "posted") {
+						$scope.posted += 1;
+					}
+				});
+			});
+	};
+
+	$scope.selectPage = function(page) {
+		$scope.page = page;
+	};
+
+	$scope.$watch('page', updatePosts);
 };
 
 biomed.PostAddCtrl = function($scope, Posts, $location) {
 
+        $scope.tagOptions = {
+                'multiple': true,
+                'simple_tags': true,
+                'tags': [],
+                'formatNoMatches': function() { return 'Type a tag and press return to add it.'; }
+        };
+
+	$scope.pages = [
+		{ value: 'front',    label: 'Front Page' },
+		{ value: 'about-us', label: 'About Us' },
+		{ value: 'sales',    label: 'Sales' },
+		{ value: 'service',  label: 'Service' }
+	];
+
+	$scope.togglePage = function(page) {
+		var idx = $scope.model.pages.indexOf(page.value);
+		if (idx > -1) {
+			$scope.model.pages.splice(idx, 1);
+		} else {
+			$scope.model.pages.push(page.value);
+		}
+	}
+
 	$scope.model = {
-		gallery: []
+		gallery: [],
+		pages: [],
+		postedOn: new Date()
 	};
 
 	$scope.titleImageOptions = {
@@ -255,10 +318,6 @@ biomed.PostAddCtrl = function($scope, Posts, $location) {
 		$scope.model.status = status;
 		$scope.model.createdOn = new Date();
 
-		if (status === 'posted') {
-			$scope.model.postedOn = new Date();
-		}
-
 		Posts.create($scope.model, function(result) {
 			$location.path("/posts/" + result._id);
 		});
@@ -276,8 +335,33 @@ biomed.PostAddCtrl = function($scope, Posts, $location) {
 biomed.PostEditCtrl = function($scope, Posts, $routeParams, $location) {
 	var galleryImages = {};
 
+        $scope.tagOptions = {
+                'multiple': true,
+                'simple_tags': true,
+                'tags': [],
+                'formatNoMatches': function() { return 'Type a tag and press return to add it.'; }
+        };
+
+        $scope.pages = [
+                { value: 'front',    label: 'Front Page' },
+                { value: 'about-us', label: 'About Us' },
+                { value: 'sales',    label: 'Sales' },
+                { value: 'service',  label: 'Service' }
+        ];
+
+        $scope.togglePage = function(page) {
+                var idx = $scope.model.pages.indexOf(page.value);
+                if (idx > -1) {
+                        $scope.model.pages.splice(idx, 1);
+                } else {
+                        $scope.model.pages.push(page.value);
+                }
+        }
+
 	$scope.model = Posts.get($routeParams, function() {
 		$scope.loading = false;
+
+		console.log($scope.model);
 
 		if ($scope.model.image) {
 			$scope.existingTitleImages = [$scope.model.image];
@@ -286,6 +370,10 @@ biomed.PostEditCtrl = function($scope, Posts, $routeParams, $location) {
 		$scope.existingGalleryImages = $scope.model.gallery;
 		for (var i = 0; i < $scope.model.gallery.length; i++) {
 			galleryImages[$scope.model.gallery[i]] = 1;
+		}
+
+		if (!$scope.model.postedOn) {
+			$scope.model.postedOn = new Date();
 		}
 	});
 
@@ -349,11 +437,7 @@ biomed.PostEditCtrl = function($scope, Posts, $routeParams, $location) {
                 $scope.model.gallery = Object.keys(galleryImages);
                 $scope.model.status = status;
 
-                if (status === 'posted') {
-                        $scope.model.postedOn = new Date();
-                } else {
-			$scope.model.postedOn = null;
-		}
+		console.log($scope.model);
 
                 Posts.update({id: $scope.model._id}, $scope.model, function(result) {
                         $location.path("/posts/");
@@ -396,7 +480,7 @@ biomed.ClientIndexCtrl = function($scope, $filter, $routeParams, Clients, Locati
 	LocationBinder($scope, ['query']);
 
 	$scope.filter = function() {
-		filteredData = $filter('filter')(allData, $scope.query);
+		filteredData = $filter('orderBy')($filter('filter')(allData, $scope.query), $scope.sort.column, $scope.sort.descending);
 		index = initialPageSize;
 		$scope.canLoad = true;
 		$scope.clients = filteredData.slice(0, initialPageSize);
@@ -407,6 +491,27 @@ biomed.ClientIndexCtrl = function($scope, $filter, $routeParams, Clients, Locati
 		index += pageSize;
 		$scope.canLoad = index < filteredData.length;
 	}
+
+        $scope.sort = {
+                column: 'name',
+                descending: false
+        };
+
+        $scope.selectedCls = function(column) {
+                return column == $scope.sort.column && 'sort-' + $scope.sort.descending;
+        }
+
+        $scope.changeSorting = function(column) {
+                var sort = $scope.sort;
+                if (sort.column == column) {
+                        sort.descending = !sort.descending;
+                } else {
+                        sort.column = column;
+                        sort.descending = false;
+                }
+
+		$scope.filter();
+        };
 };
 
 biomed.ClientAddCtrl = function($scope, Clients, $location) {
@@ -578,6 +683,10 @@ biomed.WorkorderIndexCtrl = function($scope, $filter, $routeParams, Workorders, 
 
 	$scope.$watch('end', fetchData);
 
+	$scope.sort = {
+		column: 'scheduling.start',
+		descending: true
+	};
 
 	$scope.addItems = function() {
 		$scope.workorders = $scope.workorders.concat(filteredData.slice(index, index + pageSize));
@@ -590,6 +699,20 @@ biomed.WorkorderIndexCtrl = function($scope, $filter, $routeParams, Workorders, 
 		index = initialPageSize;
 		$scope.canLoad = true;
 		$scope.workorders = filteredData.slice(0, initialPageSize);
+	};
+
+	$scope.selectedCls = function(column) {
+		return column == $scope.sort.column && 'sort-' + $scope.sort.descending;
+	}
+
+	$scope.changeSorting = function(column) {
+		var sort = $scope.sort;
+		if (sort.column == column) {
+			sort.descending = !sort.descending;
+		} else {
+			sort.column = column;
+			sort.descending = false;
+		}
 	};
 
 	function fetchData() {
@@ -656,6 +779,10 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 	updateUsers();
 
 	$scope.$watch('group', updateUsers);
+
+	$scope.$watch('model.client', function() {
+		$scope.currentClient = Clients.get({ id: $scope.model.client });
+	});
 
 	Clients.index(function(result) {
 		$scope.clients = result;

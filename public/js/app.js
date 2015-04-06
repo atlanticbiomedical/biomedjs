@@ -9,6 +9,7 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 			sales: 'Sales',
 			other: 'Others'
 		};
+		$rootScope.dayOfYear = moment().dayOfYear();
 	})
 	.config(function($routeProvider, $locationProvider, $httpProvider) {
 

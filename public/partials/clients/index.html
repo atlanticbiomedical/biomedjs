@@ -20,10 +20,10 @@
 		<table class="biomed-table" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
 			<thead>
 				<tr>
-					<th style="width: 20%"></th>
-					<th style="width: 48%">Client Name</th>
-					<th style="width: 20%">Contact</th>
-					<th style="width: 12%">Phone</th>
+					<th style="width: 20%" ng-class="selectedCls('identifier')" ng-click="changeSorting('identifier')">ID</th>
+					<th style="width: 48%" ng-class="selectedCls('name')"  ng-click="changeSorting('name')">Client Name</th>
+					<th style="width: 20%" ng-class="selectedCls('contacts[0].name')"  ng-click="changeSorting('contacts[0].name')">Contact</th>
+					<th style="width: 12%" ng-class="selectedCls('contacts[0].phone')"  ng-click="changeSorting('contacts[0].phone')">Phone</th>
 				</tr>
 			</thead>
 			<tbody>

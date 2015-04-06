@@ -33,20 +33,20 @@
 		<table class="biomed-table" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
 			<thead>
 				<tr>
-					<th style="width: 48%">Client Name</th>
-					<th style="width: 20%">Reason</th>
-					<th style="width: 20%">Contact</th>
-					<th style="width: 12%">Phone</th>
+					<th style="width: 48%" ng-class="selectedCls('client.name')"  ng-click="changeSorting('client.name')">Client Name</th>
+					<th style="width: 20%" ng-class="selectedCls('reason')"  ng-click="changeSorting('reason')">Reason</th>
+					<th style="width: 20%" ng-class="selectedCls('client.contacts[0].name')"  ng-click="changeSorting('client.contacts[0].name')">Contact</th>
+					<th style="width: 12%" ng-class="selectedCls('client.contacts[0].phone')"  ng-click="changeSorting('client.contacts[0].phone')">Phone</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-show="loading"><td colspan="4" class="table-loading"><i class="loader"></i></td></tr>
 				<tr ng-hide="loading || pms.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
-				<tr ng-hide="loading" ng-repeat="pm in pms">
+				<tr ng-hide="loading" ng-repeat="pm in pms | orderBy : sort.column : sort.descending">
 					<td><a ng-href="/workorders/add?workorderType=pm&amp;clientId={{pm.client._id}}&amp;type={{pm.reason}}">{{pm.client.name}} ({{pm.client.identifier | uppercase}})</a><br>
 					<td>{{pm.reason}}</td>
 					<td>{{pm.client.contacts[0].name}}</td>
-					<td>{{pm.lient.contacts[0].phone}}</td>
+					<td>{{pm.client.contacts[0].phone}}</td>
 				</tr>
 			</tbody>
 		</table>

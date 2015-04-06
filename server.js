@@ -1,16 +1,38 @@
+var pushover = require('pushover-notifications');
+
 var express = require('express')
 	fs = require('fs'),
 	passport = require('passport');
 
-var env = process.env.NODE_ENV || 'development',
+var env = 'prod',
 	config = require('./config/config')[env],
 	mongoose = require('mongoose');
 
 var log = require('log4node');
-log.reconfigure({
-	level: 'info',
-	file: 'server.log'
-});
+
+
+       process.on('uncaughtException', function(err) {
+               console.log('Uncaught Exception:', err);
+               console.log(err.stack);
+
+               var p = new pushover({
+                       user: 'aJmPD4KigO0vLwim76n3WqWKwbKA3k',
+                       token: 'YxspDLz3WinbPmwBThuZXCME9QmkDb'
+               });
+
+               var message = {
+                       title: 'Unhandled error in portal',
+                       message: 'Process was reset on ' + new Date(),
+                       sound: 'falling'
+               };
+               p.send(message, function(err, result) {
+                       if (err) {
+                               log.emergency('Error while sending pushover notification');
+                               log.emergency(err);
+                       }
+                       process.exit(1);
+               });
+       });
 
 log.info("----- Server Started -----");
 

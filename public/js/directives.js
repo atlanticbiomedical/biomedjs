@@ -89,10 +89,17 @@ angular.module('biomed.directives', [])
 
         attr.$observe('value', update)();
         attr.$observe('title', function(){ update(); a.text(tab.title); })();
+        attr.$observe('visible', function(){
+		update();
+		tab.tabElement[0].style.display = (tab.visible === "false") ? 'none' : 'block';
+        })();
 
         function update() {
+          console.log(attr.visible);
           tab.title = attr.title;
           tab.value = attr.value || attr.title;
+          tab.visible = attr.visible;
+          
           if (!ngModel.$setViewValue && (!ngModel.$viewValue || tab == selectedTab)) {
             // we are not part of angular
             ngModel.$viewValue = tab.value;
@@ -235,17 +242,17 @@ angular.module('biomed.directives', [])
 			function setupScale() {
 				x = d3.scale.linear()
 					.range([0, 100])
-					.domain([420, 1320])
+					.domain([420, 1140])
 					.clamp(true);
 			}
 
 			setupScale();
 
 			var color = d3.scale.category20();
-			var hourWidth = 100 / 15;
+			var hourWidth = 100 / 12;
 
 			$scope.hourMarkers = [];
-			for (var i = 7; i < 22; i++) {
+			for (var i = 7; i < 19; i++) {
 				$scope.hourMarkers.push({
 					date: moment({ hour: i }).toDate(),
 					style: {
@@ -266,13 +273,16 @@ angular.module('biomed.directives', [])
                         function generateDate() {
 				var range = moment($scope.date);
 				var data = {};
+				var current = range.format('ddd MMM Do YYYY');
 
-				for (var i = 0; i < 7; i++) {
+				for (var i = -7; i < 22; i++) {
 					var day = range.clone().add(i, 'days');
 					var key = day.format('MM-DD-YYYY');
 					var label = day.format('ddd MMM Do YYYY');
 
 					data[key] = {
+						order: i,
+						current: current == label,
 						label: label,
 						values: []
 					};
@@ -345,7 +355,12 @@ angular.module('biomed.directives', [])
                                         })
                                 });
 
-                                $scope.data = data;
+				var dataArray = [];
+				for (var o in data) {
+					dataArray.push(data[o]);
+				}
+
+				$scope.data = dataArray;
                         }
 		}
 	};
@@ -374,7 +389,7 @@ angular.module('biomed.directives', [])
 				rangeDate = moment($scope.date).startOf('day');
 
 				rangeStart = moment(rangeDate).add('hours', 7);
-				rangeEnd = moment(rangeDate).add('hours', 22);
+				rangeEnd = moment(rangeDate).add('hours', 19);
 
 				x = d3.time.scale()
 					.range([0, 100])

@@ -288,6 +288,10 @@ header {
 		width: 140px;
 	}
 
+	.tech-current {
+		font-weight: bold;
+	}
+
 	.enteries {
 		margin-left: 150px;
 		position: relative;
@@ -719,3 +723,33 @@ header {
     background-position: -7px -400px;
   }
 }
+
+
+
+
+th.sort-true::after {
+	width: 0; 
+	height: 0; 
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	
+	border-top: 8px solid #000;
+	content: "";
+	top: 12px;
+	left: 10px;
+	position: relative;
+}
+
+th.sort-false::after {
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+
+        border-bottom: 8px solid #000;
+        content: "";
+        bottom: 11px;
+        left: 10px;
+        position: relative;
+}
+

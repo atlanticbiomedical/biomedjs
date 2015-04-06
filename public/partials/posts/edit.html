@@ -29,6 +29,32 @@
 						<textarea ng-model="model.details" class="input-xlarge"></textarea>
 					</div>
 				</div>
+                                <div class="control-group">
+                                        <label class="control-label">Posted On</label>
+                                        <div class="controls">
+                                                <span><input ng-model="model.postedOn" datepicker type="text" class="input-small"></span>
+                                        </div>
+                                </div>
+                                <div class="control-group">
+                                        <label class="control-label">Pages</label>
+                                        <div class="controls">
+                                                <label ng-repeat="page in pages">
+                                                        <input
+                                                                type="checkbox"
+                                                                name="model.pages[]"
+                                                                value="page.value"
+                                                                ng-checked="model.pages.indexOf(page.value) > -1"
+                                                                ng-click="togglePage(page)"
+                                                        >{{page.label}}</input>
+                                                </label>
+                                        </div>
+                                </div>
+                                <div class="control-group">
+                                        <label class="control-label">Tags</label>
+                                        <div class="controls">
+                                                <input type="text" ui-select2="tagOptions" ng-model="model.tags" class="input-xxlarge" />
+                                        </div>
+                                </div>
 			</div>
 		</div>
 	</div>
@@ -42,7 +68,7 @@
 						<div class="dropzone" dropzone="titleImageOptions" existing="existingTitleImages"></div>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="control-group" ng-show="model.image">
 					<label class="control-label">Gallery</label>
 					<div class="controls">
 						<div class="dropzone" dropzone="galleryImageOptions" existing="existingGalleryImages"></div>

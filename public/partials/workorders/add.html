@@ -21,6 +21,26 @@
 						</select>
 					</div>
 				</div>
+				<div class="control-group" ng-show="currentClient.address">
+					<label class="control-label"></label>
+					<div class="controls">
+						<span style="font-weight: bold">{{currentClient.contacts[0].name}}</span>
+						<div>
+							{{currentClient.address.street1}}<br>
+							{{currentClient.address.street2}}<br ng-show="currentClient.address.street2">
+							{{currentClient.address.city}}, {{currentClient.address.state}}. {{currentClient.address.zip}}
+						</div>
+						{{currentClient.contacts[0].phone}}
+					</div>
+				</div>
+				<div class="control-group" ng-show="currentClient.notes['internal']">
+					<label class="control-label">Internal Notes</label>
+					<div class="controls">{{currentClient.notes['internal']}}</div>
+				</div>
+                                <div class="control-group" ng-show="currentClient.notes['tech']">
+                                        <label class="control-label">Tech Notes</label>
+                                        <div class="controls">{{currentClient.notes['tech']}}</div>
+                                </div>
 				<div class="control-group">
 					<label class="control-label">Additional E-Mails</label>
 					<div class="controls">

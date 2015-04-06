@@ -1,4 +1,5 @@
 var express = require('express');
+var ClusterStore = require('strong-cluster-connect-store')(express.session);
 
 module.exports = function(app, config, passport, piler) {
 	app.set('showStackError', true);
@@ -16,9 +17,7 @@ module.exports = function(app, config, passport, piler) {
 		app.use(express.bodyParser());
 		app.use(express.methodOverride());
 
-		app.use(express.session({
-			secret: 'atlantic_biomed_server_secret'
-		}));
+		app.use(express.session({ store: new ClusterStore(), secret: 'atlantic_biomed_server_secret' }));
 
 		// use passport session
 		app.use(passport.initialize());

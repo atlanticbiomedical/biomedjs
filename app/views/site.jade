@@ -38,7 +38,7 @@ html(lang="en", ng-app="site", ng-controller="site.PageCtrl")
 					.controls
 						.dropzone(dropzone='titleImageOptions')
 
-				.control-group
+				.control-group(ng-show='model.image')
 					label.control-label Gallery
 					.controls
 						.dropzone(dropzone='galleryImageOptions')

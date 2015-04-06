@@ -12,7 +12,7 @@
 			</div>
 		</div>
 		<div ng-repeat="(name, values) in data" class="tech">
-			<div class="tech-label text-right">{{values.label}}</div>
+			<div class="tech-label text-right" ng-class="{'tech-current': values.current}">{{values.label}}</div>
 			<div class="enteries">
 				<div ng-repeat="entry in values.values" ng-style="entry.style" class="entry" ng-click="onEntryClick({entry: entry})" title="{{entry.workorder.client.name}} ({{entry.workorder.client.identifier}}) - {{entry.workorder.client.address.city}}">{{entry.workorder.client.identifier}}</div>
 			</div>

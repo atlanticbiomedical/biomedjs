@@ -27,17 +27,17 @@
     	</div>
 		<table class="biomed-table" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
 			<thead>
-					<tr>
-						<th style="width: 50%">Workorder</th>
-						<th style="width: 30%">Client</th>
-						<th style="width: 10%">Date</th>
-						<th style="width: 10%">Status</th>
-					</tr>
+				<tr>
+					<th style="width: 50%" ng-class="selectedCls('biomedId')"  ng-click="changeSorting('biomedId')">Workorder</th>
+					<th style="width: 30%" ng-class="selectedCls('client.name')" ng-click="changeSorting('client.name')">Client</th>
+					<th style="width: 10%" ng-class="selectedCls('scheduling.start')" ng-click="changeSorting('scheduling.start')">Date</th>
+					<th style="width: 10%" ng-class="selectedCls('status')" ng-click="changeSorting('status')">Status</th>
+				</tr>
 			</thead>
 			<tbody>
 				<tr ng-show="loading"><td colspan="4" class="table-loading"><i class="loader"></i></td></tr>
 				<tr ng-hide="loading || workorders.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
-				<tr ng-hide="loading" ng-repeat="workorder in workorders">
+				<tr ng-hide="loading" ng-repeat="workorder in workorders | orderBy : sort.column : sort.descending">
 					<td>
 						<a ng-href="/workorders/{{workorder._id}}">#{{workorder.biomedId}} - {{workorder.reason}}</a><br>
 						<strong>Techs:</strong> {{ workorder.techs | techs }}<br>
