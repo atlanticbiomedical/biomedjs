@@ -85,7 +85,7 @@ exports.create = function(req, res, next) {
 
 	var client = new Client({
 		name: req.body.name,
-		identifier: req.body.identifier,
+		identifier: req.body.identifier.toUpperCase(),
 		contacts: req.body.contacts,
 		address: req.body.address,
 		notes: req.body.notes,
@@ -106,13 +106,44 @@ exports.create = function(req, res, next) {
 	})
 };
 
+exports.isUnique = function(req, res, next) {
+	
+	var field = req.param('field');
+	var value = req.param('value');
+	var key = req.param('key');
+
+	if (!field || !value) {
+		return res.json(400, 'missing field or value');		
+	}
+
+	var query = {};
+	
+	if (field === 'identifier') {
+		query[field] = value.toUpperCase();
+	} else {
+		query[field] = value;
+	}
+
+	if (key) {
+		query['_id'] = { $ne: key };
+	}
+
+	Client.find(query)
+		.exec(function(err, result) {
+			if (err) return next(err);
+			res.json({
+				isUnique: result.length === 0
+			});
+		});
+};
+
 exports.update = function(req, res, next) {
 	var id = req.param('client_id');
 	log.info("clients.update %s %j", id, req.body);
 
 	return Client.findById(id, function(err, client) {
 		client.name = req.body.name;
-		client.identifier = req.body.identifier;
+		client.identifier = req.body.identifier.toUpperCase();
 		client.contacts = req.body.contacts;
 		client.address = req.body.address;
 		client.frequencies = req.body.frequencies;

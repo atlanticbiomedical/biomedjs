@@ -6,7 +6,7 @@
 	<h1>New Client</h1>
 </header>
 
-<div class="form">
+<form name="form" class="form">
 	<div class="form-section">
 		<div class="section-label">Client Name</div>
 		<div class="section-container">
@@ -17,10 +17,20 @@
 						<input ng-model="model.name" type="text" name="name" class="input-xlarge">
 					</div>
 				</div>
-				<div class="control-group">
+				<div
+					ng-class="{ 'error': form.identifier.$invalid && !form.identifier.$pristine }"
+					class="control-group">
+
 					<label class="control-label">Identifier</label>
 					<div class="controls">
-						<input ng-model="model.identifier" type="text" name="identifier" requiredclass="input-xlarge">
+						<input
+							ng-model="model.identifier"
+							required
+							ab-unique="{field: 'identifier'}"
+							type="text"
+							name="identifier"
+							class="input-xlarge">
+						<span ng-show="form.identifier.$error.unique" class="help-inline">Identifier must be unique</span>
 					</div>
 				</div>
 			</div>
@@ -190,7 +200,7 @@
 	<div class="form-section">
 		<div class="section-label">&nbsp;</div>
 		<div class="section-container">
-			<button ng-click="save()" type="button" class="btn btn-primary">Save</button>
+			<button ng-click="save()" ng-disabled="form.$invalid" type="button" class="btn btn-primary">Save</button>
 		</div>
 	</div>
-</div>
+</form>

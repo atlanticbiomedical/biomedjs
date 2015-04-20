@@ -21,7 +21,7 @@
 				<tr>
 					<th colspan="2"></th>
 					<th colspan="5">Groups</th>
-					<th colspan="7">Permissions</th>
+					<th colspan="9">Permissions</th>
 				</tr>
 				<tr>
 					<th style="width: 15%">Name</th>
@@ -35,9 +35,11 @@
 					<th style="width: 5%">Tags</th>
 					<th style="width: 5%">Messages</th>
 					<th style="width: 5%">Edit</th>
+					<th style="width: 5%">Billing</th>
 					<th style="width: 5%">Site</th>
 					<th style="width: 5%">Admin</th>
                                         <th style="width: 5%">Frequency</th>
+					<th style="width: 5%">Schedulable</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -56,9 +58,11 @@
 					<td class="{{ checkPerm(user, 'system.tags') }}"><a ng-click="togglePerm(user, 'system.tags')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.tags'), 'icon-remove': !checkPerm(user, 'system.tags')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'messages.receive') }}"><a ng-click="togglePerm(user, 'messages.receive')"><i ng-class="{ 'icon-ok': checkPerm(user, 'messages.receive'), 'icon-remove': !checkPerm(user, 'messages.receive')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'system.edit') }}"><a ng-click="togglePerm(user, 'system.edit')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.edit'), 'icon-remove': !checkPerm(user, 'system.edit')}"></i></a></td>
+					<td class="{{ checkPerm(user, 'system.edit.billing') }}"><a ng-click="togglePerm(user, 'system.edit.billing')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.edit.billing'), 'icon-remove': !checkPerm(user, 'system.edit.billing')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'system.site') }}"><a ng-click="togglePerm(user, 'system.site')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.site'), 'icon-remove': !checkPerm(user, 'system.site')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'system.admin') }}"><a ng-click="togglePerm(user, 'system.admin')"><i ng-class="{ 'icon-ok': checkPerm(user, 'system.admin'), 'icon-remove': !checkPerm(user, 'system.admin')}"></i></a></td>
 					<td class="{{ checkPerm(user, 'client.frequency') }}"><a ng-click="togglePerm(user, 'client.frequency')"><i ng-class="{ 'icon-ok': checkPerm(user, 'client.frequency'), 'icon-remove': !checkPerm(user, 'client.frequency')}"></i></a></td>
+					<td class="{{ checkPerm(user, 'workorder.schedulable') }}"><a ng-click="togglePerm(user, 'workorder.schedulable')"><i ng-class="{ 'icon-ok': checkPerm(user, 'workorder.schedulable'), 'icon-remove': !checkPerm(user, 'workorder.schedulable')}"></i></a></td>
 				</tr>
 			</tbody>
 		</table>

@@ -834,4 +834,37 @@ angular.module('biomed.directives', [])
 			});
 		}
 	};
-});
+})
+.directive('abUnique', function(Clients, $timeout) {
+	return {
+		restrict: 'A',
+		require: 'ngModel',
+		link: function(scope, element, attrs, ngModel) {
+			var stop_timeout;
+			return scope.$watch(function() {
+				return ngModel.$modelValue;
+			}, function(name) {
+				$timeout.cancel(stop_timeout);
+
+				if (!name) {
+					ngModel.$setValidity('unique', true);
+				}
+
+				stop_timeout = $timeout(function() {
+					var keyProperty = scope.$eval(attrs.abUnique);
+
+					if (name) {
+						Clients.isUnique({
+							key: keyProperty.key,
+							field: keyProperty.field,
+							value: name
+						}, function(result) {
+							console.log('unique = ' + result.isUnique);
+							ngModel.$setValidity('unique', result.isUnique);
+						});
+					}
+				}, 200);
+			});
+		}
+	};
+})

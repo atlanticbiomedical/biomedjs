@@ -32,6 +32,7 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 
 	var clients = require('../app/controllers/clients');
 	app.get('/api/clients', clients.index);
+	app.get('/api/clients/isUnique', clients.isUnique);
 	app.get('/api/clients/frequencies', clients.frequencies);
 	app.get('/api/clients/:client_id', clients.get);
 	app.get('/api/clients/:client_id/workorders', clients.workorders);

@@ -31,8 +31,15 @@
 						<div ng-class="{error: identificationForm.identifier.$invalid}" class="control-group">
 							<label class="control-label">Identifier</label>
 							<div class="controls">
-								<input ng-model="identification.model.identifier" type="text" name="identifier" required="true" class="input-xlarge">
+								<input
+									ng-model="identification.model.identifier"
+									ab-unique="{field: 'identifier', key: master._id}"
+									required="true"
+									type="text"
+									name="identifier"
+									class="input-xlarge">
 								<span ng-show="identificationForm.identifier.$error.required" class="help-inline">Required</span>
+								<span ng-show="identificationForm.identifier.$error.unique" class="help-inline">Identifier must be unique</span>
 							</div>
 						</div>
 						<div class="form-actions">

@@ -132,7 +132,7 @@ module.exports = function(config, calendar) {
 						return callback(null);
 
 					var description = generateDescription(client, workorder, req.user, null, techs);
-					var techDescription = appendNotes(description, client);
+					var techDescription = appendNotes(description, client, workorder);
 
 					var to = req.body.emails;
 					var techTo = generateToLine(techs);
@@ -302,7 +302,7 @@ module.exports = function(config, calendar) {
 
 
 					var description = generateDescription(client, workorder, createdBy, modifiedBy, techs);
-					var techDescription = appendNotes(description, client);
+					var techDescription = appendNotes(description, client, workorder);
 
 					var to = req.body.emails;
 					var techTo = generateToLine(techs);
@@ -394,17 +394,21 @@ function generateLocation(client) {
 	return sprintf("%(street1)s %(street2)s %(city)s, %(state)s. %(zip)s", data);
 }
 
-function appendNotes(message, client) {
+function appendNotes(message, client, workorder) {
 	var template =
 		"%(message)s\n" +
 		"Tech Notes:\n" +
 		"	%(notes)s\n" +
+		"\n" +
+		"Alternative Contact:\n" +
+		"	%(alternativeContact)s\n" +
 		"\n";
 
 	if (client.notes && client.notes['tech']) {
 		var resources = {
 			message: message || '',
-			notes: client.notes['tech'] || ''
+			notes: client.notes['tech'] || '',
+			alternativeContact: workorder.alternativeContact || ''
 		};
 
 		return sprintf(template, resources);
@@ -491,7 +495,6 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 }
 
 function generateAttendees(techs, workorder) {
-	console.log('here');
 	return techs.map(function(t) { return t.email; }).concat(workorder.emails);
 }
 

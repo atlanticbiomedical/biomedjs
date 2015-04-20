@@ -66,7 +66,15 @@ biomed.SchedulePmsCtrl = function($scope, Clients) {
 
 	$scope.month = moment().month();
 
+	$scope.frequencies = [];
+
 	var allData = Clients.frequencies(function() {
+		if  (allData) {
+			angular.forEach(allData[0].frequencies, function(value, key) {
+				$scope.frequencies.push(key);
+			});
+		}
+
 		filter();
 		$scope.loading = false;
 	});
@@ -80,12 +88,9 @@ biomed.SchedulePmsCtrl = function($scope, Clients) {
 
 			angular.forEach(client.frequencies, function(value, key) {				
 				if (value[$scope.month]) {
-					reason.push(key);
-
-//					$scope.pms.push({
-//						reason: key,
-//						client: client
-//					});
+					if  (!$scope.frequency || $scope.frequency == key) {
+						reason.push(key);
+					}
 				}
 			});
 
@@ -120,6 +125,7 @@ biomed.SchedulePmsCtrl = function($scope, Clients) {
         };
 
 	$scope.$watch('month', filter);
+	$scope.$watch('frequency', filter);
 };
 
 biomed.UsersIndexCtrl = function($scope, $filter, $routeParams, $location, Users, LocationBinder) {
@@ -676,7 +682,7 @@ biomed.AccountingIndexCtrl = function($scope, $filter, $routeParams, Workorders,
 	var defaultEnd = moment().toDate();
 	var defaultStart = moment(defaultEnd).subtract('days', 7).toDate();
 
-	LocationBinder($scope, ['query', 'start', 'end'], {
+	LocationBinder($scope, ['query', 'status', 'start', 'end'], {
 		start: defaultStart,
 		end: defaultEnd
 	});
@@ -692,6 +698,8 @@ biomed.AccountingIndexCtrl = function($scope, $filter, $routeParams, Workorders,
 	$scope.canLoad = true;
 
 	$scope.$watch('query', filter);
+
+	$scope.$watch('status', filter);
 
 	$scope.$watch('start', fetchData);
 
@@ -709,10 +717,14 @@ biomed.AccountingIndexCtrl = function($scope, $filter, $routeParams, Workorders,
 	}
 
 	function filter() {
-		filteredData = $filter('filter')(data, $scope.query);
+		filteredData = $filter('filter')(data, {
+			$: $scope.query,
+			status: $scope.status
+		});
 		index = initialPageSize;
 		$scope.canLoad = true;
 		$scope.workorders = filteredData.slice(0, initialPageSize);
+		$scope.total = filteredData.length;
 	};
 
 	$scope.selectedCls = function(column) {
@@ -728,6 +740,11 @@ biomed.AccountingIndexCtrl = function($scope, $filter, $routeParams, Workorders,
 			sort.descending = false;
 		}
 	};
+
+	$scope.selectPage = function(status) {
+		console.log('SelectPage: ' + status);
+		$scope.status = status;
+	}
 
 	function fetchData() {
 		$scope.loading = true;
@@ -971,14 +988,14 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 	};
 
 	function updateUsers() {
-		Users.index({ group: $scope.group }, function(result) {
+		Users.index({ group: $scope.group, perms: 'workorder.schedulable' }, function(result) {
 			$scope.users = result;
 		});
 	}
 
 
 	function updateAllUsers() {
-		var criteria = {};
+		var criteria = { perms: 'workorder.schedulable' };
 
 		Users.index(criteria, function(result) {
 			result.sort(function(a,b) {
@@ -1028,6 +1045,24 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 	$scope.status = createController();
 	$scope.remarks = createController();
 	$scope.scheduling = createSchedulingController();
+
+	function updateStatus() {
+		if ($scope.status.model.invoiceNumber && $scope.status.model.checkNumber) {
+			$scope.status.model.status = 'paid';
+		} else if ($scope.status.model.invoiceNumber) {
+			$scope.status.model.status = 'invoiced';
+		} else {
+			$scope.status.model.status = 'scheduled';
+		}
+	}
+
+	$scope.$watch('status.model.invoiceNumber', function() {
+		updateStatus();
+	});
+
+	$scope.$watch('status.model.checkNumber', function() {
+		updateStatus();
+	});
 
 	$scope.destroy = function() {
 		Workorders.destroy({id: $scope.master._id});
@@ -1185,13 +1220,13 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 	}
 
 	function updateUsers() {
-		Users.index({ group: $scope.group }, function(result) {
+		Users.index({ group: $scope.group, perms: 'workorder.schedulable' }, function(result) {
 			$scope.users = result;
 		});
 	}
 
 	function updateAllUsers() {
-		var criteria = {};
+		var criteria = {perms: 'workorder.schedulable'};
 
 		Users.index(criteria, function(result) {
                         result.sort(function(a,b) {
