@@ -9,15 +9,40 @@
 	<div class="span12">
 		<div class="toolbelt">
 			<a href="/clients/add" class="btn btn-primary"  ng-show="accountHasPermission('system.edit')">Create new Workorder</a>
+				<span class="toolbelt-text">Filter:</span>
+					<select ng-model="filter" name="filter" class="input-xlarge">
+						<option value="all">All</option>
+						<option value="due">Due</option>
+						<option value="overdue">Overdue</option>
+						<option value="scheduled">Scheduled</option>
+						<option value="complete">Complete</option>
+					</select>
 				<span class="toolbelt-text">Frequency:</span>
 					<select ng-model="frequency" name="frequency" class="input-xlarge">
-						<option value="">All</option>
-						<option ng-repeat="f in frequencies" value="{{f}}">{{f}}</option>
+						<option value="" ng-disabled="month == ''">All</option>
+                                                                       	<option value="Anesthesia">Anesthesia</option>
+                                                                       	<option value="Annual">Annual</option>
+                                                                       	<option value="DLLR">DLLR</option>
+                                                                       	<option value="ERT">ERT</option>
+                                                                       	<option value="Ice Maker">Ice Maker</option>
+                                                                       	<option value="Imaging">Imaging</option>
+                                                                       	<option value="Medical Device">Medical Device</option>
+                                                                       	<option value="Medical Gas Systems">Medical Gas Systems</option>
+                                                                       	<option value="N2O Trace Gas">N2O Trace Gas</option>
+                                                                       	<option value="Quarterly">Quarterly</option>
+                                                                       	<option value="RAE">RAE</option>
+                                                                       	<option value="Semi">Semi</option>
+                                                                       	<option value="Sterilizer - F">Sterilizer - F</option>
+                                                                       	<option value="Sterilizer - TT">Sterilizer - TT</option>
+                                                                       	<option value="Vaporizer">Vaporizer</option>
+                                                                       	<option value="Waste Management System">Waste Management System</option>
+                                                                    	<option value="legacy" disabled>legacy</option>
 					</select>
 			<div class="pull-right">
 				<span class="toolbelt-text">Month:</span>
 			        <div class="input-append">
 					<select ng-model="month" name="month" class="input-xlarge">
+						<option value="" ng-disabled="filter != 'scheduled' && filter != 'completed'">All</option>
 						<option value="0">January</option>
 						<option value="1">February</option>
 						<option value="2">March</option>
@@ -49,13 +74,35 @@
 				<tr ng-hide="loading || pms.length"><td colspan="4" class="table-message">There is no information to display.</td></tr>
 				<tr ng-hide="loading" ng-repeat="pm in pms | orderBy : sort.column : sort.descending">
 					<td colspan="2">
-						{{pm.client.name}} ({{pm.client.identifier | uppercase}})<br>
-						<span ng-repeat="reason in pm.reason">
-							<a ng-href="/workorders/add?workorderType=pm&amp;clientId={{pm.client._id}}&amp;type={{reason}}">{{reason}}</a><span ng-show="!$last">, </span>
-						</span>
+						{{pm.name}} ({{pm.identifier | uppercase}})<br>
+
+						<table class="pm-workorders">
+							<thead ng-if="pm.frequencies.length > 0">
+								<th width="150"><strong>Due:</strong></th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="reason in pm.frequencies">
+									<td width="150">{{reason}}</td>
+									<td><a ng-href="/workorders/add?workorderType=pm&amp;clientId={{pm._id}}&amp;type={{reason}}">Create Workorder</a><td>
+								</tr>
+							</tbody>
+							<thead ng-if="pm.workorders">
+								<th width="150"><strong>Workorders:</strong></th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="(key, values) in pm.workorders">
+									<td width="150">{{key}}</td>
+									<td>
+										<span ng-repeat="workorder in values">
+											<a ng-href="/workorders/{{workorder.id}}">#{{workorder.identifier}} ({{workorder.status}})</a><span ng-show="!$last">, </span>
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</td>
-					<td>{{pm.client.contacts[0].name}}</td>
-					<td>{{pm.client.contacts[0].phone}}</td>
+					<td>{{pm.contacts[0].name}}</td>
+					<td>{{pm.contacts[0].phone}}</td>
 				</tr>
 			</tbody>
 		</table>

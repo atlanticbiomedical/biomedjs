@@ -36,6 +36,13 @@ angular.module('biomed.services', [])
 			destroy: 	{ method: 'DELETE', params: { id: 0 } },
 		});
 })
+.factory("Pms", function($resource) {
+	return $resource('/api/pms',
+		{},
+		{
+			index:		{ method: 'GET', isArray: true },
+		});
+})
 .factory("Users", function($resource) {
 	return $resource('/api/users/:id/:cmd',
 		{ id: "@id", cmd: "@cmd" },

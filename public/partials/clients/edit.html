@@ -286,7 +286,7 @@
 			<tbody>
 				<tr ng-repeat="(frequency, values) in master.frequencies">
 					<td class="name">{{frequency}}</td>
-					<td ng-repeat="enabled in values" class="{{enabled}}"><a ng-click="toggleFrequency(frequency, $index)"><i ng-class="{ 'icon-ok': enabled, 'icon-remove': !enabled }"></i></a></td>
+					<td ng-repeat="enabled in values track by $index" class="{{enabled}}"><a ng-click="toggleFrequency(frequency, $index)"><i ng-class="{ 'icon-ok': enabled, 'icon-remove': !enabled }"></i></a></td>
 				</tr>
 			</tbody>
 		</table>

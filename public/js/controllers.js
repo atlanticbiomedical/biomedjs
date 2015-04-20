@@ -1,5 +1,5 @@
-
-biomed.TechScheduleCtrl = function($scope, $routeParams, $location, Schedule, Users, LocationBinder) {
+angular.module('biomed')
+.controller("TechScheduleCtrl", function($scope, $routeParams, $location, Schedule, Users, LocationBinder) {
 
 	if (!$scope.date) {
 		$scope.date = new Date();
@@ -25,9 +25,9 @@ biomed.TechScheduleCtrl = function($scope, $routeParams, $location, Schedule, Us
 			$scope.schedule = result;
 		});
 	}
-};
+})
 
-biomed.ScheduleIndexCtrl = function($scope, $location, Users, Schedule, LocationBinder) {
+.controller("ScheduleIndexCtrl", function($scope, $location, Users, Schedule, LocationBinder) {
 
 //	LocationBinder($scope, ['date'], { date: new Date() });
 	updateUsers();
@@ -59,56 +59,45 @@ biomed.ScheduleIndexCtrl = function($scope, $location, Users, Schedule, Location
 		});
 	}
 
-};
+})
 
-biomed.SchedulePmsCtrl = function($scope, Clients) {
+.controller("SchedulePmsCtrl", function($scope, $q, Clients, Workorders, Pms) {
 	$scope.loading = true;
 
+	// Setup initial state
+	$scope.filter = "all";
 	$scope.month = moment().month();
-
-	$scope.frequencies = [];
-
-	var allData = Clients.frequencies(function() {
-		if  (allData) {
-			angular.forEach(allData[0].frequencies, function(value, key) {
-				$scope.frequencies.push(key);
-			});
-		}
-
-		filter();
-		$scope.loading = false;
-	});
-
-	function filter() {
-		$scope.pms = [];
-
-		angular.forEach(allData, function(client) {
-
-			var reason = [];
-
-			angular.forEach(client.frequencies, function(value, key) {				
-				if (value[$scope.month]) {
-					if  (!$scope.frequency || $scope.frequency == key) {
-						reason.push(key);
-					}
-				}
-			});
-
-			if (reason.length > 0) {
-				$scope.pms.push({
-					reason: reason,
-					client: client
-				});
-			}
-		});
-
-		console.log($scope.pms);
-	}
+	$scope.year = 2015;
+	$scope.frequency = "";
 
         $scope.sort = {
                 column: 'client.name',
                 descending: false
         };
+
+	function update() {
+		$scope.loading = true;
+
+		if ($scope.filter != 'scheduled' && $scope.filter != 'complete') {
+			if ($scope.month == "") {
+				$scope.month = moment().month();
+			}
+		}
+		if ($scope.month == "" && $scope.frequency == "") {
+			$scope.frequency = "Anesthesia";
+		}
+
+		var query = {
+			type: $scope.filter,
+			year: $scope.year,
+			month: $scope.month,
+			frequency: $scope.frequency
+		};
+
+		$scope.pms = Pms.index(query, function() {
+			$scope.loading = false;
+		});
+	}
 
         $scope.selectedCls = function(column) {
                 return column == $scope.sort.column && 'sort-' + $scope.sort.descending;
@@ -124,11 +113,13 @@ biomed.SchedulePmsCtrl = function($scope, Clients) {
                 }
         };
 
-	$scope.$watch('month', filter);
-	$scope.$watch('frequency', filter);
-};
+	$scope.$watch('filter', update);
+	$scope.$watch('month', update);
+	$scope.$watch('year', update);
+	$scope.$watch('frequency', update);
+})
 
-biomed.UsersIndexCtrl = function($scope, $filter, $routeParams, $location, Users, LocationBinder) {
+.controller("UsersIndexCtrl", function($scope, $filter, $routeParams, $location, Users, LocationBinder) {
 	$scope.loading = true;
 
 	$scope.account.$then(function(value) {
@@ -210,17 +201,17 @@ biomed.UsersIndexCtrl = function($scope, $filter, $routeParams, $location, Users
 	$scope.isNew = function(user) {
 		return !('_id' in user);
 	};
-};
+})
 
-biomed.UserClockCtrl = function($scope, $routeParams, Users) {
+.controller("UserClockCtrl", function($scope, $routeParams, Users) {
         Users.index({userid: $routeParams.id}, function(result) {
                 $scope.tech = result[0];
         });
 
 	$scope.clocks = Users.clocks($routeParams);
-};
+})
 
-biomed.PostIndexCtrl = function($scope, $routeParams, Posts, LocationBinder) {
+.controller("PostIndexCtrl", function($scope, $routeParams, Posts, LocationBinder) {
 	var updatePosts = function() {
 		$scope.loading = true;
 
@@ -244,9 +235,9 @@ biomed.PostIndexCtrl = function($scope, $routeParams, Posts, LocationBinder) {
 	};
 
 	$scope.$watch('page', updatePosts);
-};
+})
 
-biomed.PostAddCtrl = function($scope, Posts, $location) {
+.controller("PostAddCtrl", function($scope, Posts, $location) {
 
         $scope.tagOptions = {
                 'multiple': true,
@@ -350,9 +341,9 @@ biomed.PostAddCtrl = function($scope, Posts, $location) {
 	$scope.saveAsPosted = function() {
 		save('posted');
 	};
-};
+})
 
-biomed.PostEditCtrl = function($scope, Posts, $routeParams, $location) {
+.controller("PostEditCtrl", function($scope, Posts, $routeParams, $location) {
 	var galleryImages = {};
 
         $scope.tagOptions = {
@@ -475,10 +466,10 @@ biomed.PostEditCtrl = function($scope, Posts, $routeParams, $location) {
         $scope.saveAsArchived = function() {
                 save('archived');
         };
-};
+})
 
 
-biomed.ClientIndexCtrl = function($scope, $filter, $routeParams, Clients, LocationBinder) {
+.controller("ClientIndexCtrl", function($scope, $filter, $routeParams, Clients, LocationBinder) {
 	$scope.loading = true;
 
 	var allData = Clients.index(function() {
@@ -532,9 +523,9 @@ biomed.ClientIndexCtrl = function($scope, $filter, $routeParams, Clients, Locati
 
 		$scope.filter();
         };
-};
+})
 
-biomed.ClientAddCtrl = function($scope, Clients, $location) {
+.controller("ClientAddCtrl", function($scope, Clients, $location) {
 
 	$scope.save = function() {
 		$scope.model.contacts = [$scope.primaryContact, $scope.secondaryContact];
@@ -543,9 +534,9 @@ biomed.ClientAddCtrl = function($scope, Clients, $location) {
 			$location.path("/clients/" + result._id);
 		})
 	};
-};
+})
 
-biomed.ClientEditCtrl = function($scope, $routeParams, Clients) {
+.controller("ClientEditCtrl", function($scope, $routeParams, Clients) {
 	$scope.route = $routeParams;
 	$scope.loading = true;
 
@@ -672,9 +663,9 @@ biomed.ClientEditCtrl = function($scope, $routeParams, Clients) {
 			});
 		}
 	}
-};
+})
 
-biomed.AccountingIndexCtrl = function($scope, $filter, $routeParams, Workorders, LocationBinder) {
+.controller("AccountingIndexCtrl", function($scope, $filter, $routeParams, Workorders, LocationBinder) {
 	$scope.loading = true;
 
 	var data = {};
@@ -757,9 +748,9 @@ biomed.AccountingIndexCtrl = function($scope, $filter, $routeParams, Workorders,
 			filter();
 		});
 	}
-} 
+})
 
-biomed.WorkorderIndexCtrl = function($scope, $filter, $routeParams, Workorders, LocationBinder) {
+.controller("WorkorderIndexCtrl", function($scope, $filter, $routeParams, Workorders, LocationBinder) {
 	$scope.loading = true;
 
 	var data = {};
@@ -831,9 +822,9 @@ biomed.WorkorderIndexCtrl = function($scope, $filter, $routeParams, Workorders, 
 			filter();
 		});
 	}
-} 
+})
 
-biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clients, Users) {
+.controller("WorkorderAddCtrl", function($scope, $location, Workorders, Schedule, Clients, Users) {
 
         $scope.emailsOptions = {
 		'multiple': true,
@@ -1014,9 +1005,9 @@ biomed.WorkorderAddCtrl = function($scope, $location, Workorders, Schedule, Clie
 			});
 		});
 	}
-}
+})
 
-biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, Users) {
+.controller("WorkorderEditCtrl", function($scope, $routeParams, Workorders, Schedule, Users) {
         $scope.emailsOptions = {
                 'multiple': true,
                 'simple_tags': true,
@@ -1245,10 +1236,10 @@ biomed.WorkorderEditCtrl = function($scope, $routeParams, Workorders, Schedule, 
 			});
 		});
 	}
-};
+})
 
 
-biomed.PageCtrl = function($scope, $dialog, Account) {
+.controller("PageCtrl", function($scope, $dialog, Account) {
 	$scope.opts = {
 		backdrop: true,
 		keyboard: true,
@@ -1256,7 +1247,7 @@ biomed.PageCtrl = function($scope, $dialog, Account) {
 		dialogFade: true,
 		backdropFade: true,
 		templateUrl: '/partials/messages.html',
-		controller: 'biomed.MessagesCtrl'
+		controller: 'MessagesCtrl'
 	};
 
 	$scope.openDialog = function(){
@@ -1273,9 +1264,9 @@ biomed.PageCtrl = function($scope, $dialog, Account) {
 	};
 
 	$scope.account = Account.get();
-};
+})
 
-biomed.MessagesCtrl = function($scope, dialog, Users, Messages) {
+.controller("MessagesCtrl", function($scope, dialog, Users, Messages) {
 	$scope.model = {};
 
 	$scope.model.messages = [
@@ -1302,4 +1293,4 @@ biomed.MessagesCtrl = function($scope, dialog, Users, Messages) {
 	$scope.cancel = function() {
 		dialog.close();
 	};
-};
+})

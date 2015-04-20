@@ -23,7 +23,9 @@
     "markdown": "",
     "node-uuid": "~1.4.1",
     "MD5": "~1.2.1",
-    "pushover-notifications": "~0.2.2"
+    "pushover-notifications": "~0.2.2",
+    "bluebird": "~2.9.24",
+    "lodash": "~3.7.0"
   },
   "devDependencies": {
     "supervisor": ""

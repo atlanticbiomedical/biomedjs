@@ -5,9 +5,12 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	piler.addCssUrl("//fonts.googleapis.com/css?family=Open+Sans:400,300");
 	piler.addCssFile("/css/biomed.less");
 
-	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js");
-	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.1.3/angular.js");
-	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.1.3/angular-resource.js");
+	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js");
+	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js");
+	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js");
+	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-resource.js");
+
+
 	piler.addJsUrl("http://d3js.org/d3.v2.js");
 	piler.addJsFile("/js/lib/moment.js");
 	piler.addJsFile("/js/lib/bootstrap-datepicker.js");
@@ -47,6 +50,9 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.post('/api/workorders', workorders.create);
 	app.post('/api/workorders/:workorder_id', workorders.update);
 	app.del('/api/workorders/:workorder_id', workorders.destroy);
+
+	var pms = require('../app/controllers/pms');
+	app.get('/api/pms', pms.index);
 
 	var schedule = require('../app/controllers/schedule');
 	app.get('/api/schedule', schedule.index);

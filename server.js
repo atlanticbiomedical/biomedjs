@@ -6,10 +6,12 @@ var express = require('express')
 
 var env = 'prod',
 	config = require('./config/config')[env],
-	mongoose = require('mongoose');
+	mongoose = require('mongoose'),
+	Promise = require('bluebird');
 
 var log = require('log4node');
 
+Promise.promisifyAll(mongoose);
 
        process.on('uncaughtException', function(err) {
                console.log('Uncaught Exception:', err);
