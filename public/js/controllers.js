@@ -21,7 +21,6 @@ angular.module('biomed')
 			start: moment($scope.date).subtract('days', 10).toDate().toJSON(),
 			end: moment($scope.date).add('days', 21).toDate().toJSON()
 		}, function(result) {
-			console.log(result);
 			$scope.schedule = result;
 		});
 	}
@@ -122,7 +121,7 @@ angular.module('biomed')
 .controller("UsersIndexCtrl", function($scope, $filter, $routeParams, $location, Users, LocationBinder) {
 	$scope.loading = true;
 
-	$scope.account.$then(function(value) {
+	$scope.account.$promise.then(function(value) {
 		if (!$scope.accountHasPermission('system.admin'))
 			return $location.path('/');
 	});
@@ -276,13 +275,11 @@ angular.module('biomed')
 		},
 		eventHandlers: {
 			success: function(file, response) {
-				console.log('adding file');
 				$scope.$apply(function() {
 					$scope.model.image = response.filename;
 				});
 			},
 			removedfile: function(file) {
-				console.log('removing file');
 				$scope.$apply(function() {
 					$scope.model.image = undefined;
 				});
@@ -303,7 +300,6 @@ angular.module('biomed')
 		},
 		eventHandlers: {
 			success: function(file, response) {
-				console.log('Adding File');
 				file.filename = response.filename;
 
 				if (galleryImages[file.filename]) {
@@ -314,7 +310,6 @@ angular.module('biomed')
 				}
 			},
                         removedfile: function(file) {
-                                console.log('Removing File');
                                 galleryImages[file.filename]--;
 
 				if (galleryImages[file.filename] <= 0) {
@@ -372,8 +367,6 @@ angular.module('biomed')
 	$scope.model = Posts.get($routeParams, function() {
 		$scope.loading = false;
 
-		console.log($scope.model);
-
 		if ($scope.model.image) {
 			$scope.existingTitleImages = [$scope.model.image];
 		}
@@ -397,13 +390,11 @@ angular.module('biomed')
                 },
                 eventHandlers: {
                         success: function(file, response) {
-                                console.log('adding file');
                                 $scope.$apply(function() {
                                         $scope.model.image = response.filename;
                                 });
                         },
                         removedfile: function(file) {
-                                console.log('removing file');
                                 $scope.$apply(function() {
                                         $scope.model.image = undefined;
                                 });
@@ -423,7 +414,6 @@ angular.module('biomed')
                 },
                 eventHandlers: {
                         success: function(file, response) {
-                                console.log('Adding File');
                                 file.filename = response.filename;
 
                                 if (galleryImages[file.filename]) {
@@ -434,7 +424,6 @@ angular.module('biomed')
                                 }
                         },
                         removedfile: function(file) {
-                                console.log('Removing File');
                                 galleryImages[file.filename]--;
 
 				if (galleryImages[file.filename] <= 0) {
@@ -447,8 +436,6 @@ angular.module('biomed')
         var save = function(status) {
                 $scope.model.gallery = Object.keys(galleryImages);
                 $scope.model.status = status;
-
-		console.log($scope.model);
 
                 Posts.update({id: $scope.model._id}, $scope.model, function(result) {
                         $location.path("/posts/");
@@ -673,10 +660,13 @@ angular.module('biomed')
 	var defaultEnd = moment().toDate();
 	var defaultStart = moment(defaultEnd).subtract('days', 7).toDate();
 
-	LocationBinder($scope, ['query', 'status', 'start', 'end'], {
-		start: defaultStart,
-		end: defaultEnd
-	});
+	$scope.start = defaultStart;
+	$scope.end = defaultEnd;
+
+//	LocationBinder($scope, ['query', 'status', 'start', 'end'], {
+//		start: defaultStart,
+//		end: defaultEnd
+//	});
 
 	fetchData();
 
@@ -686,6 +676,7 @@ angular.module('biomed')
 	var initialPageSize = 100;
 	var pageSize = 5;
 
+	$scope.query = '!n/a';
 	$scope.canLoad = true;
 
 	$scope.$watch('query', filter);
@@ -733,7 +724,6 @@ angular.module('biomed')
 	};
 
 	$scope.selectPage = function(status) {
-		console.log('SelectPage: ' + status);
 		$scope.status = status;
 	}
 
@@ -844,6 +834,8 @@ angular.module('biomed')
 
 	var search = $location.search();
 
+	$scope.model.status = 'scheduled';
+
 	if (search.workorderType == 'pm') {
 		$scope.model.client = search.clientId;
 		$scope.model.reason = "Preventive Maintenance";
@@ -853,6 +845,7 @@ angular.module('biomed')
 	} else if (search.workorderType == "meeting") {
 		$scope.model.reason = "Meeting";
 		$scope.workorderType = 'meeting';
+		$scope.model.status = 'n/a';
 
 		if (search.clientId) {
 			$scope.model.client = search.clientId;
@@ -966,7 +959,6 @@ angular.module('biomed')
 		var startDate = moment(picker.startDate).format('YYYY-MM-DD');
 		var endDate = moment(picker.endDate).format('YYYY-MM-DD');
 
-		model.status = 'scheduled';
 		model.scheduling = {};
 		model.scheduling.start = moment(startDate + 'T' + picker.startTime).toDate();
 		model.scheduling.end = moment(endDate + 'T' + picker.endTime).toDate();
@@ -1175,16 +1167,18 @@ angular.module('biomed')
 		}
 
 		$scope.$watch('scheduling.startDate', function() {
-			Schedule.index({
-				date: $scope.scheduling.startDate.toJSON()
-			}, function(result) {
-				$scope.scheduling.schedule = result;
-			});
+			if ($scope.scheduling.startDate) {
+				Schedule.index({
+					date: $scope.scheduling.startDate.toJSON()
+				}, function(result) {
+					$scope.scheduling.schedule = result;
+				});
 
-			if (datesOverlap()) {
-				$scope.scheduling.endDate = $scope.scheduling.startDate;
+				if (datesOverlap()) {
+					$scope.scheduling.endDate = $scope.scheduling.startDate;
+				}
+				updateDuration();
 			}
-			updateDuration();
 		});
 
 	        $scope.$watch('scheduling.endDate', function() {
