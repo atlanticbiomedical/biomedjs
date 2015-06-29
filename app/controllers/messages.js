@@ -14,13 +14,11 @@ module.exports = function(config) {
 
 	return {
 		send: function(req, res) {			
-			console.log(req);
 			var userId = req.body.user;
 			if (!userId) {
 				return res.json(404, null);
 			}
 
-			console.log("Sending message");
 			User.findById(userId, function(err, user) {
 				if (err) return res.json(500, err);
 

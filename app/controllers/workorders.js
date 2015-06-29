@@ -139,9 +139,6 @@ module.exports = function(config, calendar) {
 
 					var subject = 'Workorder created: ' + workorder.biomedId;
 
-					console.log('-------------------------');
-					console.log(to);
-
 					async.waterfall([
 						function(cb) {
 							if (to && to.length > 0) {
@@ -151,7 +148,6 @@ module.exports = function(config, calendar) {
 									to: to,
 									subject: subject
 								};
-								console.log(msg);
 								server.send(msg, function(err, message) { cb(err); });
 							} else {
 								cb();
@@ -165,7 +161,6 @@ module.exports = function(config, calendar) {
 									to: techTo,
 									subject: subject
 								};
-								console.log(msg);
 								server.send(msg, function(err, message) { cb(err); });
 							} else {
 								cb();
@@ -318,7 +313,6 @@ module.exports = function(config, calendar) {
 									to: to,
 									subject: subject
 								};
-								console.log(msg);
 								server.send(msg, function(err, message) { cb(err); });
 							} else {
 								cb();
@@ -332,7 +326,6 @@ module.exports = function(config, calendar) {
 									to: techTo,
 									subject: subject
 								};
-								console.log(msg);
 								server.send(msg, function(err, message) { cb(err); });
 							} else {
 								cb();

@@ -118,6 +118,59 @@ angular.module('biomed')
 	$scope.$watch('frequency', update);
 })
 
+.controller("FrequencyReportCtrl", function($scope, $q, $filter, Clients, Workorders, Pms) {
+	$scope.loading = true;
+
+	// Setup initial state
+	$scope.month = moment().month();
+	$scope.year = 2015;
+	$scope.frequency = "Anesthesia";
+
+        $scope.sort = {
+                column: 'client.name',
+                descending: false
+        };
+
+	function update() {
+		$scope.loading = true;
+
+		if ($scope.month == "" && $scope.frequency == "") {
+			$scope.frequency = "Anesthesia";
+		}
+
+		var query = {
+			year: $scope.year,
+			month: $scope.month,
+			frequency: $scope.frequency,
+			type: 'all'
+		};
+
+		$scope.pms = Pms.index(query, function() {
+			$scope.loading = false;
+		});
+	}
+
+        $scope.selectedCls = function(column) {
+                return column == $scope.sort.column && 'sort-' + $scope.sort.descending;
+        }
+
+        $scope.changeSorting = function(column) {
+		console.log(column);
+                var sort = $scope.sort;
+                if (sort.column == column) {
+                        sort.descending = !sort.descending;
+                } else {
+                        sort.column = column;
+                        sort.descending = false;
+                }
+        };
+
+	$scope.$watch('month', update);
+	$scope.$watch('year', update);
+	$scope.$watch('frequency', update);
+})
+
+
 .controller("UsersIndexCtrl", function($scope, $filter, $routeParams, $location, Users, LocationBinder) {
 	$scope.loading = true;
 
@@ -814,7 +867,7 @@ angular.module('biomed')
 	}
 })
 
-.controller("WorkorderAddCtrl", function($scope, $location, Workorders, Schedule, Clients, Users) {
+.controller("WorkorderAddCtrl", function($scope, $location, $filter, Workorders, Schedule, Clients, Users) {
 
         $scope.emailsOptions = {
 		'multiple': true,
@@ -864,18 +917,45 @@ angular.module('biomed')
 		}
 	}
 
+	if ($scope.model.client) {
+		Clients.get({ id: $scope.model.client }, function(item) {
+			$scope.clientPicker = {id: item._id, text: item.name + " (" + item.identifier + ")", data: item};
+		});
+	}
+
 	updateAllUsers();
 	updateUsers();
 
 	$scope.$watch('group', updateUsers);
 
-	$scope.$watch('model.client', function() {
-		$scope.currentClient = Clients.get({ id: $scope.model.client });
+	$scope.$watch('clientPicker', function() {
+		if ($scope.clientPicker) {
+			var client = $scope.clientPicker.data;
+			$scope.model.client = client._id;
+			$scope.currentClient = client;
+		} else {
+			$scope.model.client = null;
+			$scope.currentClient = null;
+		}
 	});
 
 	Clients.index(function(result) {
 		$scope.clients = result;
 	});
+
+	$scope.clientOpts = {
+		containerCssClass: 'input-xxlarge',
+		placeholder: 'Choose a Client',
+		minimumInputLength: 2,
+		query: function(query) {
+			var data = $filter('filter')($scope.clients, query.term);
+			var results = [];
+			data.forEach(function(item) {
+				results.push({id: item._id, text: item.name + " (" + item.identifier + ")", data: item}); 
+			});
+			query.callback({ results: results });
+		}
+	};
 
 	function convertToDate(date, time) {
 		return moment(moment(date).format('YYYY-MM-DD') + 'T' + time).toDate();

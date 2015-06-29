@@ -1,0 +1,73 @@
+<ul class="breadcrumb">
+        <li><a href="/schedule/pms"><i class="icon-briefcase"></i>Preventive Maintenance</a><li>
+        <li><a href="/schedule/pms/report"><i class="icon-book"></i>Frequency Report</a></li>
+</ul>
+<header>
+	<h1>Frequency Report</h1>
+</header>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="toolbelt">
+			<span class="toolbelt-text">Frequency:</span>
+			<select ng-model="frequency" name="frequency" class="input-xlarge">
+                              	<option value="Anesthesia">Anesthesia</option>
+                          	<option value="Annual">Annual</option>
+	            	    	<option value="DLLR">DLLR</option>
+        		      	<option value="ERT">ERT</option>
+                            	<option value="Ice Maker">Ice Maker</option>
+                          	<option value="Imaging">Imaging</option>
+                          	<option value="Medical Device">Medical Device</option>
+                           	<option value="Medical Gas Systems">Medical Gas Systems</option>
+                	     	<option value="N2O Trace Gas">N2O Trace Gas</option>
+                         	<option value="Quarterly">Quarterly</option>
+                                <option value="RAE">RAE</option>
+                          	<option value="Semi">Semi</option>
+				<option value="Sterilizer - Cleaning">Sterilizer - Cleaning</option>
+                            	<option value="Sterilizer - F">Sterilizer - F</option>
+                           	<option value="Sterilizer - TT">Sterilizer - TT</option>
+                           	<option value="Vaporizer">Vaporizer</option>
+                        	<option value="Waste Management System">Waste Management System</option>
+			<select>
+			<div class="pull-right">
+				<span class="toolbelt-text">Month:</span>
+			        <div class="input-append">
+					<select ng-model="month" name="month" class="input-xlarge">
+						<option value="">All</option>
+						<option value="0">January</option>
+						<option value="1">February</option>
+						<option value="2">March</option>
+						<option value="3">April</option>
+						<option value="4">May</option>
+						<option value="5">June</option>
+						<option value="6">July</option>
+						<option value="7">August</option>
+						<option value="8">September</option>
+						<option value="9">October</option>
+						<option value="10">November</option>
+						<option value="11">December</option>
+					</select>
+		            		<span class="add-on"><i class="icon-calendar"></i></span>
+	            		</div>
+			</div>
+		</div>
+		<table class="biomed-table" infinite-scroll="addItems()" can-load="canLoad" threshold="300">
+			<thead>
+				<tr>
+					<th style="width: 60%" ng-class="selectedCls('name')"  ng-click="changeSorting('name')">Client Name</th>
+					<th style="width: 25%" ng-class="selectedCls('contacts[0].name')"  ng-click="changeSorting('contacts[0].name')">Contact</th>
+					<th style="width: 15%" ng-class="selectedCls('contacts[0].phone')"  ng-click="changeSorting('contacts[0].phone')">Phone</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-show="loading"><td colspan="3" class="table-loading"><i class="loader"></i></td></tr>
+				<tr ng-hide="loading || pms.length"><td colspan="3" class="table-message">There is no information to display.</td></tr>
+				<tr ng-hide="loading" ng-repeat="pm in pms | orderBy : sort.column : sort.descending">
+					<td>{{pm.name}} ({{pm.identifier | uppercase}})</td>
+					<td>{{pm.contacts[0].name}}</td>
+					<td>{{pm.contacts[0].phone}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

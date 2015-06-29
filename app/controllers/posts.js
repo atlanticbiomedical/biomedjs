@@ -43,7 +43,6 @@ function renderHtml(input) {
 		try {
 			return markdown.toHTML(input);
 		} catch (err) {
-			console.log('Failed to render html', err);
 			return input;
 		}
 	} else {
@@ -108,8 +107,6 @@ exports.create = function(req, res, next) {
 exports.update = function(req, res, next) {
 	var id = req.param('post_id');
 
-	console.log('updating post');
-	
 	return Post.findById(id, function(err, post) {
 		post.title		= req.body.title;
 		post.preview		= req.body.preview;

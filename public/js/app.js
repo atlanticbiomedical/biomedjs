@@ -44,6 +44,10 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 				templateUrl: '/partials/schedule/pms.html',
 				controller: "SchedulePmsCtrl"
 			})
+			.when('/schedule/pms/report', {
+				templateUrl: '/partials/schedule/report.html',
+				controller: "FrequencyReportCtrl"
+			})
 			.when('/clients', {
 				templateUrl: '/partials/clients/index.html',
 				controller: "ClientIndexCtrl",

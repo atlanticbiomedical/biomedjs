@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 
 var log = require('log4node');
 
-var frequencies = ["Medical Device","Sterilizer - TT","Vaporizer","Ice Maker","Anesthesia","Waste Management System","Imaging","Medical Gas Systems","RAE","ERT","N2O Trace Gas","Sterilizer - F","Quarterly","Semi","Annual","legacy","DLLR", "Isolation Panel", "Battery Backup"];
+var frequencies = ["Medical Device","Sterilizer - TT","Vaporizer","Ice Maker","Anesthesia","Waste Management System","Imaging","Medical Gas Systems","RAE","ERT","N2O Trace Gas","Sterilizer - F","Quarterly","Semi","Annual","legacy","DLLR", "Isolation Panel", "Battery Backup", "Sterilizer - Cleaning"];
 
 exports.index = function(req, res) {
 	log.info("clients.index");

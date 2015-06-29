@@ -72,6 +72,6 @@ require('./config/routes')(app, auth, piler, calendar, directory, config);
 
 GLOBAL.health = 'OK'
 
-var port = process.env.PORT || 8000
+var port = process.env.PORT || 9000
 server.listen(port)
 console.log('Express app started on port ' + port)
