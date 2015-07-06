@@ -28,6 +28,7 @@
                            	<option value="Sterilizer - TT">Sterilizer - TT</option>
                            	<option value="Vaporizer">Vaporizer</option>
                         	<option value="Waste Management System">Waste Management System</option>
+				<option value="legacy">legacy</option>
 			<select>
 			<div class="pull-right">
 				<span class="toolbelt-text">Month:</span>
@@ -63,7 +64,7 @@
 				<tr ng-show="loading"><td colspan="3" class="table-loading"><i class="loader"></i></td></tr>
 				<tr ng-hide="loading || pms.length"><td colspan="3" class="table-message">There is no information to display.</td></tr>
 				<tr ng-hide="loading" ng-repeat="pm in pms | orderBy : sort.column : sort.descending">
-					<td>{{pm.name}} ({{pm.identifier | uppercase}})</td>
+					<td><a href="/clients/{{pm._id}}">{{pm.name}} ({{pm.identifier | uppercase}})</a></td>
 					<td>{{pm.contacts[0].name}}</td>
 					<td>{{pm.contacts[0].phone}}</td>
 				</tr>

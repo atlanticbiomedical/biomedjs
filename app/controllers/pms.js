@@ -201,13 +201,13 @@ function filterClientsByFrequency(month, frequency) {
 
 			Object.keys(client.frequencies).forEach(function(frequencyName) {
 				var monthData = client.frequencies[frequencyName];
-				if (monthData[month] || month === undefined) {
+
+				if (month ? monthData[month] : _.some(monthData, Boolean)) {
 					if (!frequency || frequency == frequencyName) {
 						enabledFrequencies.push(frequencyName);
 					}
 				}
 			});
-
 			if (enabledFrequencies.length > 0) {
 				client.frequencies = enabledFrequencies;
 				results.push(client);

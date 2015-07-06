@@ -73,5 +73,37 @@ require('./config/routes')(app, auth, piler, calendar, directory, config);
 GLOBAL.health = 'OK'
 
 var port = process.env.PORT || 9000
-server.listen(port)
-console.log('Express app started on port ' + port)
+
+server.on('error', function(e) {
+	if (e.code == 'EADDRINUSE') {
+		console.log('Address in use, retrying...');
+		setTimeout(function() {
+			server.close();
+			server.listen(port, onListen);
+		}, 1000);
+	}
+});
+
+
+server.listen(port, onListen);
+
+
+
+function onListen() {
+               var p = new pushover({
+                       user: 'aJmPD4KigO0vLwim76n3WqWKwbKA3k',
+                       token: 'YxspDLz3WinbPmwBThuZXCME9QmkDb'
+               });
+
+               var message = {
+                       title: 'Portal is running',
+                       message: 'Process was reset on ' + new Date(),
+                       sound: 'bugle'
+               };
+               p.send(message, function(err, result) {
+                       if (err) {
+                               log.emergency('Error while sending pushover notification');
+                               log.emergency(err);
+                       }
+               });
+}

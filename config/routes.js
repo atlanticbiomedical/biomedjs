@@ -23,6 +23,13 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	piler.addJsFile("/js/filters.js");
 	piler.addJsFile("/js/services.js");
 
+	app.get('/crash', function(req, res) {
+		console.log('Commiting Suicide for Science!');
+		process.nextTick(function() {
+			throw new Error("Ermergerd!");
+		});
+	});
+
 	app.all('/api/*', auth.requiresApiAccess);
 
 	var posts = require('../app/controllers/posts');
