@@ -705,6 +705,257 @@ angular.module('biomed')
 	}
 })
 
+.controller("DeviceIndexCtrl", function($scope, $filter, $routeParams, Devices, LocationBinder) {
+	$scope.loading = true;
+
+	var allData = Devices.index(function() {
+		$scope.loading = false;
+		$scope.filter();
+	});
+
+	var filteredData = [];
+	var index = 0;
+	var initialPageSize = 100;
+	var pageSize = 5;
+
+	$scope.canLoad = true;
+
+	$scope.$watch('query', function() {
+		$scope.filter();
+	});
+
+	LocationBinder($scope, ['query']);
+
+	$scope.filter = function() {
+		filteredData = $filter('orderBy')($filter('filter')(allData, $scope.query), $scope.sort.column, $scope.sort.descending);
+		index = initialPageSize;
+		$scope.canLoad = true;
+		$scope.devices = filteredData.slice(0, initialPageSize);
+	};
+
+	$scope.addItems = function() {
+		$scope.devices = $scope.devices.concat(filteredData.slice(index, index + pageSize));
+		index += pageSize;
+		$scope.canLoad = index < filteredData.length;
+	}
+
+        $scope.sort = {
+                column: 'deviceType',
+                descending: false
+        };
+
+        $scope.selectedCls = function(column) {
+                return column == $scope.sort.column && 'sort-' + $scope.sort.descending;
+        }
+
+        $scope.changeSorting = function(column) {
+                var sort = $scope.sort;
+                if (sort.column == column) {
+                        sort.descending = !sort.descending;
+                } else {
+                        sort.column = column;
+                        sort.descending = false;
+                }
+
+		$scope.filter();
+        };
+})
+
+.controller("DeviceAddCtrl", function($scope, Devices, $location, $filter) {
+	$scope.model = {};
+
+	$scope.deviceTypes = Devices.deviceTypes();
+	$scope.deviceMakes = Devices.makes();
+
+	$scope.deviceTypeOpts = {
+		containerCssClass: 'input-xxlarge',
+		placeholder: 'Choose a Device Type',
+		query: function(query) {
+			var data = $filter('filter')($scope.deviceTypes, query.term);
+			var results = [];
+			data.forEach(function(item) {
+				results.push({id: item, text: item});
+			});
+			query.callback({results: results });
+		},
+		createSearchChoice: function(term) {
+			return { id: term, text: term };
+		}
+	};
+
+	$scope.makeOpts = {
+		containerCssClass: 'input-xxlarge',
+		placeholder: 'Choose a Device Make',
+		query: function(query) {
+			var data = $filter('filter')($scope.deviceMakes, query.term);
+			var results = [];
+			data.forEach(function(item) {
+				results.push({id: item, text: item});
+			});
+			query.callback({results: results });
+		},
+		createSearchChoice: function(term) {
+			return { id: term, text: term };
+		}
+	};
+
+	var images = {};
+
+        $scope.imageOpts = {
+                options: {
+                       	url: '/api/devices/images',
+                       	addRemoveLinks: true
+               	},
+               	eventHandlers: {
+                       	success: function(file, response) {
+                                file.filename = response.filename;
+
+                               	if (images[file.filename]) {
+                                       	images[file.filename]++;
+                                       	this.removeFile(file);
+                                } else {
+                                        images[file.filename] = 1;
+                                }
+                        },
+                        removedfile: function(file) {
+                                images[file.filename]--;
+
+                                if (images[file.filename] <= 0) {
+                                        delete images[file.filename];
+                                }
+                        }
+                }
+        };
+
+	$scope.$watch('deviceTypePicker', function() {
+		if ($scope.deviceTypePicker) {
+			$scope.model.deviceType = $scope.deviceTypePicker.id;
+		} else {
+			$scope.model.deviceType = null;
+		}
+	});
+
+	$scope.$watch('makePicker', function() {
+		if ($scope.makePicker) {
+			$scope.model.make = $scope.makePicker.id;
+		} else {
+			$scope.model.make = null;
+		}
+	});
+
+        $scope.save = function() {
+		$scope.model.images = Object.keys(images);
+
+		Devices.create($scope.model, function(result) {
+//			$location.path("/devices/" + result._id);
+			$location.path("/devices/");
+		});
+        };
+})
+
+.controller("DeviceEditCtrl", function($scope, Devices, $location, $filter, $routeParams) {
+	var images = {};
+
+	$scope.model = Devices.get($routeParams, function() {
+		$scope.loading = false;
+
+		$scope.existingImages = $scope.model.images;
+		if ($scope.model.images) {
+			for (var i = 0; i < $scope.model.images.length; i++) {
+				images[$scope.model.images[i]] = 1;
+			}
+		}
+
+		$scope.deviceTypePicker = {id: $scope.model.deviceType, text: $scope.model.deviceType};
+		$scope.makePicker = {id: $scope.model.make, text: $scope.model.make};
+	});
+
+	$scope.deviceTypes = Devices.deviceTypes();
+	$scope.deviceMakes = Devices.makes();
+
+	$scope.deviceTypeOpts = {
+		containerCssClass: 'input-xxlarge',
+		placeholder: 'Choose a Device Type',
+		query: function(query) {
+			var data = $filter('filter')($scope.deviceTypes, query.term);
+			var results = [];
+			data.forEach(function(item) {
+				results.push({id: item, text: item});
+			});
+			query.callback({results: results });
+		},
+		createSearchChoice: function(term) {
+			return { id: term, text: term };
+		}
+	};
+
+	$scope.makeOpts = {
+		containerCssClass: 'input-xxlarge',
+		placeholder: 'Choose a Device Make',
+		query: function(query) {
+			var data = $filter('filter')($scope.deviceMakes, query.term);
+			var results = [];
+			data.forEach(function(item) {
+				results.push({id: item, text: item});
+			});
+			query.callback({results: results });
+		},
+		createSearchChoice: function(term) {
+			return { id: term, text: term };
+		}
+	};
+
+        $scope.imageOpts = {
+                options: {
+                       	url: '/api/devices/images',
+                       	addRemoveLinks: true
+               	},
+               	eventHandlers: {
+                       	success: function(file, response) {
+                                file.filename = response.filename;
+
+                               	if (images[file.filename]) {
+                                       	images[file.filename]++;
+                                       	this.removeFile(file);
+                                } else {
+                                        images[file.filename] = 1;
+                                }
+                        },
+                        removedfile: function(file) {
+                                images[file.filename]--;
+
+                                if (images[file.filename] <= 0) {
+                                        delete images[file.filename];
+                                }
+                        }
+                }
+        };
+
+	$scope.$watch('deviceTypePicker', function() {
+		if ($scope.deviceTypePicker) {
+			$scope.model.deviceType = $scope.deviceTypePicker.id;
+		} else {
+			$scope.model.deviceType = null;
+		}
+	});
+
+	$scope.$watch('makePicker', function() {
+		if ($scope.makePicker) {
+			$scope.model.make = $scope.makePicker.id;
+		} else {
+			$scope.model.make = null;
+		}
+	});
+
+        $scope.save = function() {
+		$scope.model.images = Object.keys(images);
+
+		Devices.update({id: $scope.model._id}, $scope.model, function(result) {
+			$location.path("/devices/");
+		});
+        };
+})
+
 .controller("AccountingIndexCtrl", function($scope, $filter, $routeParams, Workorders, LocationBinder) {
 	$scope.loading = true;
 

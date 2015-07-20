@@ -14,6 +14,20 @@ angular.module('biomed.services', [])
 			isUnique:	{ method: 'GET', params: { cmd: 'isUnique' } },
 		});
 })
+.factory("Devices", function($resource) {
+	return $resource('/api/devices/:id/:cmd',
+		{ id: "@id", cmd: "@cmd" },
+		{
+			index: 	 	{ method: 'GET', params: {}, isArray: true },
+			deviceTypes:	{ method: 'GET', params: { cmd: 'deviceTypes' }, isArray: true },
+			makes:		{ method: 'GET', params: { cmd: 'makes' }, isArray: true },
+			models:		{ method: 'GET', params: { cmd: 'models' }, isArray: true },
+			get: 	 	{ method: 'GET', params: { id: 0} },
+			create:  	{ method: 'POST', params: {} },
+			update:  	{ method: 'POST', params: { id: 0} },
+			destroy: 	{ method: 'DELETE', params: { id: 0 } },
+		});
+})
 .factory("Posts", function($resource) {
 	return $resource('/api/posts/:id',
 		{ id: "@id" },

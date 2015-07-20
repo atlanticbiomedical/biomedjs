@@ -6,8 +6,8 @@
 <header ng-hide="loading">
 	<h1>{{master.name}}</h1>
 	<p class="lead">{{master.identifier}}</p>
-	<a class="btn btn-primary" href="/workorders/add?clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Create new Workorder</a>
-	<a class="btn" href="/workorders/add?workorderType=meeting&clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Create new Meeting</a>
+	<a class="btn btn-primary" href="/workorders/add?clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Work Order</a>
+	<a class="btn" href="/workorders/add?workorderType=meeting&clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Meeting</a>
 </header>
 <div ng-hide="loading" class="tabbable">
 	<div class="tab-content">
@@ -305,9 +305,7 @@
 							<th style="width: 8%">Purchase Date</th>
 							<th style="width: 6%">Warranty Expiration</th>
 							<th style="width: 8%">PM Test</th>
-							<th style="width: 4%">Room #</th>
-							<th style="width: 4%">PO Number</th>
-							<th style="width: 4%">Move to</th>
+							<th style="width: 4%">Location</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -322,8 +320,6 @@
 							<td>{{tag.data.deviceWarrantyExpiration}}</td>
 							<td>{{tag.data.test}}</td>
 							<td>{{tag.data.roomNumber}}</td>
-							<td>{{tag.data.poNumber}}</td>
-							<td>{{tag.data.MoveTo}}</td>
 						</tr>
 					</tbody>
 				</table>

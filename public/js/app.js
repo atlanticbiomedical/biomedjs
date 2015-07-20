@@ -61,6 +61,19 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 				templateUrl: '/partials/clients/edit.html',
 				controller: "ClientEditCtrl"
 			})
+			.when('/devices', {
+				templateUrl: '/partials/devices/index.html',
+				controller: "DeviceIndexCtrl",
+				reloadOnSearch: false
+			})
+			.when('/devices/add', {
+				templateUrl: '/partials/devices/add.html',
+				controller: "DeviceAddCtrl"
+			})
+			.when('/devices/:id', {
+				templateUrl: '/partials/devices/edit.html',
+				controller: "DeviceEditCtrl"
+			})
 			.when('/accounting', {
 				templateUrl: '/partials/accounting/index.html',
 				controller: "AccountingIndexCtrl",

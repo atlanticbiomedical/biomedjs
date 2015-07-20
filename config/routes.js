@@ -58,6 +58,16 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.post('/api/workorders/:workorder_id', workorders.update);
 	app.del('/api/workorders/:workorder_id', workorders.destroy);
 
+	var devices = require('../app/controllers/devices');
+	app.get('/api/devices', devices.index);
+	app.get('/api/devices/deviceTypes', devices.deviceTypes);
+	app.get('/api/devices/makes', devices.makes);
+	app.get('/api/devices/models', devices.models);
+	app.post('/api/devices/images', devices.upload);
+	app.get('/api/devices/:device_id', devices.get);
+	app.post('/api/devices', devices.create);
+	app.post('/api/devices/:device_id', devices.update);
+
 	var pms = require('../app/controllers/pms');
 	app.get('/api/pms', pms.index);
 

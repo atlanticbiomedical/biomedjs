@@ -60,6 +60,10 @@ html(lang="en", ng-app="biomed", ng-controller="PageCtrl")
 						a(href='/accounting')
 							|  Accounting
 
+					li(data-match-route='/devices.*')
+						a(href='/devices')
+							|  Devices
+
 					li(data-match-route='/posts.*', ng-show="accountHasPermission('system.admin')")
 						a(href='/posts')
 							|  Posts

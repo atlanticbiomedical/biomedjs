@@ -807,7 +807,8 @@ angular.module('biomed.directives', [])
 	return {
 		scope: {
 			dropzone: '=',
-			existing: '='
+			existing: '=',
+			prefix: '@'
 		},
 		controller: function($scope, $element, $attrs) {
 			var config, dropzone;
@@ -821,13 +822,16 @@ angular.module('biomed.directives', [])
 			$scope.$watch('existing', function() {
 				var existing = $scope.existing;
 
-				console.log(dropzone);
+				var prefix = "http://atlanticbiomedical.com/images/";
+				if ($scope.prefix) {
+					prefix = prefix + $scope.prefix;
+				}
 
 				if (existing) {
 					for (var i = 0; i < existing.length; i++) {
 						var file = { name: existing[i], size: 0, accepted: true, filename: existing[i] };
 						dropzone.options.addedfile.call(dropzone, file);
-						dropzone.options.thumbnail.call(dropzone, file, "http://atlanticbiomedical.com/images/" + existing[i]);
+						dropzone.options.thumbnail.call(dropzone, file, prefix + existing[i]);
 						dropzone.files.push(file);
 					}
 				}
