@@ -40,8 +40,13 @@
 				<tr ng-hide="loading" ng-repeat="workorder in workorders | orderBy : sort.column : sort.descending">
 					<td>
 						<a ng-href="/workorders/{{workorder._id}}">#{{workorder.biomedId}} - {{workorder.reason}}</a><br>
-						<strong>Techs:</strong> {{ workorder.techs | techs }}<br>
-						{{workorder.remarks}}
+						<span ng-show="workorder.reason != 'Shipment'">
+							<strong>Techs:</strong> {{ workorder.techs | techs }}<br>
+							{{workorder.remarks}}
+						</span>
+						<span ng-show="workorder.reason == 'Shipment'">
+							<strong>Tracking Number:</strong> {{workorder.trackingNumber}}
+						</span>
 					</td>
 					<td><a ng-href="/clients/{{workorder.client._id}}">{{workorder.client.name}} ({{workorder.client.identifier}})</a></td>
 					<td>{{workorder.scheduling.start | date}}</td>

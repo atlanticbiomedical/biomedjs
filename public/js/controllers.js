@@ -1148,12 +1148,16 @@ angular.module('biomed')
 		$scope.workorderType = 'pm';
 	} else if (search.workorderType == "meeting") {
 		$scope.model.reason = "Meeting";
-		$scope.workorderType = 'meeting';
 		$scope.model.status = 'n/a';
+		$scope.workorderType = 'meeting';
 
 		if (search.clientId) {
 			$scope.model.client = search.clientId;
 		}
+	} else if (search.workorderType == 'shipment') {
+		$scope.model.reason = 'Shipment';
+		$scope.model.status = 'scheduled';
+		$scope.workorderType = 'shipment';
 	} else {
 		if (search.clientId) {
 			$scope.model.client = search.clientId;

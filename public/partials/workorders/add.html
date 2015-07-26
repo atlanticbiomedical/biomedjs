@@ -1,12 +1,14 @@
 <ul class="breadcrumb">
 	<li><a href="/clients"><i class="icon-briefcase"></i> Workorders</a><span class="divider"></span><li>
-	<li ng-hide="loading || workorderType == 'meeting'" class="active">New Workorder<li>
+	<li ng-hide="loading || workorderType == 'meeting' || workorderType == 'shipment'" class="active">New Workorder<li>
 	<li ng-hide="loading || workorderType != 'meeting'" class="active">New Meeting</li>
+	<li ng-hide="loading || workorderType != 'shipment'" class="active">New Shipment</li>
 </ul>
 
 <header>
-	<h1 ng-show="workorderType != 'meeting'">New Workorder</h1>
+	<h1 ng-show="workorderType != 'meeting' && workorderType != 'shipment'">New Workorder</h1>
 	<h1 ng-show="workorderType == 'meeting'">New Meeting</h1>
+	<h1 ng-show="workorderType == 'shipment'">New Shipment</h1>
 </header>
 <div class="form">
 	<div class="form-section">
@@ -39,13 +41,13 @@
                                         <label class="control-label">Tech Notes</label>
                                         <div class="controls">{{currentClient.notes['tech']}}</div>
                                 </div>
-				<div class="control-group">
+				<div class="control-group" ng-show="workorderType != 'shipment'">
 					<label class="control-label">Additional E-Mails</label>
 					<div class="controls">
                                                 <input type="text" ui-select2="emailsOptions" ng-model="model.emails" class="input-xxlarge" />
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="control-group" ng-show="workorderType != 'shipment'">
 					<label class="control-label">Alternative Contact</label>
 					<div class="controls">
 						<input ng-model="model.alternativeContact" type="text" class="input-large">
@@ -62,7 +64,7 @@
 				<div class="control-group">
 					<label class="control-label">Reason</label>
 					<div class="controls">
-						<select ng-model="model.reason" name="reason" class="input-xlarge" ng-disabled="{{workorderType == 'pm' || workorderType == 'meeting'}}">
+						<select ng-model="model.reason" name="reason" class="input-xlarge" ng-disabled="{{workorderType == 'pm' || workorderType == 'meeting' || workorderType == 'shipment'}}">
 							<option value="Add New Equipment">Add New Equipment</option>
 							<option value="As Directed">As Directed</option>
 							<option value="Autoclave Repair">Autoclave Repair</option>
@@ -77,6 +79,7 @@
 							<option value="Preventive Maintenance">Preventive Maintenance</option>
 							<option value="Printer Failure">Printer Failure</option>
 							<option value="Repair">Repair</option>
+							<option value="Shipment">Shipment</option>
 						</select>
 					</div>
 				</div>
@@ -113,7 +116,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="form-section">
+	<div class="form-section" ng-show="workorderType != 'shipment'">
 		<div class="section-label">Scheduling</div>
 		<div class="section-container">
 			<div class="form-editor">
@@ -296,11 +299,30 @@
 			</div>
 		</div>
 	</div>
+	<div class="form-section" ng-show="workorderType == 'shipment'">
+		<div class="section-label">Shipment Details</div>
+		<div class="section-container">
+			<div class="form-editor">
+				<div class="control-group">
+					<label class="control-label">Date Shipped</label>
+					<div class="controls">
+						<span><input ng-model="picker.startDate" datepicker type="text" class="input-small"></span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Tracking Number</label>
+					<div class="controls">
+						<span><input ng-model="model.trackingNumber" type="text" class="input-small"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="form-section">
 		<div class="section-label">&nbsp;</div>
 		<div class="section-container">
                         <button ng-disabled="!model.client" ng-click="save(false)" type="button" class="btn btn-primary">Save</button>
-			<button ng-disabled="!model.client" ng-click="save(true)" type="button" class="btn">Save & Notify</button>
+			<button ng-disabled="!model.client" ng-click="save(true)" ng-show="workorderType != 'shipment'" type="button" class="btn">Save & Notify</button>
 		</div>
 	</div>
 </div>

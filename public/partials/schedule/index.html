@@ -10,10 +10,11 @@
 		<div class="toolbelt">
 			<a href="/workorders/add" class="btn btn-primary" ng-show="accountHasPermission('system.edit')">Work Order</a>
 			<a href="/workorders/add?workorderType=meeting" class="btn" ng-show="accountHasPermission('system.edit')">Meeting</a>
+			<a href="/workorders/add?workorderType=shipment" class="btn" ng-show="accountHasPermission('system.edit')">Shipment</a>
 			<div class="pull-right">
-	            <span class="toolbelt-text">Group: </span>
-	            <div class="input-append">
-					<select ng-model="group" name="group" class="input-medium">
+				<span class="toolbelt-text">Group: </span>
+	            		<div class="input-append">
+			<select ng-model="group" name="group" class="input-medium">
 						<option ng-repeat="(key, value) in TECH_GROUPS" value="{{key}}">{{value}}</option>
 					</select>
 		            <span class="add-on"><i class="icon-calendar"></i></span>

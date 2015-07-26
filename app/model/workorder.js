@@ -29,7 +29,8 @@ var workorderSchema = new Schema({
 	invoicedOn: Date,
 	checkNumber: String,
 	paidOn: Date,
-	alternativeContact: String
+	alternativeContact: String,
+	trackingNumber: String
 });
 
 module.exports = mongoose.model('Workorder', workorderSchema);

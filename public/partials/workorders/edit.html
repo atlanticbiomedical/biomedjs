@@ -21,7 +21,7 @@
 				</div>
 			</form>
 
-                        <div class="form-section">
+                        <div class="form-section" ng-show="master.reason != 'Shipment'">
                                 <div class="section-label">Additional Contact Information</div>
                                 <div class="section-container">
                                         <div ng-hide="emails.visible" class="form-preview">
@@ -63,7 +63,7 @@
 						<div class="control-group">
 							<label class="control-label">Reason</label>
 							<div class="controls">
-								<select ng-model="remarks.model.reason" name="reason" class="input-xlarge">
+								<select ng-model="remarks.model.reason" name="reason" class="input-xlarge" ng-disabled="master.reason == 'Shipment' || master.reason == 'Meeting'">
 									<option value="Add New Equipment">Add New Equipment</option>
 									<option value="As Directed">As Directed</option>
 									<option value="Autoclave Repair">Autoclave Repair</option>
@@ -78,6 +78,7 @@
 									<option value="Preventive Maintenance">Preventive Maintenance</option>
 									<option value="Printer Failure">Printer Failure</option>
 									<option value="Repair">Repair</option>
+									<option value="Shipment">Shipment</option>
 								</select>
 							</div>
 						</div>
@@ -114,13 +115,13 @@
 						</div>
 						<div class="form-actions">
 							<button ng-click="remarks.save(false)" type="button" class="btn btn-primary">Save</button>
-							<button	ng-click="remarks.save(true)" type="button" class="btn">Save & Notify</button>
+							<button	ng-click="remarks.save(true)" ng-show="master.reason != 'Shipment'" type="button" class="btn">Save & Notify</button>
 							<button ng-click="remarks.reset()" type="button" class="btn">Cancel</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="form-section">
+			<div class="form-section" ng-show="master.reason != 'Shipment'">
 				<div class="section-label">Scheduling</div>
 				<div class="section-container">
 					<div ng-hide="scheduling.visible" class="form-preview">
@@ -313,6 +314,35 @@
 					</div>
 				</div>
 			</div>
+			<div class="form-section" ng-show="master.reason == 'Shipment'">
+				<div class="section-label">Shipment Details</div>
+				<div class="section-container">
+					<div ng-hide="scheduling.visible" class="form-preview">
+						Shipped <strong>{{master.scheduling.start | date }}</strong><br>
+						Tracking Number: <strong><a ng-href="https://www.fedex.com/apps/fedextrack/?action=track&tracknumbers={{master.trackingNumber}}" target="new">{{master.trackingNumber}}</a></strong><br>
+						<a ng-click="scheduling.edit()" ng-show="accountHasPermission('system.edit')">Edit</a>
+					</div>
+					<div ng-show="scheduling.visible" class="form-editor">
+						<div class="control-group">
+							<label class="control-label">Shipping Date</label>
+							<div class="controls">
+								<span><input ng-model="scheduling.startDate" datepicker type="text" class="input-small"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Tracking Number</label>
+							<div class="controls">
+								<span><input ng-model="scheduling.model.trackingNumber" type="text" class="input-small"></span>
+							</div>
+						</div>
+	
+						<div class="form-actions">
+							<button ng-click="scheduling.save(false)" type="button" class="btn btn-primary">Save</button>
+							<button ng-click="scheduling.reset()" type="button" class="btn">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
 			<form name="form" class="form-section" style="margin-bottom: 0">
 				<div class="section-label">Billing</div>
 				<div class="section-container">
@@ -336,7 +366,7 @@
 						</div>
 						<div class="form-actions">
 							<button ng-disabled="form.$invalid" ng-click="status.save(false)" type="button" class="btn btn-primary">Save</button>
-							<button ng-disabled="form.$invalid" ng-click="status.save(true)" type="button" class="btn">Save & Notify</button>
+							<button ng-disabled="form.$invalid" ng-click="status.save(true)" ng-show="master.reason != 'Shipment'" type="button" class="btn">Save & Notify</button>
 							<button ng-click="status.reset()" type="button" class="btn">Cancel</button>
 						</div>
 					</div>
@@ -345,7 +375,11 @@
 			<div class="form-section">
 				<div class="section-label">Other</div>
 				<div class="section-container">
-					<button ng-click="destroy()" type="button" class="btn btn-danger">Remove <span ng-show="workorderType != 'meeting'">workorder</span><span ng-show="workorderType == 'meeting'">meeting</span></button>
+					<button ng-click="destroy()" type="button" class="btn btn-danger">Remove
+						<span ng-show="master.reason != 'Meeting' && master.reason != 'Shipment'">workorder</span>
+						<span ng-show="master.reason == 'Meeting'">meeting</span>
+						<span ng-show="master.reason == 'Shipment'">shipment</soan>
+					</button>
 				</div>
 			</div>
 		</div>
