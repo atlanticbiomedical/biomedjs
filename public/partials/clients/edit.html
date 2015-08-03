@@ -8,6 +8,7 @@
 	<p class="lead">{{master.identifier}}</p>
 	<a class="btn btn-primary" href="/workorders/add?clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Work Order</a>
 	<a class="btn" href="/workorders/add?workorderType=meeting&clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Meeting</a>
+	<a class="btn" href="/devices/add?clientId={{master._id}}" ng-show="accountHasPermission('system.edit')">Device</a>
 </header>
 <div ng-hide="loading" class="tabbable">
 	<div class="tab-content">
@@ -309,17 +310,17 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-hide="tags.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
-						<tr ng-repeat="tag in tags">
-							<td><a href="http://n.atlb.co/{{tag._id}}">{{tag.data.clientDeviceId}} - (Tag:{{tag._id}})</a></td>							
-							<td>{{tag.data.device}}</td>							
-							<td>{{tag.data.make}}</td>
-							<td>{{tag.data.model}}</td>
-							<td>{{tag.data.serialNumber}}</td>
-							<td>{{tag.data.purchaseDate}}</td>
-							<td>{{tag.data.deviceWarrantyExpiration}}</td>
-							<td>{{tag.data.test}}</td>
-							<td>{{tag.data.roomNumber}}</td>
+						<tr ng-hide="devices.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
+						<tr ng-repeat="device in devices">
+							<td><a href="/devices/{{device._id}}">{{device.biomedId}}</a></td>
+							<td></td>
+							<td>{{device.deviceType.make}}</td>
+							<td>{{device.deviceType.model}}</td>
+							<td>{{device.serialNumber}}</td>
+							<td>{{device.purchaseDate | date}}</td>
+							<td>{{device.warrantyExpiration | date}}</td>
+							<td></td>
+							<td>{{device.location}}</td>
 						</tr>
 					</tbody>
 				</table>

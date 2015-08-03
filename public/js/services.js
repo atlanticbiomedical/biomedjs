@@ -3,23 +3,24 @@ angular.module('biomed.services', [])
 	return $resource('/api/clients/:id/:cmd',
 		{ id: "@id", cmd: "@cmd" },
 		{
-			index: 	 	{ method: 'GET', params: {}, isArray: true },
+			index: 	 		{ method: 'GET', params: {}, isArray: true },
 			frequencies:	{ method: 'GET', params: { cmd: 'frequencies' }, isArray: true },
-			get: 	 	{ method: 'GET', params: { id: 0} },
-			create:  	{ method: 'POST', params: {} },
-			update:  	{ method: 'POST', params: { id: 0} },
-			destroy: 	{ method: 'DELETE', params: { id: 0 } },
+			get: 	 		{ method: 'GET', params: { id: 0} },
+			create:  		{ method: 'POST', params: {} },
+			update:  		{ method: 'POST', params: { id: 0} },
+			destroy: 		{ method: 'DELETE', params: { id: 0 } },
 			workorders: 	{ method: 'GET', params: { id: 0, cmd: 'workorders' }, isArray: true },
+			devices: 		{ method: 'GET', params: { id: 0, cmd: 'devices' }, isArray: true },
 			tags:       	{ method: 'GET', params: { id: 0, cmd: 'tags' }, isArray: true },
-			isUnique:	{ method: 'GET', params: { cmd: 'isUnique' } },
+			isUnique:		{ method: 'GET', params: { cmd: 'isUnique' } },
 		});
 })
-.factory("Devices", function($resource) {
-	return $resource('/api/devices/:id/:cmd',
+.factory("DeviceTypes", function($resource) {
+	return $resource('/api/device_types/:id/:cmd',
 		{ id: "@id", cmd: "@cmd" },
 		{
 			index: 	 	{ method: 'GET', params: {}, isArray: true },
-			deviceTypes:	{ method: 'GET', params: { cmd: 'deviceTypes' }, isArray: true },
+			categories:	{ method: 'GET', params: { cmd: 'categories' }, isArray: true },
 			makes:		{ method: 'GET', params: { cmd: 'makes' }, isArray: true },
 			models:		{ method: 'GET', params: { cmd: 'models' }, isArray: true },
 			get: 	 	{ method: 'GET', params: { id: 0} },

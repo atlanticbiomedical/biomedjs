@@ -1,16 +1,17 @@
 var mongoose = require('mongoose')
-	Schema = mongoose.Schema,
-	ObjectId = Schema.ObjectId;
+  Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId;
 
 var deviceSchema = new Schema({
-	deviceType: String,
-	make: String,
-	model: String,
-	technicalData: String,
-	links: String,
-	partsRecommended: String,
-	images: [{ type: String }],
-        deleted: { type: Boolean, default: false }
+  client: { type: ObjectId, ref: 'Client' },
+  deviceType: { type: ObjectId, ref: 'DeviceType' },
+
+  biomedId: String,
+  serialNumber: String,
+  purchaseDate: Date,
+  warrantyExpiration: Date,
+  location: String,
+  deleted: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('Device', deviceSchema);

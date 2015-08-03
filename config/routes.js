@@ -19,6 +19,8 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	piler.addJsFile("/js/lib/dropzone.js");
 	piler.addJsFile("/js/app.js");
 	piler.addJsFile("/js/controllers.js");
+	piler.addJsFile("/js/controllers/devices.js");
+	piler.addJsFile("/js/controllers/deviceTypes.js");
 	piler.addJsFile("/js/directives.js");
 	piler.addJsFile("/js/filters.js");
 	piler.addJsFile("/js/services.js");
@@ -47,6 +49,7 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.get('/api/clients/:client_id', clients.get);
 	app.get('/api/clients/:client_id/workorders', clients.workorders);
 	app.get('/api/clients/:client_id/tags', clients.tags);
+	app.get('/api/clients/:client_id/devices', clients.devices);
 	app.post('/api/clients', clients.create);
 	app.post('/api/clients/:client_id', clients.update);
 	app.del('/api/clients/:client_id', clients.destroy);
@@ -60,13 +63,20 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 
 	var devices = require('../app/controllers/devices');
 	app.get('/api/devices', devices.index);
-	app.get('/api/devices/deviceTypes', devices.deviceTypes);
-	app.get('/api/devices/makes', devices.makes);
-	app.get('/api/devices/models', devices.models);
-	app.post('/api/devices/images', devices.upload);
+	app.get('/api/devices/isUnique', devices.isUnique);
 	app.get('/api/devices/:device_id', devices.get);
 	app.post('/api/devices', devices.create);
 	app.post('/api/devices/:device_id', devices.update);
+
+	var deviceTypes = require('../app/controllers/deviceTypes');
+	app.get('/api/device_types', deviceTypes.index);
+	app.get('/api/device_types/categories', deviceTypes.categories);
+	app.get('/api/device_types/makes', deviceTypes.makes);
+	app.get('/api/device_types/models', deviceTypes.models);
+	app.post('/api/device_types/images', deviceTypes.upload);
+	app.get('/api/device_types/:device_type_id', deviceTypes.get);
+	app.post('/api/device_types', deviceTypes.create);
+	app.post('/api/device_types/:device_type_id', deviceTypes.update);
 
 	var pms = require('../app/controllers/pms');
 	app.get('/api/pms', pms.index);
