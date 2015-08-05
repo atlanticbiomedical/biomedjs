@@ -1,0 +1,70 @@
+<ul class="breadcrumb">
+    <li><a href="/checkLists"><i class="icon-briefcase"></i> Check Lists</a><span class="divider"></span><li>
+    <li class="active">New Test Run</li>
+</ul>
+<header>
+    <h1>New Test Run</h1>
+</header>
+<form name="form" class="form">
+    <div class="form-section" ng-repeat="field in model.fields">
+        <div class="section-label">{{$index + 1}}.</div>
+        <div class="section-container {{field.result}}">
+            <div class="form-editor">
+                <div class="control-group">
+                    <label class="control-label">Test</label>
+                    <div class="controls">
+                        <p>{{field.label}}</p>
+                        <p ng-if="field.type == 'range'">Passing Values: {{field.min}} - {{field.max}}</p>
+                    </div>
+                </div>
+                <div class="control-group" ng-if="field.type == 'boolean'">
+                    <label class="control-label">Result</label>
+                    <div class="controls">
+                        <select ng-model="field.value" class="input-xlarge" required>
+                            <option value="true">Pass</option>
+                            <option value="false">Fail</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" ng-if="field.type == 'range'">
+                    <label class="control-label">Result</label>
+                    <div class="controls">
+                        <input ng-model="field.value" type="number" class="input-xlarge" required>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Comments</label>
+                    <div class="controls">
+                        <textarea ng-model="field.comments" type="text" class="input-xxlarge" ng-required="!field.result"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
+        <div class="section-label">Summary</div>
+        <div class="section-container">
+            <div class="form-editor">
+                <div class="control-group">
+                    <label class="control-label">Result</label>
+                    <div class="controls">
+                        <span ng-if="model.result">Passed</span>
+                        <span ng-if="!model.result">Failed</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Comments</label>
+                    <div class="controls">
+                        <textarea ng-model="model.comments" class="input-xlarge"></textarea> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
+        <div class="section-label">&nbsp;</div>
+        <div class="section-container">
+            <button ng-click="save()" ng-disabled="form.$invalid" type="button" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</form>

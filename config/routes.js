@@ -9,18 +9,21 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js");
 	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js");
 	piler.addJsUrl("//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-resource.js");
-
-
 	piler.addJsUrl("http://d3js.org/d3.v2.js");
+	piler.addJsUrl("https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js")
+
 	piler.addJsFile("/js/lib/moment.js");
 	piler.addJsFile("/js/lib/bootstrap-datepicker.js");
 	piler.addJsFile("/js/lib/dialog.js");
 	piler.addJsFile("/js/lib/select2.js");
 	piler.addJsFile("/js/lib/dropzone.js");
+	piler.addJsFile("/js/lib/hashids.js");
 	piler.addJsFile("/js/app.js");
 	piler.addJsFile("/js/controllers.js");
+	piler.addJsFile("/js/controllers/checkLists.js");
 	piler.addJsFile("/js/controllers/devices.js");
 	piler.addJsFile("/js/controllers/deviceTypes.js");
+	piler.addJsFile("/js/controllers/testRuns.js");
 	piler.addJsFile("/js/directives.js");
 	piler.addJsFile("/js/filters.js");
 	piler.addJsFile("/js/services.js");
@@ -65,6 +68,7 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.get('/api/devices', devices.index);
 	app.get('/api/devices/isUnique', devices.isUnique);
 	app.get('/api/devices/:device_id', devices.get);
+	app.get('/api/devices/:device_id/test_runs', devices.testRuns);
 	app.post('/api/devices', devices.create);
 	app.post('/api/devices/:device_id', devices.update);
 
@@ -77,6 +81,18 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.get('/api/device_types/:device_type_id', deviceTypes.get);
 	app.post('/api/device_types', deviceTypes.create);
 	app.post('/api/device_types/:device_type_id', deviceTypes.update);
+
+	var checkLists = require('../app/controllers/checkLists');
+	app.get('/api/check_lists', checkLists.index);
+	app.get('/api/check_lists/:check_list_id', checkLists.get);
+	app.post('/api/check_lists', checkLists.create);
+	app.post('/api/check_lists/:check_list_id', checkLists.update);
+
+	var testRuns = require('../app/controllers/testRuns');
+	app.get('/api/test_runs', testRuns.index);
+	app.get('/api/test_runs/:test_run_id', testRuns.get);
+	app.post('/api/test_runs', testRuns.create);
+	app.post('/api/test_runs/:test_run_id', testRuns.update);
 
 	var pms = require('../app/controllers/pms');
 	app.get('/api/pms', pms.index);

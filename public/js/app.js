@@ -66,10 +66,6 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 				controller: "DeviceTypeIndexCtrl",
 				reloadOnSearch: false
 			})
-			.when('/devices/add', {
-				templateUrl: '/partials/devices/add.html',
-				controller: "DeviceAddCtrl"
-			})
 			.when('/deviceTypes/add', {
 				templateUrl: '/partials/deviceTypes/add.html',
 				controller: "DeviceTypeAddCtrl"
@@ -77,6 +73,35 @@ angular.module('biomed', ['biomed.filters', 'biomed.services', 'biomed.directive
 			.when('/deviceTypes/:id', {
 				templateUrl: '/partials/deviceTypes/edit.html',
 				controller: "DeviceTypeEditCtrl"
+			})
+			.when('/devices/add', {
+				templateUrl: '/partials/devices/add.html',
+				controller: "DeviceAddCtrl"
+			})
+			.when('/devices/:id', {
+				templateUrl: '/partials/devices/edit.html',
+				controller: "DeviceEditCtrl"
+			})
+			.when('/checkLists', {
+				templateUrl: '/partials/checkLists/index.html',
+				controller: "CheckListIndexCtrl",
+				reloadOnSearch: false
+			})
+			.when('/checkLists/add', {
+				templateUrl: '/partials/checkLists/add.html',
+				controller: "CheckListAddCtrl"
+			})
+			.when('/checkLists/:id', {
+				templateUrl: '/partials/checkLists/add.html',
+				controller: "CheckListEditCtrl"
+			})
+			.when('/testRuns/add', {
+				templateUrl: '/partials/testRuns/add.html',
+				controller: "TestRunAddCtrl"
+			})
+			.when('/testRuns/:id', {
+				templateUrl: '/partials/testRuns/view.html',
+				controller: "TestRunViewCtrl"
 			})
 			.when('/accounting', {
 				templateUrl: '/partials/accounting/index.html',

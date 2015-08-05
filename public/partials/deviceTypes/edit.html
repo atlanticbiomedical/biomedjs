@@ -6,75 +6,127 @@
     <h1>Edit Device</h1>
 </header>
 
-<form name="form" class="form">
-    <div class="form-section">
-        <div class="section-label">Device Identification</div>
-        <div class="section-container">
-            <div class="form-editor">
-                <div class="control-group">
-                    <label class="control-label">Device Type</label>
-                    <div class="controls">
-                        <input type="hidden" ng-model="categoryPicker" ui-select2="categoryOpts" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Make</label>
-                    <div class="controls">
-                        <input type="hidden" ng-model="makePicker" ui-select2="makeOpts" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Model</label>
-                    <div class="controls">
-                        <input ng-model="model.model" type="text" class="input-xlarge">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-section">
-        <div class="section-label">Device Details</div>
-        <div class="section-container">
-            <div class="form-editor">
-                <div class="control-group">
-                    <label class="control-label">Technical Data</label>
-                    <div class="controls">
-                        <textarea ng-model="model.technicalData" type="text" class="input-xxlarge"></textarea>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Links</label>
-                    <div class="controls">
-                        <textarea ng-model="model.links" type="text" class="input-xxlarge"></textarea>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">Recommended Parts</label>
-                    <div class="controls">
-                        <textarea ng-model="model.partsRecommended" type="text" class="input-xxlarge"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-section">
-        <div class="section-label">Images</div>
-        <div class="section-container">
-            <div class="form-editor">
-                <div class="control-group">
-                    <label class="control-label">Images</label>
-                    <div class="controls">
-                        <div class="dropzone" dropzone="imageOpts" existing="existingImages" prefix="devices/"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div ng-hide="loading" class="tabbable">
+    <div class="tab-content">
+        <div class="tab-pane active form" title="Details">
 
-    <div class="form-section">
-        <div class="section-label">&nbsp;</div>
-        <div class="section-container">
-            <button ng-click="save()" ng-disabled="form.$invalid" type="button" class="btn btn-primary">Save</button>
+            <form name="form" class="form">
+                <div class="form-section">
+                    <div class="section-label">Device Identification</div>
+                    <div class="section-container">
+                        <div class="form-editor">
+                            <div class="control-group">
+                                <label class="control-label">Device Type</label>
+                                <div class="controls">
+                                    <input type="hidden" ng-model="categoryPicker" ui-select2="categoryOpts" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Make</label>
+                                <div class="controls">
+                                    <input type="hidden" ng-model="makePicker" ui-select2="makeOpts" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Model</label>
+                                <div class="controls">
+                                    <input ng-model="model.model" type="text" class="input-xlarge">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="section-label">Device Details</div>
+                    <div class="section-container">
+                        <div class="form-editor">
+                            <div class="control-group">
+                                <label class="control-label">Technical Data</label>
+                                <div class="controls">
+                                    <textarea ng-model="model.technicalData" type="text" class="input-xxlarge"></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Links</label>
+                                <div class="controls">
+                                    <textarea ng-model="model.links" type="text" class="input-xxlarge"></textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Recommended Parts</label>
+                                <div class="controls">
+                                    <textarea ng-model="model.partsRecommended" type="text" class="input-xxlarge"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="section-label">Checklist</div>
+                    <div class="section-container">
+                        <div class="form-editor">
+                            <div class="control-group">
+                                <label class="control-label">Checklist</label>
+                                <div class="controls">
+                                    <select ng-model="model.checkList" class="input-xlarge">
+                                        <option value="">None</option>
+                                        <option ng-repeat="checkList in checkLists" value="{{checkList._id}}">{{checkList.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="section-label">Images</div>
+                    <div class="section-container">
+                        <div class="form-editor">
+                            <div class="control-group">
+                                <label class="control-label">Images</label>
+                                <div class="controls">
+                                    <div class="dropzone" dropzone="imageOpts" existing="existingImages" prefix="devices/"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">&nbsp;</div>
+                    <div class="section-container">
+                        <button ng-click="save()" ng-disabled="form.$invalid" type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane" title="Devices">
+            <div class="row-fluid">
+                <div class="span12">
+                    <table class="biomed-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 7%">Device ID</th>
+                                <th style="width: 6%">Client</th>
+                                <th style="width: 5%">Serial No.</th>
+                                <th style="width: 8%">Purchase Date</th>
+                                <th style="width: 6%">Warranty Expiration</th>
+                                <th style="width: 4%">Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-hide="devices.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
+                            <tr ng-repeat="device in devices">                                
+                                <td><a href="/devices/{{device._id}}">{{device.biomedId}}</a></td>
+                                <td><a ng-href="/clients/{{device.client._id}}">{{device.client.name}} ({{device.client.identifier}})</a></td>
+                                <td>{{device.serialNumber}}</td>
+                                <td>{{device.purchaseDate | date}}</td>
+                                <td>{{device.warrantyExpiration | date}}</td>
+                                <td>{{device.location}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</form>
+</div>

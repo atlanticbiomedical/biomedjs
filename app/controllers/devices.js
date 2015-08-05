@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    Device = mongoose.model('Device');
+    Device = mongoose.model('Device'),
+    TestRun = mongoose.model('TestRun');
 
 var _ = require('lodash');
 var md5 = require('MD5');
@@ -9,7 +10,18 @@ var log = require('log4node');
 exports.index = function(req, res, next) {
   log.info('devices.index');
   
-  Device.find({ deleted: false })
+  var query = {
+    deleted: false
+  };
+
+  var deviceType = req.param('deviceType');
+  if (deviceType) {
+    query.deviceType = deviceType;
+  }
+
+  Device.find(query)
+    .populate('deviceType', 'category make model')
+    .populate('client', 'name identifier')
     .exec(returnResult(res));
 };
 
@@ -19,8 +31,24 @@ exports.get = function(req, res, next) {
   log.info("devices.get %s", id);
 
   Device.findById(id)
+    .populate('deviceType', 'category make model checkList')
+    .populate('deviceType.checkList', 'name fields')
+    .populate('client', 'name identifier')
     .exec(returnResult(res));
 };
+
+exports.testRuns = function(req, res, next) {
+  var id = req.param('device_id');
+  log.info("devices.testRuns %s", id);
+
+  TestRun.find({device: id, deleted: false })
+    .exec(function(err, devices) {
+      if (err) return next(err);
+      if (!devices) return next(new Error('Failed to load testRuns ' + id));
+
+      res.json(devices);
+    });  
+}
 
 exports.create = function(req, res, next) {
   log.info("devices.create %j", res.body);

@@ -1,40 +1,36 @@
+
+var PUSHOVER_ENABLED = true;
+
+var env = 'prod';
+
 var pushover = require('pushover-notifications');
-
-var express = require('express')
-	fs = require('fs'),
-	passport = require('passport');
-
-var env = 'prod',
-	config = require('./config/config')[env],
-	mongoose = require('mongoose'),
-	Promise = require('bluebird');
-
+var express = require('express');
+var fs = require('fs');
+var passport = require('passport');
+var config = require('./config/config')[env];
+var mongoose = require('mongoose');
+var Promise = require('bluebird');
 var log = require('log4node');
 
 Promise.promisifyAll(mongoose);
 
-       process.on('uncaughtException', function(err) {
-               console.log('Uncaught Exception:', err);
-               console.log(err.stack);
+var pushoverApi = new pushover({
+  user: 'aJmPD4KigO0vLwim76n3WqWKwbKA3k',
+  token: 'YxspDLz3WinbPmwBThuZXCME9QmkDb'
+});
 
-               var p = new pushover({
-                       user: 'aJmPD4KigO0vLwim76n3WqWKwbKA3k',
-                       token: 'YxspDLz3WinbPmwBThuZXCME9QmkDb'
-               });
+process.on('uncaughtException', function(err) {
+  console.log('Uncaught Exception:', err);
+  console.log(err.stack);
 
-               var message = {
-                       title: 'Unhandled error in portal',
-                       message: 'Process was reset on ' + new Date(),
-                       sound: 'falling'
-               };
-               p.send(message, function(err, result) {
-                       if (err) {
-                               log.emergency('Error while sending pushover notification');
-                               log.emergency(err);
-                       }
-                       process.exit(1);
-               });
-       });
+  sendPushOver(
+    'Unhandled error in portal',
+    'Process was reset on ' + new Date(),
+    'falling',
+    function() {
+      process.exit(1);
+    });
+});
 
 log.info("----- Server Started -----");
 
@@ -45,15 +41,15 @@ mongoose.connect(config.database);
 // bootstrap model
 var modelPath = __dirname + '/app/model'
 fs.readdirSync(modelPath).forEach(function (file) {
-	require(modelPath + '/' + file)
+  require(modelPath + '/' + file)
 })
 
 require('./config/passport')(passport, config);
 
 var app = express(),
-	http = require('http'),
-	server = http.createServer(app),
-	io = require('socket.io').listen(server);
+  http = require('http'),
+  server = http.createServer(app),
+  io = require('socket.io').listen(server);
 
 // Configure piler
 var piler = require('./config/piler')(app, server, io, config);
@@ -75,35 +71,43 @@ GLOBAL.health = 'OK'
 var port = process.env.PORT || 9000
 
 server.on('error', function(e) {
-	if (e.code == 'EADDRINUSE') {
-		console.log('Address in use, retrying...');
-		setTimeout(function() {
-			server.close();
-			server.listen(port, onListen);
-		}, 1000);
-	}
+  if (e.code == 'EADDRINUSE') {
+    console.log('Address in use, retrying...');
+    setTimeout(function() {
+      server.close();
+      server.listen(port, onListen);
+    }, 1000);
+  }
 });
-
 
 server.listen(port, onListen);
 
-
-
 function onListen() {
-               var p = new pushover({
-                       user: 'aJmPD4KigO0vLwim76n3WqWKwbKA3k',
-                       token: 'YxspDLz3WinbPmwBThuZXCME9QmkDb'
-               });
+  sendPushOver(
+    'Portal is running',
+    'Process was reset on ' + new Date(),
+    'bugle');
+}
 
-               var message = {
-                       title: 'Portal is running',
-                       message: 'Process was reset on ' + new Date(),
-                       sound: 'bugle'
-               };
-               p.send(message, function(err, result) {
-                       if (err) {
-                               log.emergency('Error while sending pushover notification');
-                               log.emergency(err);
-                       }
-               });
+function sendPushOver(title, message, sound, callback) {
+  if (!PUSHOVER_ENABLED) {
+    return;
+  }
+
+  var data = {
+    title: title,
+    message: message,
+    sound: sound
+  };
+
+  pushoverApi.send(data, function(err, result) {
+    if (err) {
+      log.emergency('Error while sending pushover notification');
+      log.emergency(err);
+    }
+
+    if (callback) {
+      callback();
+    }
+  });
 }

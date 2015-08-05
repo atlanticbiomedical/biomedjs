@@ -936,6 +936,10 @@ angular.module('biomed')
 			var client = $scope.clientPicker.data;
 			$scope.model.client = client._id;
 			$scope.currentClient = client;
+
+			$scope.devices = Clients.devices({id: client._id}, function() {
+				console.log($scope.devices);
+			});
 		} else {
 			$scope.model.client = null;
 			$scope.currentClient = null;
@@ -1082,7 +1086,7 @@ angular.module('biomed')
 	}
 })
 
-.controller("WorkorderEditCtrl", function($scope, $routeParams, Workorders, Schedule, Users) {
+.controller("WorkorderEditCtrl", function($scope, $routeParams, Workorders, Schedule, Users, Clients) {
         $scope.emailsOptions = {
                 'multiple': true,
                 'simple_tags': true,
@@ -1099,17 +1103,24 @@ angular.module('biomed')
 
 	$scope.$watch('group', updateUsers);
 
-	$scope.master = Workorders.get($routeParams, function() {
-		$scope.loading = false;
+	Workorders.get($routeParams, function(workorderData) {
+		Clients.devices({id: workorderData.client._id}, function(devicesData) {
 
-		if ($scope.master.reason == "Meeting") {
-			$scope.workorderType = "meeting";
-		}
+			$scope.allDevices = devicesData;
+			$scope.master = workorderData;
+
+			if ($scope.master.reason == "Meeting") {
+				$scope.workorderType = "meeting";
+			}
+
+			$scope.loading = false;
+		});
 	});
 
 	$scope.emails = createController();
 	$scope.status = createController();
 	$scope.remarks = createController();
+	$scope.devices = createController();
 	$scope.scheduling = createSchedulingController();
 
 	function updateStatus() {

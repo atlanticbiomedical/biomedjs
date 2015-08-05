@@ -1,0 +1,71 @@
+<ul class="breadcrumb">
+    <li><a href="/checkLists"><i class="icon-briefcase"></i> Check Lists</a><span class="divider"></span><li>
+    <li class="active">
+        <span ng-if="isEdit">Edit</span>
+        <span ng-if="!isEdit">New</span> Check List
+    <li>
+</ul>
+<header>
+    <h1>New Check List</h1>
+</header>
+<form name="form" class="form">
+    <div class="form-section">
+        <div class="section-label">General</div>
+        <div class="section-container">
+            <div class="form-editor">
+                <div class="control-group">
+                    <label class="control-label">Name</label>
+                    <div class="controls">
+                        <input ng-model="model.name" type="text" class="input-xlarge" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section" ng-repeat="field in model.fields">
+        <div class="section-label">Field {{$index + 1}}</div>
+        <div class="section-container">
+            <div class="form-editor">
+                <div class="control-group">
+                    <label class="control-label">Label</label>
+                    <div class="controls">
+                        <input ng-model="field.label" type="text" class="input-xlarge" required>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Field Type</label>
+                    <div class="controls">
+                        <select ng-model="field.type" class="input-xlarge" required>
+                            <option value="boolean">Pass / Fail</option>
+                            <option value="range">Range</option>
+                        </select>
+                    </div>
+                </div>
+                <div ng-if="field.type == 'range'">
+                    <div class="control-group">
+                        <label class="control-label">Minimum (Inclusive)</label>
+                        <div class="controls">
+                            <input ng-model="field.min" type="number" class="input-xlarge" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Maximum (Inclusive)</label>
+                        <div class="controls">
+                            <input ng-model="field.max" type="number" class="input-xlarge" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button ng-click="removeField($index)" ng-disabled="model.fields.length <= 1" class="btn" type="button">Remove Field</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
+        <div class="section-label">&nbsp;</div>
+        <div class="section-container">
+            <button ng-click="addField()" type="button" class="btn">Add Field</button>
+            <button ng-click="save()" ng-disabled="form.$invalid" type="button" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</form>

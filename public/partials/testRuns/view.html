@@ -1,0 +1,65 @@
+<ul class="breadcrumb">
+    <li class="active">Test Results</li>
+</ul>
+<header>
+    <h1>Test Results</h1>
+</header>
+<form name="form" class="form">
+    <div class="form-section" ng-repeat="field in model.fields">
+        <div class="section-label">{{$index + 1}}.</div>
+        <div class="section-container {{field.result}}">
+            <div class="form-editor">
+                <div class="control-group">
+                    <label class="control-label">Test</label>
+                    <div class="controls">
+                        <p>{{field.label}}</p>
+                        <p ng-if="field.type == 'range'">Passing Values: {{field.min}} - {{field.max}}</p>
+                    </div>
+                </div>
+                <div class="control-group" ng-if="field.type == 'boolean'">
+                    <label class="control-label">Result</label>
+                    <div class="controls">
+                        <p style="padding-top: 5px">
+                            <span ng-if="field.value" style="color: green">Passed</span>
+                            <span ng-if="!field.value" style="color: red">Failed</span>                    
+                        </p>
+                    </div>
+                </div>
+                <div class="control-group" ng-if="field.type == 'range'">
+                    <label class="control-label">Result</label>
+                        <div class="controls">
+                        <p style="padding-top: 5px">{{field.value}}</p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Comments</label>
+                    <div class="controls">
+                        <p style="padding-top: 5px">{{field.comments}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
+        <div class="section-label">Summary</div>
+        <div class="section-container">
+            <div class="form-editor">
+                <div class="control-group">
+                    <label class="control-label">Result</label>
+                    <div class="controls">
+                        <p style="padding-top: 5px">
+                            <span ng-if="model.result" style="color: green">Passed</span>
+                            <span ng-if="!model.result" style="color: red">Failed</span>                    
+                        </p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Comments</label>
+                    <div class="controls">
+                        <p>{{model.comments}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

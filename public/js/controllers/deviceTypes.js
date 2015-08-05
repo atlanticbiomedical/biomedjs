@@ -56,11 +56,13 @@ angular.module('biomed')
   };
 })
 
-.controller("DeviceTypeAddCtrl", function($scope, DeviceTypes, $location, $filter) {
+.controller("DeviceTypeAddCtrl", function($scope, DeviceTypes, CheckLists, $location, $filter) {
   $scope.model = {};
 
   $scope.categories = DeviceTypes.categories();
   $scope.deviceMakes = DeviceTypes.makes();
+
+  $scope.checkLists = CheckLists.index();
 
   $scope.categoryOpts = {
     containerCssClass: 'input-xxlarge',
@@ -147,7 +149,7 @@ angular.module('biomed')
   };
 })
 
-.controller("DeviceTypeEditCtrl", function($scope, DeviceTypes, $location, $filter, $routeParams) {
+.controller("DeviceTypeEditCtrl", function($scope, DeviceTypes, Devices, CheckLists, $location, $filter, $routeParams) {
   var images = {};
 
   $scope.model = DeviceTypes.get($routeParams, function() {
@@ -164,8 +166,15 @@ angular.module('biomed')
     $scope.makePicker = {id: $scope.model.make, text: $scope.model.make};
   });
 
+  console.log($routeParams);
+
+  $scope.devices = Devices.index({ deviceType: $routeParams.id });
+
   $scope.categories = DeviceTypes.categories();
   $scope.deviceMakes = DeviceTypes.makes();
+
+  $scope.checkLists = CheckLists.index();
+
 
   $scope.categoryOpts = {
     containerCssClass: 'input-xxlarge',

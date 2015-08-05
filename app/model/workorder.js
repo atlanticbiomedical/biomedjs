@@ -30,7 +30,8 @@ var workorderSchema = new Schema({
 	checkNumber: String,
 	paidOn: Date,
 	alternativeContact: String,
-	trackingNumber: String
+	trackingNumber: String,
+	devices: [{ type: ObjectId, ref: 'Device' }]
 });
 
 module.exports = mongoose.model('Workorder', workorderSchema);

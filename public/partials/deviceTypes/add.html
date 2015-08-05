@@ -58,6 +58,22 @@
         </div>
     </div>
     <div class="form-section">
+        <div class="section-label">Checklist</div>
+        <div class="section-container">
+            <div class="form-editor">
+                <div class="control-group">
+                    <label class="control-label">Checklist</label>
+                    <div class="controls">
+                        <select ng-model="model.checkList" class="input-xlarge">
+                            <option value="">None</option>
+                            <option ng-repeat="checkList in checkLists" value="{{checkList._id}}">{{checkList.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
         <div class="section-label">Images</div>
         <div class="section-container">
             <div class="form-editor">

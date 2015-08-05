@@ -64,6 +64,10 @@ html(lang="en", ng-app="biomed", ng-controller="PageCtrl")
 						a(href='/deviceTypes')
 							|  Devices
 
+					li(data-match-route='/checkLists.*')
+						a(href='/checkLists')
+							|  Check Lists
+
 					li(data-match-route='/posts.*', ng-show="accountHasPermission('system.admin')")
 						a(href='/posts')
 							|  Posts

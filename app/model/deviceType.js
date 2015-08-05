@@ -10,6 +10,7 @@ var deviceTypeSchema = new Schema({
   links: String,
   partsRecommended: String,
   images: [{ type: String }],
+  checkList: { type: ObjectId, ref: 'CheckList' },
   deleted: { type: Boolean, default: false }
 });
 

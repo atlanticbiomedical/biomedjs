@@ -29,6 +29,41 @@ angular.module('biomed.services', [])
 			destroy: 	{ method: 'DELETE', params: { id: 0 } },
 		});
 })
+.factory("Devices", function($resource) {
+	return $resource('/api/devices/:id/:cmd',
+		{ id: "@id", cmd: "@cmd" },
+		{
+			index: 	 	{ method: 'GET', params: {}, isArray: true },
+			get: 	 	{ method: 'GET', params: { id: 0} },
+			create:  	{ method: 'POST', params: {} },
+			update:  	{ method: 'POST', params: { id: 0} },
+			destroy: 	{ method: 'DELETE', params: { id: 0 } },
+			testRuns: 	{ method: 'GET', params: { id: 0, cmd: 'test_runs' }, isArray: true },
+			isUnique:	{ method: 'GET', params: { cmd: 'isUnique' } },
+		});
+})
+.factory("CheckLists", function($resource) {
+	return $resource('/api/check_lists/:id/:cmd',
+		{ id: "@id", cmd: "@cmd" },
+		{
+			index: 	 	{ method: 'GET', params: {}, isArray: true },
+			get: 	 	{ method: 'GET', params: { id: 0} },
+			create:  	{ method: 'POST', params: {} },
+			update:  	{ method: 'POST', params: { id: 0} },
+			destroy: 	{ method: 'DELETE', params: { id: 0 } },
+		});
+})
+.factory("TestRuns", function($resource) {
+	return $resource('/api/test_runs/:id/:cmd',
+		{ id: "@id", cmd: "@cmd" },
+		{
+			index: 	 	{ method: 'GET', params: {}, isArray: true },
+			get: 	 	{ method: 'GET', params: { id: 0} },
+			create:  	{ method: 'POST', params: {} },
+			update:  	{ method: 'POST', params: { id: 0} },
+			destroy: 	{ method: 'DELETE', params: { id: 0 } },
+		});
+})
 .factory("Posts", function($resource) {
 	return $resource('/api/posts/:id',
 		{ id: "@id" },

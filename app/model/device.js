@@ -11,6 +11,8 @@ var deviceSchema = new Schema({
   purchaseDate: Date,
   warrantyExpiration: Date,
   location: String,
+  frequencyType: String,
+  frequencySchedule: [],
   deleted: { type: Boolean, default: false }
 });
 

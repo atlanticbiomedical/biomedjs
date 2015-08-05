@@ -299,7 +299,7 @@
 					<thead>
 						<tr>
 							<th style="width: 7%">Device ID</th>
-							<th style="width: 6%">Device</th>
+							<th style="width: 6%">Category</th>
 							<th style="width: 5%">Make</th>
 							<th style="width: 5%">Model</th>
 							<th style="width: 5%">Serial No.</th>
@@ -313,7 +313,7 @@
 						<tr ng-hide="devices.length"><td colspan="11" class="table-message">There is no information to display.</td></tr>
 						<tr ng-repeat="device in devices">
 							<td><a href="/devices/{{device._id}}">{{device.biomedId}}</a></td>
-							<td></td>
+							<td>{{device.deviceType.category}}</td>
 							<td>{{device.deviceType.make}}</td>
 							<td>{{device.deviceType.model}}</td>
 							<td>{{device.serialNumber}}</td>

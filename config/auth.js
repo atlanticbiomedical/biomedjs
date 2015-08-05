@@ -15,8 +15,14 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/auth/callback', function(req, res, next) {
+
+		var callbackHost = req.headers['x-forwarded-host'];
+		if (!callbackHost) {
+			callbackHost = "localhost:9000";
+		}
+
 		var options = {
-			callbackURL: 'http://' + req.headers['x-forwarded-host'] + '/auth/callback'
+			callbackURL: 'http://' + callbackHost + '/auth/callback'
 		};
 		passport.authenticate('google', options, function(err, user, info) {
 			var redirectUrl = '/';

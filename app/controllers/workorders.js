@@ -77,7 +77,8 @@ module.exports = function(config, calendar) {
 				scheduling: req.body.scheduling,
 				techs: req.body.techs,
 				alternativeContact: req.body.alternativeContact,
-				trackingNumber: req.body.trackingNumber
+				trackingNumber: req.body.trackingNumber,
+				devices: req.body.devices
 			});
 
 			var notify = req.body._notify || "";
@@ -241,6 +242,7 @@ module.exports = function(config, calendar) {
 						workorder.paidOn = req.body.paidOn;
 						workorder.alternativeContact = req.body.alternativeContact;
 						workorder.trackingNumber = req.body.trackingNumber;
+						workorder.devices = req.body.devices;
 						callback(err);
 					});
 				},
