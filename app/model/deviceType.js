@@ -9,6 +9,7 @@ var deviceTypeSchema = new Schema({
   technicalData: String,
   links: String,
   partsRecommended: String,
+  testEquipmentRecommended: String,
   images: [{ type: String }],
   checkList: { type: ObjectId, ref: 'CheckList' },
   deleted: { type: Boolean, default: false }
