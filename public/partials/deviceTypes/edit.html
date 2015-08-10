@@ -1,14 +1,14 @@
 <ul class="breadcrumb">
     <li><a href="/devices"><i class="icon-briefcase"></i> Devices</a><span class="divider"></span><li>
-    <li class="active">Edit Device<li>
+    <li class="active">Edit Global Device<li>
 </ul>
 <header>
-    <h1>Edit Device</h1>
+    <h1>Edit Global Device</h1>
 </header>
 
 <div ng-hide="loading" class="tabbable">
     <div class="tab-content">
-        <div class="tab-pane active form" title="Details">
+        <div class="tab-pane active form" title="Global Details">
 
             <form name="form" class="form">
                 <div class="form-section">
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Recommended Parts</label>
+                                <label class="control-label">Recommended PM Parts</label>
                                 <div class="controls">
                                     <textarea ng-model="model.partsRecommended" type="text" class="input-xxlarge"></textarea>
                                 </div>
@@ -111,7 +111,7 @@
                     <table class="biomed-table">
                         <thead>
                             <tr>
-                                <th style="width: 7%">Device ID</th>
+                                <th style="width: 7%">Control #</th>
                                 <th style="width: 6%">Client</th>
                                 <th style="width: 5%">Serial No.</th>
                                 <th style="width: 8%">Purchase Date</th>

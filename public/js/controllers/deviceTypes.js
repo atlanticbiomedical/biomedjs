@@ -152,18 +152,20 @@ angular.module('biomed')
 .controller("DeviceTypeEditCtrl", function($scope, DeviceTypes, Devices, CheckLists, $location, $filter, $routeParams) {
   var images = {};
 
-  $scope.model = DeviceTypes.get($routeParams, function() {
-    $scope.loading = false;
+  $scope.checkLists = CheckLists.index(function() {
+    $scope.model = DeviceTypes.get($routeParams, function() {
+      $scope.loading = false;
 
-    $scope.existingImages = $scope.model.images;
-    if ($scope.model.images) {
-      for (var i = 0; i < $scope.model.images.length; i++) {
-        images[$scope.model.images[i]] = 1;
+      $scope.existingImages = $scope.model.images;
+      if ($scope.model.images) {
+        for (var i = 0; i < $scope.model.images.length; i++) {
+          images[$scope.model.images[i]] = 1;
+        }
       }
-    }
 
-    $scope.categoryPicker = {id: $scope.model.category, text: $scope.model.category};
-    $scope.makePicker = {id: $scope.model.make, text: $scope.model.make};
+      $scope.categoryPicker = {id: $scope.model.category, text: $scope.model.category};
+      $scope.makePicker = {id: $scope.model.make, text: $scope.model.make};
+    });
   });
 
   console.log($routeParams);
@@ -172,8 +174,6 @@ angular.module('biomed')
 
   $scope.categories = DeviceTypes.categories();
   $scope.deviceMakes = DeviceTypes.makes();
-
-  $scope.checkLists = CheckLists.index();
 
 
   $scope.categoryOpts = {

@@ -75,7 +75,9 @@ function checkListsControllerFactory(isEdit) {
 
     function save() {
       if (isEdit) {
-        CheckLists.update({id: $scope.model._id}, $scope.model);
+        CheckLists.update({id: $scope.model._id}, $scope.model, function() {
+          $location.path("/checkLists/");
+        });
       } else {
         CheckLists.create($scope.model, function(result) {
           $location.path("/checkLists/" + result._id);

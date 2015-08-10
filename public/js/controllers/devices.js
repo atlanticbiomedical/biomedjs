@@ -94,13 +94,14 @@ function devicesControllerFactory(isEdit) {
 
     function create() {
       Devices.create($scope.model, function(result) {
-        console.log('here');
-        $location.path("/devices/" + result._id);
+        $location.path("/clients/" + result.client);
       });
     }
 
     function update() {
-      Devices.update({id: $scope.model._id}, $scope.model);
+      Devices.update({id: $scope.model._id}, $scope.model, function() {
+        $location.path("/clients/" + $scope.model.client);
+      });
     }
 
     var hashids = new Hashids("biomed");
