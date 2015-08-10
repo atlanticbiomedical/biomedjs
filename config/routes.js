@@ -88,7 +88,7 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.post('/api/check_lists', checkLists.create);
 	app.post('/api/check_lists/:check_list_id', checkLists.update);
 
-	var testRuns = require('../app/controllers/testRuns');
+	var testRuns = require('../app/controllers/testRuns')(config);
 	app.get('/api/test_runs', testRuns.index);
 	app.get('/api/test_runs/:test_run_id', testRuns.get);
 	app.post('/api/test_runs', testRuns.create);

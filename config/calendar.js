@@ -28,11 +28,7 @@ module.exports = function(config) {
 
 	return {
 		scheduleEvent: function(event, callback) {
-			console.log("schedule event");
-		
 			api(function(client, callback) {
-
-				console.log("Insert Google Calendar");
 
 				var params = {
 					calendarId: 'primary',
@@ -43,9 +39,6 @@ module.exports = function(config) {
 				var request = client.calendar.events.insert(params, resource);
 
 				request.withAuthClient(oauth2Client).execute(function(err, result) {
-					console.log("in request callback");
-					console.dir(err);
-					console.dir(result);
 					callback(err, result);
 				});
 			}, callback);
@@ -60,10 +53,6 @@ module.exports = function(config) {
 				});
 				
 				getRequest.withAuthClient(oauth2Client).execute(function(err, result) {
-					console.log("get result");
-					console.log(err);
-					console.log(result);
-
 					var resource = buildResource(event, result);
 					if ('sequence' in resource) {
 						resource.sequence += 1;
@@ -117,7 +106,6 @@ module.exports = function(config) {
 		var handler = function(client) {
 			workorder(client, function(err, result) {
 				if (oauth2Client.credentials.access_token != config.auth.accessToken) {
-					console.log("Updating access token");
 					config.auth.accessToken = oauth2Client.credentials.access_token;
 				}
 
@@ -125,12 +113,9 @@ module.exports = function(config) {
 			});
 		};
 
-		console.log(apiClient);
 		if (apiClient) {
-			console.log("Using cached api client");
 			handler(apiClient);
 		} else {
-			console.log("Getting api client");
 			googleapis.discover('calendar', 'v3').execute(function(err, client) {
 				if (err) return callback(err);
 				apiClient = client;

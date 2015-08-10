@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 	Client = mongoose.model('Client'),
 	Workorder = mongoose.model('Workorder'),
 	Counter = mongoose.model('Counter'),
+	Device = mongoose.model('Device'),
 	User = mongoose.model('User');
 
 module.exports = function(config, calendar) {
@@ -85,6 +86,7 @@ module.exports = function(config, calendar) {
 
 			var client;
 			var techs;
+			var devices;
 			var jsonResult;
 
 			async.waterfall([
@@ -106,6 +108,14 @@ module.exports = function(config, calendar) {
 					});
 				},
 				function(callback) {
+					Device.find({client: req.body.client, deleted: false })
+						.populate({path: 'deviceType'})
+						.exec(function(err, results) {
+							devices = results;
+							callback(err);
+						});
+				},
+				function(callback) {
 					User.find({
 							'_id': { $in: workorder.techs }
 						},
@@ -117,7 +127,7 @@ module.exports = function(config, calendar) {
 				function(callback) {
 					calendar.scheduleEvent({
 						summary: generateSummary(client),
-						description: generateDescription(client, workorder, req.user),
+						description: generateDescription(client, workorder, req.user, null, null, devices),
 						location: generateLocation(client),
 						start: workorder.scheduling.start,
 						end: workorder.scheduling.end,
@@ -133,7 +143,7 @@ module.exports = function(config, calendar) {
 					if (!notify)
 						return callback(null);
 
-					var description = generateDescription(client, workorder, req.user, null, techs);
+					var description = generateDescription(client, workorder, req.user, null, techs, devices);
 					var techDescription = appendNotes(description, client, workorder);
 
 					var to = req.body.emails;
@@ -215,6 +225,7 @@ module.exports = function(config, calendar) {
 			var workorder;
 			var client;
 			var techs;
+			var devices;
 			var createdBy;
 			var modifiedBy;
 
@@ -253,6 +264,14 @@ module.exports = function(config, calendar) {
 					});
 				},
 				function(callback) {
+					Device.find({'_id': { $in: workorder.devices }})
+						.populate({path: 'deviceType'})
+						.exec(function(err, results) {
+							devices = results;
+							callback(err);
+						});
+				},
+				function(callback) {
 					if (workorder.createdBy) {
 						User.findById(workorder.createdBy, function(err, result) {
 							createdBy = result;
@@ -284,7 +303,7 @@ module.exports = function(config, calendar) {
 				function(callback) {
 					calendar.updateEvent({
 						summary: generateSummary(client),
-						description: generateDescription(client, workorder),
+						description: generateDescription(client, workorder, null, null, null, devices),
 						location: generateLocation(client),
 						start: workorder.scheduling.start,
 						end: workorder.scheduling.end,
@@ -299,7 +318,7 @@ module.exports = function(config, calendar) {
 						return callback(null);
 
 
-					var description = generateDescription(client, workorder, createdBy, modifiedBy, techs);
+					var description = generateDescription(client, workorder, createdBy, modifiedBy, techs, devices);
 					var techDescription = appendNotes(description, client, workorder);
 
 					var to = req.body.emails;
@@ -414,7 +433,7 @@ function appendNotes(message, client, workorder) {
 
 }
 
-function generateDescription(client, workorder, createdBy, modifiedBy) {
+function generateDescription(client, workorder, createdBy, modifiedBy, techs, devices) {
 	var template = 
 		"Workorder ID:\n" +
 		"	%(biomedId)s\n" +
@@ -447,7 +466,10 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 		"	%(status)s\n" +
 		"\n" +
 		"Remarks:\n" +
-		"	%(remarks)s\n";
+		"	%(remarks)s\n" +
+		"\n" +
+		"Devices:\n" +
+		"%(devices)s\n";
 
 	var format = "MMMM Do YYYY, h:mm a"
 
@@ -472,6 +494,7 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 		contact: '',
 		createdBy: '',
 		modifiedBy: '',
+		devices: ''
 	};
 
 	if (client.contacts[0]) {
@@ -487,7 +510,18 @@ function generateDescription(client, workorder, createdBy, modifiedBy) {
 		resources.modifiedBy = modifiedBy.name.first + " " + modifiedBy.name.last;
 	}
 
-	return sprintf(template, resources);
+	if (devices) {
+		for (var i = 0; i < devices.length; i++) {
+			var device = devices[i];
+
+			resources.devices += "\t(" + device.biomedId + ") " + device.deviceType.make + " " + device.deviceType.model + "\n";
+		}
+	}
+
+	var result = sprintf(template, resources);
+	console.log(result);
+
+	return result;
 }
 
 function generateAttendees(techs, workorder) {
