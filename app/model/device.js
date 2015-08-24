@@ -13,6 +13,7 @@ var deviceSchema = new Schema({
   location: String,
   frequencyType: String,
   frequencySchedule: [],
+  lastTestRun: {},
   deleted: { type: Boolean, default: false }
 });
 

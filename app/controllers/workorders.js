@@ -108,12 +108,12 @@ module.exports = function(config, calendar) {
 					});
 				},
 				function(callback) {
-					Device.find({client: req.body.client, deleted: false })
-						.populate({path: 'deviceType'})
-						.exec(function(err, results) {
-							devices = results;
-							callback(err);
-						});
+                    Device.find({'_id': { $in: req.body.devices }})
+                        .populate({path: 'deviceType'})
+                        .exec(function(err, results) {
+                            devices = results;
+                            callback(err);
+                        });
 				},
 				function(callback) {
 					User.find({

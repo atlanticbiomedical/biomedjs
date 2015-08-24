@@ -115,6 +115,15 @@ module.exports = function(config) {
       }
 
       testRun.save(returnResult(res));
+
+      Device.findById(testRun.device, function(err, device) {
+        if (err) {
+          log.error("Failed to fetch device for testRun: %s", err);
+        } else {
+          device.lastTestRun = testRun;
+          device.save();
+        }
+      });
     },
 
     update: function(req, res, next) {

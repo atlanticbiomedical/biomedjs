@@ -305,7 +305,8 @@
 							<th style="width: 5%">Serial No.</th>
 							<th style="width: 8%">Purchase Date</th>
 							<th style="width: 6%">Warranty Expiration</th>
-							<th style="width: 8%">PM Test</th>
+							<th style="width: 4%">PM Test</th>
+                            <th style="width: 8%">Last Test Run</th>
 							<th style="width: 4%">Location</th>
 						</tr>
 					</thead>
@@ -319,7 +320,16 @@
 							<td>{{device.serialNumber}}</td>
 							<td>{{device.purchaseDate | date}}</td>
 							<td>{{device.warrantyExpiration | date}}</td>
-							<td></td>
+							<td><a href="/testRuns/add?deviceId{{device._id}}">New</a></td>
+                            <td>
+                                <div ng-if="device.lastTestRun">
+                                    <a href="http://localhost:9000/testRuns/{{device.lastTestRun._id}}">
+                                        <span>{{device.lastTestRun.date | date}} | </span>
+                                        <span ng-if="device.lastTestRun.result">Passed</span>
+                                        <span ng-if="!device.lastTestRun.result">Failed</span>
+                                    </a>
+                                </div>
+                            </td>
 							<td>{{device.location}}</td>
 						</tr>
 					</tbody>

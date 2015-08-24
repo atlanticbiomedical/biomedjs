@@ -40,6 +40,8 @@ function testRunAddController($scope, Devices, CheckLists, TestRuns, $location, 
         field.result = (field.value == 'true');
       } else if (field.type == 'range') {
         field.result = field.value >= field.min && field.value <= field.max;
+      } else if (field.type == 'text') {
+        field.result = true;
       }
 
       $scope.model.result &= field.result;

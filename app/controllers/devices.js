@@ -32,7 +32,6 @@ exports.get = function(req, res, next) {
 
   Device.findById(id)
     .populate('deviceType', 'category make model checkList')
-    .populate('deviceType.checkList', 'name fields')
     .populate('client', 'name identifier')
     .exec(returnResult(res));
 };
