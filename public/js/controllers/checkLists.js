@@ -73,6 +73,14 @@ function checkListsControllerFactory(isEdit) {
       }
     }
 
+    function moveUpField(index) {
+        $scope.model.fields.splice(index - 1, 0, $scope.model.fields.splice(index, 1)[0]);
+    }
+
+     function moveDownField(index) {
+         $scope.model.fields.splice(index + 1, 0, $scope.model.fields.splice(index, 1)[0]);
+     }
+
     function save() {
       if (isEdit) {
         CheckLists.update({id: $scope.model._id}, $scope.model, function() {
@@ -87,6 +95,8 @@ function checkListsControllerFactory(isEdit) {
 
     $scope.addField = addField;
     $scope.removeField = removeField;
+    $scope.moveUpField = moveUpField;
+    $scope.moveDownField = moveDownField;
     $scope.save = save;
     $scope.isEdit = isEdit;
 

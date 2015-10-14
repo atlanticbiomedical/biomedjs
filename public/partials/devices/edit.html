@@ -15,13 +15,13 @@
                     <div class="section-container">
                         <div class="form-editor">
                             <div class="control-group">
-                                <label class="control-label">Category</label>
+                                <label class="control-label">Device</label>
                                 <div class="controls">
                                     <input type="hidden" ng-model="deviceTypes.category.picker" ui-select2="deviceTypes.category.opts" />
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Make</label>
+                                <label class="control-label">Manufacturer</label>
                                 <div class="controls">
                                     <input type="hidden" ng-model="deviceTypes.make.picker" ui-select2="deviceTypes.make.opts" />
                                 </div>
@@ -167,6 +167,7 @@
                     <div class="section-label">&nbsp;</div>
                     <div class="section-container">
                         <button ng-click="update()" ng-disabled="form.$invalid || !model.deviceType" type="button" class="btn btn-primary">Save</button>
+                        <button ng-click="destroy()" ng-show="accountHasPermission('system.admin')" type="button" class="btn btn-danger">Remove</button>
                     </div>
                 </div>
             </form>

@@ -104,6 +104,20 @@ function devicesControllerFactory(isEdit) {
       });
     }
 
+    function destroy() {
+      $scope.model.deleted = true;
+      Devices.update({id: $scope.model._id}, $scope.model, function() {
+          $location.path("/clients/" + $scope.model.client);
+      });
+    }
+
+    function restore() {
+      $scope.model.deleted = false;
+      Devices.update({id: $scope.model._id}, $scope.model, function() {
+        $location.path("/clients/" + $scope.model.client);
+      });
+    }
+
     var hashids = new Hashids("biomed");
     var search = $location.search();
 
@@ -121,6 +135,8 @@ function devicesControllerFactory(isEdit) {
 
     $scope.create = create;
     $scope.update = update;
+    $scope.destroy = destroy;
+    $scope.restore = restore;
 
     deviceTypePickerFactory('category', 'Device Type');
     deviceTypePickerFactory('make', 'Make');

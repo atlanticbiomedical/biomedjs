@@ -57,7 +57,9 @@
                     </div>
                 </div>
                 <div class="form-actions">
-                    <button ng-click="removeField($index)" ng-disabled="model.fields.length <= 1" class="btn" type="button">Remove Field</button>
+                    <button ng-click="removeField($index)" ng-disabled="model.fields.length <= 1" class="btn" type="button">Remove</button>
+                    <button ng-click="moveUpField($index)" ng-disabled="model.fields.length <= 1 || $index == 0" class="btn" type="button">Move Up</button>
+                    <button ng-click="moveDownField($index)" ng-disabled="model.fields.length <= 1 || $index == model.fields.length - 1" class="btn" type="button">Move Down</button>
                 </div>
             </div>
         </div>

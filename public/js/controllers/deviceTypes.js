@@ -257,4 +257,13 @@ angular.module('biomed')
       $location.path("/deviceTypes/");
     });
   };
+
+  $scope.delete = function() {
+    $scope.model.images = Object.keys(images);
+    $scope.model.deleted = true;
+
+    DeviceTypes.update({id: $scope.model._id}, $scope.model, function(result) {
+      $location.path("/deviceTypes/");
+    });
+  };
 })
