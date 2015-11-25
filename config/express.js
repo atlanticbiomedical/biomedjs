@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors');
 var ClusterStore = require('strong-cluster-connect-store')(express.session);
 
 module.exports = function(app, config, passport, piler) {
@@ -22,6 +23,14 @@ module.exports = function(app, config, passport, piler) {
 		// use passport session
 		app.use(passport.initialize());
 		app.use(passport.session());
+
+		// allow cors
+		app.use(cors({
+		    origin: function(origin, callback) {
+		    	callback(null, true);
+		    },
+		    credentials: true
+		}));
 
 		// use piler for asset management
 		piler.bind();

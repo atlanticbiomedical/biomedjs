@@ -8,7 +8,7 @@ module.exports = {
 			clientSecret: '8MRNar9E_pRTOGTQonPzYOW_',
 			callback: 'http://devel.portal.atlanticbiomedical.com/auth/callback',
 			accessToken: 'ya29.AHES6ZR-vUVEh7CZzsEeGFSHqFfXtU1-LHyEAidi0CKhDGQ',
-			refreshToken: '1/exRXjTaGNlWEo-HZZWyn4NTwJ4TY3wKb-_npce21c50',
+			refreshToken: '1/exRXjTaGNlWEo-HZZWyn4NTwJ4TY3wKb-_npce21c50'
 		},
 		email: {
 			user: 'api@atlanticbiomedical.com',
@@ -18,7 +18,7 @@ module.exports = {
 			host: 'biomed.akira.gs',
 			user: 'biomed_prod',
 			password: 'wUw3RB8rrXX4HwKj',
-			database: 'biomed_prod',
+			database: 'biomed_prod'
 		}
 	},
 	prod: {
@@ -28,16 +28,17 @@ module.exports = {
 		auth: {
 			clientId: '333768673996-8epedo3je5h59n4l97v4dv8nofs7qnee.apps.googleusercontent.com',
 			clientSecret: 'afu9KhKxckWJ3Tk6uxzp9Pg6',
-			callback: 'http://portal.atlanticbiomedical.com/auth/callback',
+			callback: 'http://localhost:9000/auth/callback',
 //			accessToken: 'ya29.AHES6ZT1Sj1vpgidR2I_ksLdlV_VeZUjkitnZ01cP6VRrknjUEVbuw',
 //			refreshToken: '1/XQW9P9FNYm6jikTsV8HOIuPAo1APYhwTH5CLhq9263g'
 
 			accessToken: 'ya29.1.AADtN_Xjt0PK6YVs8q5csiQFXQg2ZDtrVhsH6P4a5zm0mHqhGx0Nnjx4Jk68Gw',
 			refreshToken: '1/_5SkDLYmsi4XNaQyAzld-W5-GEqEqt5byH6VkI-j5QI',
+			jwtSecret: '97v4dvcsiQFXQg28nofedo3jemsi4XNaQy5h59n4l97m0mHqhGx0Nnjxv4dv8n'
 		},
 		email: {
 			user: 'api@atlanticbiomedical.com',
-			password: 'success4',
+			password: 'success4'
 		},
 		mysql: {
 			host: 'localhost',

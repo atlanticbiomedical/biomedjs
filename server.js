@@ -9,10 +9,12 @@ var fs = require('fs');
 var passport = require('passport');
 var config = require('./config/config')[env];
 var mongoose = require('mongoose');
-var Promise = require('bluebird');
 var log = require('log4node');
 
-Promise.promisifyAll(mongoose);
+mongoose.Promise = require('bluebird');
+
+var moment = require('moment-timezone');
+moment.tz.setDefault("America/New_York");
 
 var pushoverApi = new pushover({
   user: 'aJmPD4KigO0vLwim76n3WqWKwbKA3k',
@@ -57,7 +59,7 @@ var piler = require('./config/piler')(app, server, io, config);
 // Express settings
 require('./config/express')(app, config, passport, piler);
 
-var auth = require('./config/auth')(app, passport);
+var auth = require('./config/auth')(app, passport, config);
 
 var calendar = require('./config/calendar')(config);
 

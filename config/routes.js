@@ -94,6 +94,12 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.post('/api/test_runs', testRuns.create);
 	app.post('/api/test_runs/:test_run_id', testRuns.update);
 
+    var timeclock = require('../app/controllers/timeclock')();
+    app.get('/api/timeclock', timeclock.index);
+    app.post('/api/timeclock/clock_in', timeclock.clockIn);
+    app.post('/api/timeclock/clock_out', timeclock.clockOut);
+    app.get('/api/timeclock/workorder/:id', timeclock.workorderDetails);
+
 	var pms = require('../app/controllers/pms');
 	app.get('/api/pms', pms.index);
 
@@ -107,8 +113,9 @@ module.exports = function(app, auth, piler, calendar, directory, config) {
 	app.post('/api/users/:user_id', users.update);
 	app.get('/api/users/:user_id/clocks', users.clocks);
 
-	var account = require('../app/controllers/account');
+	var account = require('../app/controllers/account')(config);
 	app.get('/api/account', account.profile);
+    app.post('/api/account/impersonate', account.impersonate);
 
 	var messages = require('../app/controllers/messages')(config);
 	app.post('/api/messages/send', messages.send);
