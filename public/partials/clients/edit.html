@@ -253,7 +253,7 @@
 						</tr>
 						<tr ng-repeat="workorder in workorders">
 							<td>
-								<a ng-href="/workorders/{{workorder._id}}">{{workorder.reason}}</a><br>
+								<a ng-href="/workorders/{{workorder._id}}"><span ng-if="workorder.reason">{{workorder.reason}}</span><i ng-if="!workorder.reason">-- No Reason --</i></a><br>
 								<strong>Techs:</strong> {{ workorder.techs | techs }}<br>
 								{{workorder.remarks}}
 							</td>

@@ -179,10 +179,27 @@ exports.update = function(req, res, next) {
   return Client.findById(id, function(err, client) {
     client.name = req.body.name;
     client.identifier = req.body.identifier.toUpperCase();
-    client.contacts = req.body.contacts;
     client.address = req.body.address;
     client.frequencies = req.body.frequencies;
     client.notes = req.body.notes;
+    
+
+    // name phone email
+
+    for (var i = 0; i < 2; i++) {
+      if (req.body.contacts[i]) {
+        client.contacts.set(i, {});
+        client.contacts[i].name = req.body.contacts[i].name;
+        client.contacts[i].phone = req.body.contacts[i].phone;
+        client.contacts[i].email = req.body.contacts[i].email;
+      } else {
+        client.contacts[i] = null;
+      }
+    }
+
+    client.markModified('contacts');
+
+    console.log(client);
 
     return client.save(function(err) {
       if (err)
