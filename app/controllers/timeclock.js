@@ -560,7 +560,9 @@ module.exports = function () {
         .props({
           id: req.user.id,
           date: moment(),
-          notes: req.body.notes
+          notes: req.body.notes,
+          reason: req.body.reason,
+          type: req.body.type
         })
         .then((params) => {
           var spans = findUserSpans(req.user.id, params.date);
