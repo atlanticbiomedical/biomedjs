@@ -558,7 +558,7 @@ module.exports = function () {
 
       Promise
         .props({
-          id: req.user.id,
+          id: req.body.id,
           date: moment(),
           notes: req.body.notes,
           reason: req.body.reason,
