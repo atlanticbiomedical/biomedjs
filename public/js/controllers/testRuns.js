@@ -1,6 +1,6 @@
 angular.module('biomed')
-.controller("TestRunAddCtrl", testRunAddController)
-.controller("TestRunViewCtrl", testRunViewController)
+  .controller("TestRunAddCtrl", testRunAddController)
+  .controller("TestRunViewCtrl", testRunViewController)
 
 
 function testRunAddController($scope, Devices, CheckLists, TestRuns, $location, $filter, $routeParams) {
@@ -8,10 +8,10 @@ function testRunAddController($scope, Devices, CheckLists, TestRuns, $location, 
 
   console.log(search);
 
-  $scope.device = Devices.get({id: search.deviceId}, function() {
+  $scope.device = Devices.get({id: search.deviceId}, function () {
     console.log($scope.device);
 
-    $scope.checkList = CheckLists.get({id: $scope.device.deviceType.checkList}, function() {
+    $scope.checkList = CheckLists.get({id: $scope.device.deviceType.checkList}, function () {
       $scope.loading = false;
 
       $scope.model = {
@@ -20,7 +20,7 @@ function testRunAddController($scope, Devices, CheckLists, TestRuns, $location, 
         fields: []
       };
 
-      _.each($scope.checkList.fields, function(field) {
+      _.each($scope.checkList.fields, function (field) {
 
         if (field.type == 'boolean') {
           field.value = 'false'
@@ -32,10 +32,10 @@ function testRunAddController($scope, Devices, CheckLists, TestRuns, $location, 
     })
   });
 
-  $scope.$watch('model', function() {
+  $scope.$watch('model', function () {
     $scope.model.result = true;
 
-    _.each($scope.model.fields, function(field) {
+    _.each($scope.model.fields, function (field) {
       if (field.type == 'boolean') {
         field.result = (field.value == 'true');
       } else if (field.type == 'range') {
@@ -48,8 +48,8 @@ function testRunAddController($scope, Devices, CheckLists, TestRuns, $location, 
     })
   }, true);
 
-  $scope.save = function() {
-    TestRuns.create($scope.model, function(result) {
+  $scope.save = function () {
+    TestRuns.create($scope.model, function (result) {
       $location.path("/testRuns/" + result._id);
     });
   }

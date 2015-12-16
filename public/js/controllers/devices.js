@@ -1,14 +1,14 @@
 angular.module('biomed')
-.controller("DeviceAddCtrl", devicesControllerFactory(false))
-.controller("DeviceEditCtrl", devicesControllerFactory(true))
+  .controller("DeviceAddCtrl", devicesControllerFactory(false))
+  .controller("DeviceEditCtrl", devicesControllerFactory(true))
 
 
 function devicesControllerFactory(isEdit) {
-  return function($scope, Devices, DeviceTypes, $location, $filter, $routeParams) {
+  return function ($scope, Devices, DeviceTypes, $location, $filter, $routeParams) {
     function buildDeviceTypeFilterQuery(ignore) {
       var query = {};
 
-      _.each(['category', 'make', 'model'], function(key) {
+      _.each(['category', 'make', 'model'], function (key) {
         if (key == ignore)
           return;
 
@@ -25,23 +25,23 @@ function devicesControllerFactory(isEdit) {
 
       var data = {};
 
-      _.each(['category', 'make', 'model'], function(key) {
+      _.each(['category', 'make', 'model'], function (key) {
         var query = buildDeviceTypeFilterQuery(key);
         var filteredResults = $filter('filter')(deviceTypesList, query);
 
         data[key] = [];
 
-        _.each(filteredResults, function(entry) {
+        _.each(filteredResults, function (entry) {
           data[key].push(entry[key]);
         });
       });
 
-      _.each(['category', 'make', 'model'], function(key) {
+      _.each(['category', 'make', 'model'], function (key) {
         $scope.deviceTypes[key].data = _.uniq(data[key]);
 
         if (data[key].length == 1) {
           var value = data[key][0];
-          $scope.deviceTypes[key].picker = { id: value, text: value };
+          $scope.deviceTypes[key].picker = {id: value, text: value};
         }
       });
     }
@@ -53,33 +53,33 @@ function devicesControllerFactory(isEdit) {
       $scope.deviceTypes[key].opts = {
         containerCssClass: 'input-xxlarge',
         placeholder: 'Choose a ' + label,
-        query: function(query) {
+        query: function (query) {
           var data = $filter('filter')($scope.deviceTypes[key].data, query.term);
           query.callback({
-            results: _.map(data, function(entry) {
-              return { id: entry, text: entry }
+            results: _.map(data, function (entry) {
+              return {id: entry, text: entry}
             })
           });
         }
       };
 
-      $scope.$watch('deviceTypes.' + key + '.picker',function() {
+      $scope.$watch('deviceTypes.' + key + '.picker', function () {
         filterDeviceTypeSelectors();
         updateDeviceTypeSelection();
       }, true);
     }
 
     function clearDeviceTypePickers() {
-      _.each(['category', 'make', 'model'], function(key) {
+      _.each(['category', 'make', 'model'], function (key) {
         $scope.deviceTypes[key].picker = null;
       });
     }
 
     function updateDeviceTypeSelection() {
-        var query = buildDeviceTypeFilterQuery();
-        var results = $filter('filter')(deviceTypesList, query);
+      var query = buildDeviceTypeFilterQuery();
+      var results = $filter('filter')(deviceTypesList, query);
 
-        $scope.model.deviceType = (results.length == 1) ? results[0]._id : null;
+      $scope.model.deviceType = (results.length == 1) ? results[0]._id : null;
     }
 
     function generateRandomIdentifier() {
@@ -93,27 +93,27 @@ function devicesControllerFactory(isEdit) {
     }
 
     function create() {
-      Devices.create($scope.model, function(result) {
+      Devices.create($scope.model, function (result) {
         $location.path("/clients/" + result.client);
       });
     }
 
     function update() {
-      Devices.update({id: $scope.model._id}, $scope.model, function() {
+      Devices.update({id: $scope.model._id}, $scope.model, function () {
         $location.path("/clients/" + $scope.model.client);
       });
     }
 
     function destroy() {
       $scope.model.deleted = true;
-      Devices.update({id: $scope.model._id}, $scope.model, function() {
-          $location.path("/clients/" + $scope.model.client);
+      Devices.update({id: $scope.model._id}, $scope.model, function () {
+        $location.path("/clients/" + $scope.model.client);
       });
     }
 
     function restore() {
       $scope.model.deleted = false;
-      Devices.update({id: $scope.model._id}, $scope.model, function() {
+      Devices.update({id: $scope.model._id}, $scope.model, function () {
         $location.path("/clients/" + $scope.model.client);
       });
     }
@@ -147,19 +147,19 @@ function devicesControllerFactory(isEdit) {
     console.log((isEdit ? "Edit" : "Create") + " Mode");
 
     if (isEdit) {
-      $scope.model = Devices.get($routeParams, function() {
+      $scope.model = Devices.get($routeParams, function () {
         $scope.loading = false;
 
         var deviceType = $scope.model.deviceType;
 
-        _.each(['category', 'make', 'model'], function(key) {
-          $scope.deviceTypes[key].picker = { id: deviceType[key], text: deviceType[key] };
+        _.each(['category', 'make', 'model'], function (key) {
+          $scope.deviceTypes[key].picker = {id: deviceType[key], text: deviceType[key]};
         });
 
         $scope.model.client = $scope.model.client._id;
         $scope.model.deviceType = $scope.model.deviceType._id;
 
-        $scope.testRuns = Devices.testRuns($routeParams, function() {
+        $scope.testRuns = Devices.testRuns($routeParams, function () {
           console.log($scope.testRuns);
         });
       });

@@ -1,0 +1,58 @@
+The following request for parts was made by <%- techName %> on <%- requestDate %>
+
+Customer
+ID:
+    <%- customerId %>
+
+Name:
+    <%- customerName %>
+
+<% if (customerContact) { %>
+Contact:
+    <%- customerContact %>
+
+<% } %>
+<% if (customerPhone) { %>
+Phone Number:
+    <%- customerPhone %>
+
+<% } %>
+<% if (biomedId) { %>
+Atlantic Biomedical ID:
+    <%- biomedId %>
+
+<% } %>
+
+
+Part Details
+Manufacture:
+    <%- manufacture %>
+
+Model:
+    <%- model %>
+
+
+Serial Number:
+    <%- serialNumber %>
+
+Vendor:
+    <%- vendor %>
+
+<% if (vendorPhone) { %>
+Vendor Phone Number:
+    <%- vendorPhone %>
+
+<% } %>
+
+Part Number:
+    <%- partNumber %>
+
+
+Other Details
+Brief Description:
+<%- description %>
+<% if (specialNotes) { %>
+
+Special Notes:
+<%- specialNotes %>
+<% } %>

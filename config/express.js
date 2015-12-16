@@ -1,6 +1,9 @@
 var express = require('express');
 var cors = require('cors');
 var ClusterStore = require('strong-cluster-connect-store')(express.session);
+var validators = require('./validators');
+var db = require('./db');
+var promise = require('./promise');
 
 module.exports = function(app, config, passport, piler) {
 	app.set('showStackError', true);
@@ -16,6 +19,9 @@ module.exports = function(app, config, passport, piler) {
 
 		// bodyParser should be above methodOverride
 		app.use(express.bodyParser());
+    app.use(validators());
+    app.use(db());
+    app.use(promise());
 		app.use(express.methodOverride());
 
 		app.use(express.session({ store: new ClusterStore(), secret: 'atlantic_biomed_server_secret' }));
@@ -40,9 +46,4 @@ module.exports = function(app, config, passport, piler) {
 		// routes should be last
 		app.use(app.router);
 	});
-
-//	app.configure('development', function() {
-//		// enable live update in development mode.
-//		piler.liveUpdate();
-//	});
 }

@@ -155,9 +155,9 @@ function getPmsByDate(year, month) {
 		];
 	}
 
-	return Workorder.aggregateAsync(pipeline)
+	return Workorder.aggregate(pipeline)
+    .exec()
 		.then(function(pmsData) {
-
 			var data = {};
 
 			if (month !== undefined) {
@@ -183,12 +183,13 @@ function getPmsByDate(year, month) {
 }
 
 function getClients() {
-	return Client.find({ deleted: false })
+	return Client
+    .find({ deleted: false })
 		.lean()
 		.select('name identifier frequencies')
 		.slice('contacts', 1)
 		.sort('name')
-		.execAsync();
+		.exec();
 }
 
 function filterClientsByFrequency(month, frequency) {

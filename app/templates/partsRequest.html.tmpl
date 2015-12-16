@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+</head>
+<body style="background-color:#eee;color:#333;font-family:Helvetica, Arial, sans-serif;line-height:1.25;-webkit-text-size-adjust:100%;">
+<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+    <tr>
+        <td align="center" valign="top">
+            <table border="0" cellpadding="20" cellspacing="0" width="600">
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:#fff">
+                            <tr>
+                                <td align="center" valign="top">
+                                    <table border="0" cellpadding="0" cellspacing="0" height="48" width="100%" style="background-color:#eee;">
+                                        <tr>
+                                            <td valign="middle">
+                                                <h3 style="font-weight: 300">Atlantic Biomedical</h3>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top">
+                                    <table border="0" cellpadding="0" cellspacing="0" height="48" width="100%" style="background-color:#fff;">
+                                        <tr>
+                                            <td align="center" valign="middle">
+                                                <h4 style="font-weight: 300">Parts Request</h4>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top">
+                                    <table border="0" cellpadding="0" cellspacing="0" height="1" width="100%">
+                                        <tr>
+                                            <td align="center" valign="middle" style="background-color: #eeeeee" width="199"></td>
+                                            <td align="center" valign="middle" style="background-color: #039BE5" width="202"></td>
+                                            <td align="center" valign="middle" style="background-color: #eeeeee" width="199"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top">
+                                    <table border="0" cellpadding="0" cellspacing="0" height="0" width="100%">
+                                        <tr>
+                                            <td style="padding:24px;">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td colspan="2">The following request for parts was made by <b><%- techName %></b> on <b><%- requestDate %></b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2"><h4>Customer</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>ID</td>
+                                                        <td><%- customerId %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Name</td>
+                                                        <td><%- customerName %></td>
+                                                    </tr>
+                                                    <% if (customerContact) { %>
+                                                    <tr>
+                                                        <td>Contact</td>
+                                                        <td><%- customerContact %></td>
+                                                    </tr>
+                                                    <% } %>
+                                                    <% if (customerPhone) { %>
+                                                    <tr>
+                                                        <td>Phone Number</td>
+                                                        <td><%- customerPhone %></td>
+                                                    </tr>
+                                                    <% } %>
+                                                    <% if (biomedId) { %>
+                                                    <tr>
+                                                        <td>Atlantic Biomedical ID</td>
+                                                        <td><%- biomedId %></td>
+                                                    </tr>
+                                                    <% } %>
+                                                    <tr style="margin-top: 24px;">
+                                                        <td colspan="2"><h4>Part Details</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Manufacture</td>
+                                                        <td><%- manufacture %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Model</td>
+                                                        <td><%- model %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Serial Number</td>
+                                                        <td><%- serialNumber %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Vendor</td>
+                                                        <td><%- vendor %></td>
+                                                    </tr>
+                                                    <% if (vendorPhone) { %>
+                                                    <tr>
+                                                        <td>Vendor Phone Number</td>
+                                                        <td><%- vendorPhone %></td>
+                                                    </tr>
+                                                    <% } %>
+                                                    <tr>
+                                                        <td>Part Number</td>
+                                                        <td><%- partNumber %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2"><h4>Other Details</h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">Brief Description</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2"><%- description %></td>
+                                                    </tr>
+                                                    <% if (specialNotes) { %>
+                                                    <tr>
+                                                        <td colspan="2" style="padding-top: 16px">Special Notes</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2"><%- specialNotes %></td>
+                                                    </tr>
+                                                    <% } %>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

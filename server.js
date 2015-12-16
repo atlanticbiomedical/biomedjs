@@ -1,5 +1,5 @@
 
-var PUSHOVER_ENABLED = true;
+var PUSHOVER_ENABLED = false;
 
 var env = 'prod';
 

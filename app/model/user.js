@@ -11,10 +11,26 @@ var userSchema = new Schema({
 	picture: String,
 	refreshToken: String,
 	accessToken: String,
-
 	groups: [String],
 	perms: [String],
-	deleted: { type: Boolean, default: false }
+
+  employmentType: {
+    type: String,
+    enum: ['hourly', 'salary'],
+    default: 'hourly',
+    required: true
+  },
+
+  unpaidTravel: {
+    type: Number,
+    default: 0,
+    required: true
+  },
+
+	deleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 userSchema.methods.hasPermission = function(perm) {
