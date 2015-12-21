@@ -6,6 +6,7 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 var TimeClockSpan = mongoose.model('TimeClockSpan');
 var TimeClockException = mongoose.model('TimeClockException');
+var TimeSheet = mongoose.model('TimeSheet');
 var Workorder = mongoose.model('Workorder');
 var email = require('../util/email');
 var config = require('../../config/config')['prod'];
@@ -32,6 +33,35 @@ function MultipleSpansError(spans) {
   this.spans = spans;
 }
 MultipleSpansError.prototype = Object.create(Error.prototype);
+
+function hasTechApprovedPreviousWeek(user, day) {
+  var startOfWeek = day.clone().startOf('week').subtract(1, 'week').toDate();
+  var endOfWeek = day.clone().endOf('week').subtract(1, 'week').toDate();
+
+  return Promise
+    .props({
+      spans: TimeClockSpan.count({
+        start: {
+          '$gte': startOfWeek,
+          '$lte': endOfWeek
+        },
+        user: user
+      }),
+      timesheet: TimeSheet.findOne({
+        week: startOfWeek,
+        user: user
+      })
+    })
+    .then((props) => {
+      console.log('Spans last week: ', props.spans);
+      console.log('Previous timesheet', props.timesheet);
+
+      var approved = props.spans == 0 || (props.timesheet && props.timesheet.approved);
+      console.log('Status: ', approved);
+      
+      return approved;
+    });
+}
 
 function findUserSpans(user, day) {
   var startOfDay = day.clone().startOf('day').toDate();
@@ -523,6 +553,16 @@ function validateDate(req, field) {
   return Promise.resolve(date);
 }
 
+function sendApprovalRequiredResponse(res, date) {
+  date = moment().startOf('week').subtract(1, 'week');
+  res.json({
+    tasks: [{
+      type: 'approveTimesheet',
+      week: date.format('YYYY-MM-DD')
+    }]
+  });
+}
+
 module.exports = function () {
   return {
     index: function (req, res) {
@@ -531,12 +571,20 @@ module.exports = function () {
 
       var today = moment();
 
-      var spans = findUserSpans(req.user.id, today);
-      var workorders = findUserWorkorders(req.user, today);
+      hasTechApprovedPreviousWeek(req.user.id, today)
+        .then(approved => {
+          console.log('Approved? ', approved);
+          if (!approved) {
+            return sendApprovalRequiredResponse(res, today);
+          }
 
-      Promise.join(spans, workorders, handleStatusRequest)
-        .then(responseHandler(res))
-        .catch(errorHandler(res));
+          var spans = findUserSpans(req.user.id, today);
+          var workorders = findUserWorkorders(req.user, today);
+
+          Promise.join(spans, workorders, handleStatusRequest)
+            .then(responseHandler(res))
+            .catch(errorHandler(res));
+        });
     },
 
     clockIn: function (req, res) {
@@ -545,34 +593,50 @@ module.exports = function () {
 
       var today = moment();
 
-      var params = validateClockRequest(req);
-      var spans = findUserSpans(req.user.id, today);
-      var workorders = findUserWorkorders(req.user, today);
+      hasTechApprovedPreviousWeek(req.user.id, today)
+        .then(approved => {
 
-      Promise.join(params, req.user, spans, workorders, today, handleClockInRequest)
-        .then(responseHandler(res))
-        .catch(errorHandler(res));
+          if (!approved) {
+            return sendApprovalRequiredResponse(res, today);
+          }
+
+          var params = validateClockRequest(req);
+          var spans = findUserSpans(req.user.id, today);
+          var workorders = findUserWorkorders(req.user, today);
+
+          Promise.join(params, req.user, spans, workorders, today, handleClockInRequest)
+            .then(responseHandler(res))
+            .catch(errorHandler(res));
+        });
     },
 
     clockOut: function (req, res) {
 
       //TODO: Check to make sure user has a valid timesheet.
 
-      Promise
-        .props({
-          id: req.body.id,
-          date: moment(),
-          notes: req.body.notes,
-          reason: req.body.reason,
-          type: req.body.type
-        })
-        .then((params) => {
-          var spans = findUserSpans(req.user.id, params.date);
-          var workorders = findUserWorkorders(req.user, params.date);
-          return Promise.join(params, req.user, spans, workorders, params.date, handleClockOutRequest);
-        })
-        .then(responseHandler(res))
-        .catch(errorHandler(res));
+      hasTechApprovedPreviousWeek(req.user.id, today)
+        .then(approved => {
+
+          if (!approved) {
+            return sendApprovalRequiredResponse(res, today);
+          }
+
+          Promise
+            .props({
+              id: req.body.id,
+              date: moment(),
+              notes: req.body.notes,
+              reason: req.body.reason,
+              type: req.body.type
+            })
+            .then((params) => {
+              var spans = findUserSpans(req.user.id, params.date);
+              var workorders = findUserWorkorders(req.user, params.date);
+              return Promise.join(params, req.user, spans, workorders, params.date, handleClockOutRequest);
+            })
+            .then(responseHandler(res))
+            .catch(errorHandler(res));
+        });
     },
 
     spansForUser: function (req, res) {

@@ -6,6 +6,7 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 var TimeClockSpan = mongoose.model('TimeClockSpan');
 var Workorder = mongoose.model('Workorder');
+var TimeSheet = mongoose.model('TimeSheet');
 var User = mongoose.model('User');
 var db = require('./db');
 
@@ -140,21 +141,28 @@ function buildReport(spans) {
     .then(findWorkordersById)
     .then(indexById);
 
-  const usersById = spans
-    .then(extractIds('user'))
+  const userIds = spans
+    .then(extractIds('user'));
+
+  const usersById = userIds
     .then(findUsersById)
     .then(indexById);
 
-  return Promise.join(spans, workordersById, usersById, generateSummary);
+  const timesheetsByUser = userIds
+    .then(findTimesheetsByUser)
+    .then(indexByUser);
+
+  return Promise.join(spans, workordersById, usersById, timesheetsByUser, generateSummary);
 }
 
-function generateSummary(spans, workordersById, usersById) {
+function generateSummary(spans, workordersById, usersById, timesheetsByUser) {
   var results = {};
 
   function fetchOrCreateUserRecord(userId) {
     var record = results[userId];
     if (!record) {
       var user = usersById[userId];
+      var timesheet = timesheetsByUser[userId];
 
       record = results[userId] = {
         user: {
@@ -162,6 +170,7 @@ function generateSummary(spans, workordersById, usersById) {
           name: user.name
         },
         hasOpenSpans: false,
+        approved: !!(timesheet && timesheet.approved),
         workorders: {},
         spans: {},
         clockedTime: 0,
@@ -264,6 +273,10 @@ function indexById(data) {
   return _.indexBy(data, 'id')
 }
 
+function indexByUser(data) {
+  return _.indexBy(data, 'user')
+}
+
 function findWorkordersById(ids) {
   const query = {
     _id: {
@@ -285,6 +298,16 @@ function findUsersById(ids) {
   };
 
   return User.find(query).exec();
+}
+
+function findTimesheetsByUser(ids) {
+  const query = {
+    user: {
+      $in: ids
+    }
+  };
+
+  return TimeSheet.find(query).exec();
 }
 
 function findAllSpansForWeek(week) {
@@ -318,6 +341,33 @@ function findUserSpansForWeek(id, week) {
   };
 
   return TimeClockSpan.find(query).exec();
+}
+
+function approvalHandler(req, res) {
+  return (params) => {
+    params.week = params.week.toDate();
+
+    var query = {
+      user: params.id,
+      week: params.week
+    };
+
+    req.db.TimeSheet.findOne(query)
+      .then(timesheet => {
+
+        if (!timesheet) {
+          timesheet = new req.db.TimeSheet({
+            user: params.id,
+            week: params.week
+          });
+        }
+
+        timesheet.approved = true;
+        timesheet.approvedOn = new Date();
+
+        res.promise(timesheet.save());
+      });
+  };
 }
 
 module.exports = function () {
@@ -364,6 +414,15 @@ module.exports = function () {
         })
         .then(userSummaryHandler)
         .then(responseHandler(res))
+        .catch(errorHandler(res));
+    },
+    approve: function(req, res) {
+      Promise
+        .props({
+          id: validateUserId(req),
+          week: validateWeek(req)
+        })
+        .then(approvalHandler(req, res))
         .catch(errorHandler(res));
     }
   }

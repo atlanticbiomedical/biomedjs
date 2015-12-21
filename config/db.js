@@ -13,6 +13,7 @@ const models = [
   'TestRun',
   'TimeClockException',
   'TimeClockSpan',
+  'TimeSheet',
   'User',
   'Workorder'
 ];

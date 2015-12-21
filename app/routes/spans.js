@@ -71,7 +71,7 @@ function index(req, res) {
 }
 
 /**
- * POST /api/spans/:user_id
+ * POST /api/spans/:span_id
  */
 function update(req, res) {
   req.check('id').isMongoId();

@@ -107,6 +107,7 @@ module.exports = function (app, auth, piler, calendar, directory, config) {
   app.get('/api/timesheet/summary', timesheet.summary);
   app.get('/api/timesheet/:user_id/daysWorked', timesheet.daysWorked);
   app.get('/api/timesheet/:user_id/summary', timesheet.userSummary);
+  app.post('/api/timesheet/:user_id/approve', timesheet.approve);
 
   var pms = require('../app/controllers/pms');
   app.get('/api/pms', pms.index);
