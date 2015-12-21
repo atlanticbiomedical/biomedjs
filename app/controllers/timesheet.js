@@ -159,8 +159,6 @@ function buildReport(spans, week) {
 function generateSummary(spans, workordersById, usersById, timesheetsByUser) {
   var results = {};
 
-  console.log(spans);
-
   function fetchOrCreateUserRecord(userId) {
     var record = results[userId];
     if (!record) {
@@ -216,6 +214,11 @@ function generateSummary(spans, workordersById, usersById, timesheetsByUser) {
     delete user.spans[span._id].__v;
     delete user.spans[span._id].user;
 
+    if (span.type === 'workorder') {
+      var workorder = workordersById[span.workorder];
+      addWorkorder(user, workorder);
+    }
+
     if (span.status !== 'closed') {
       user.hasOpenSpans = true;
       return;
@@ -235,8 +238,6 @@ function generateSummary(spans, workordersById, usersById, timesheetsByUser) {
       if (NON_BILLABLE_WORKORDER_TYPES.indexOf(workorderType) > -1) {
         logTime(user.accountingByNonBillable, workorderType, span.duration);
       } else {
-        addWorkorder(user, workorder);
-
         logTime(user.accountingByWorkorderType, workorderType, span.duration);
         logTime(user.accountingByPayroll, PAYROLL_WORKORDER_TYPE_MAP[workorderType], span.duration);
         logTime(user.accountingByWorkorder, span.workorder, span.duration);
