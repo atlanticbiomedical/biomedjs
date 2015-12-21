@@ -125,17 +125,18 @@ function validateWeek(req) {
 
 function summaryHandler(params) {
   const spans = findAllSpansForWeek(params.week);
+  spans.then(console.log);
 
-  return buildReport(spans);
+  return buildReport(spans, params.week);
 }
 
 function userSummaryHandler(params) {
   const spans = findUserSpansForWeek(params.id, params.week);
 
-  return buildReport(spans);
+  return buildReport(spans, params.week);
 }
 
-function buildReport(spans) {
+function buildReport(spans, week) {
   const workordersById = spans
     .then(extractIds('workorder'))
     .then(findWorkordersById)
@@ -149,7 +150,7 @@ function buildReport(spans) {
     .then(indexById);
 
   const timesheetsByUser = userIds
-    .then(findTimesheetsByUser)
+    .then(findTimesheetsByUser(week))
     .then(indexByUser);
 
   return Promise.join(spans, workordersById, usersById, timesheetsByUser, generateSummary);
@@ -157,6 +158,8 @@ function buildReport(spans) {
 
 function generateSummary(spans, workordersById, usersById, timesheetsByUser) {
   var results = {};
+
+  console.log(spans);
 
   function fetchOrCreateUserRecord(userId) {
     var record = results[userId];
@@ -300,17 +303,21 @@ function findUsersById(ids) {
   return User.find(query).exec();
 }
 
-function findTimesheetsByUser(ids) {
-  const query = {
-    user: {
-      $in: ids
-    }
-  };
+function findTimesheetsByUser(week) {
+  return ids => {
+    const query = {
+      user: {
+        $in: ids
+      },
+      week: week
+    };
 
-  return TimeSheet.find(query).exec();
+    return TimeSheet.find(query).exec();
+  }
 }
 
 function findAllSpansForWeek(week) {
+  console.log(week.format());
   var startOfWeek = week.clone().startOf('week');
   var endOfWeek = week.clone().endOf('week');
 
@@ -390,18 +397,11 @@ module.exports = function () {
     },
 
     summary: function (req, res) {
-      req.check('week').notEmpty().isWeek();
-
-      var errors = req.validationErrors();
-      if (errors) {
-        return res.json(400, errors);
-      }
-
-      var params = {
-        week: moment(req.sanitize('week'))
-      };
-
-      summaryHandler(params)
+      Promise
+        .props({
+          week: validateWeek(req)
+        })
+        .then(summaryHandler)
         .then(responseHandler(res))
         .catch(errorHandler(res));
     },
