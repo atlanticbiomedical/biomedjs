@@ -424,6 +424,7 @@ function handleClockOutRequest(params, user, spans, workorders, now) {
   span.status = 'closed';
   span.end = now.clone().utc().toDate();
   span.duration = moment(span.end).diff(span.start, 'seconds');
+  span.notes = params.notes;
 
   return span.save().then(spanToResponse);
 }
@@ -491,6 +492,7 @@ function errorHandler(res) {
         }
       });
     } else {
+      console.error(error);
       console.error(error.stack);
       res.json(500, 'Internal error');
     }

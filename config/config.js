@@ -15,8 +15,8 @@ module.exports = {
 			user: 'api@atlanticbiomedical.com',
 			password: 'success4',
 
-      partsRequest: 'akirayasha@gmail.com',
-      exception: 'akirayasha@gmail.com'
+      partsRequest: 'parts@atlanticbiomedical.com',
+      exception: 'hr@atlanticbiomedical.com'
 		},
 		mysql: {
 			host: 'localhost',
