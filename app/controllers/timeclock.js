@@ -8,6 +8,8 @@ var TimeClockSpan = mongoose.model('TimeClockSpan');
 var TimeClockException = mongoose.model('TimeClockException');
 var TimeSheet = mongoose.model('TimeSheet');
 var Workorder = mongoose.model('Workorder');
+var Device = mongoose.model('Device');
+var DeviceType = mongoose.model('DeviceType');
 var email = require('../util/email');
 var config = require('../../config/config')['prod'];
 
@@ -109,9 +111,31 @@ function findUserWorkorder(id, user) {
   };
 
   return Workorder
-    .findOne(query)
+    .findOne({
+      _id: id,
+      techs: user.id,
+      deleted: false
+    })
     .populate('client', 'name identifier contacts address')
-    .exec();
+    .then(workorder => {
+      var ids = _(workorder.devices)
+        .reject(_.isUndefined)
+        .uniq(id => id.toString())
+        .value();
+
+      return Device
+        .find({
+          _id: {
+            $in: ids
+          }
+        })
+        .populate('deviceType')
+        .select('biomedId deviceType serialNumber')
+        .then(devices => {
+          workorder.devices = devices;
+          return workorder;
+        });
+    })
 }
 
 function filterSpans(spans, filter) {
@@ -613,6 +637,8 @@ module.exports = function () {
     clockOut: function (req, res) {
 
       //TODO: Check to make sure user has a valid timesheet.
+
+      var today = moment();
 
       hasTechApprovedPreviousWeek(req.user.id, today)
         .then(approved => {

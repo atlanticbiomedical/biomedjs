@@ -7,7 +7,7 @@ var testRunSchema = new Schema({
   fields: [{}],
   date: Date,
   result: Boolean,
-  comment: String,
+  comments: String,
   deleted: { type: Boolean, default: false }
 });
 
