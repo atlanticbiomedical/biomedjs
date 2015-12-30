@@ -7,7 +7,10 @@ var ObjectId = Schema.ObjectId;
 const EXCEPTION_REASONS = [
   'late_to_first_workorder',
   'too_little_travel',
-  'too_much_travel'
+  'too_much_travel',
+  'less_than_twenty_hours_worked',
+  'less_than_thirty_hours_worked',
+  'greater_than_forty_hours_worked'
 ];
 
 var schema = new Schema({

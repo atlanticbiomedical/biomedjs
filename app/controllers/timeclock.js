@@ -82,6 +82,23 @@ function findUserSpans(user, day) {
     .exec();
 }
 
+function findUserSpansForWeek(user, day) {
+  var startOfDay = day.clone().startOf('week').toDate();
+  var endOfDay = day.clone().endOf('week').toDate();
+
+  var query = {
+    start: {
+      '$gte': startOfDay,
+      '$lte': endOfDay
+    },
+    user: user
+  };
+
+  return TimeClockSpan
+    .find(query)
+    .exec();
+}
+
 function findUserWorkorders(user, day) {
   var startOfDay = day.clone().startOf('day').toDate();
   var endOfDay = day.clone().endOf('day').toDate();
@@ -414,6 +431,64 @@ function handleClockInExceptions(user, workorder, spans, now) {
   }
 }
 
+function handleClockOutExceptions(currentSpan, user, spans, now) {
+  if (currentSpan.type !== 'workday') {
+    return;
+  }
+
+  var dayOfWeek = now.day();
+  if (dayOfWeek != 3 && dayOfWeek != 4) {
+    return;
+  }
+
+  var workdaySpans = filterSpans(spans, {type: 'workday'});
+
+  var secondsWorked = 0;
+  workdaySpans.forEach(span => secondsWorked += span.status === 'closed' ? span.duration : 0);
+  secondsWorked += currentSpan.duration;
+
+  console.log("Seconds Worked: " + secondsWorked);
+
+  if (dayOfWeek == 3 && secondsWorked < 20 * 60 * 60) {
+      new TimeClockException({
+        user: user._id,
+        date: new Date(),
+        reason: 'less_than_twenty_hours_worked'
+      }).save();
+
+      reportException({
+        user: user,
+        reason: 'Less than 20 hours worked by end of day Wednesday.'
+      });
+  }
+
+  if (dayOfWeek == 4 && secondsWorked < 30 * 60 * 60) {
+      new TimeClockException({
+        user: user._id,
+        date: new Date(),
+        reason: 'less_than_thirty_hours_worked'
+      }).save();
+
+      reportException({
+        user: user,
+        reason: 'Less than 30 hours worked by end of day Thursday.'
+      });      
+  }
+
+  if (dayOfWeek == 4 && secondsWorked > 40 * 60 * 60) {
+      new TimeClockException({
+        user: user._id,
+        date: new Date(),
+        reason: 'greater_than_forty_hours_worked'
+      }).save();
+
+      reportException({
+        user: user,
+        reason: 'Greater than 40 hours worked by end of day Thursday.'
+      });      
+  }
+}
+
 function reportException(exception) {
 
   const message = {
@@ -479,6 +554,9 @@ function handleClockOutRequest(params, user, spans, workorders, now) {
   span.end = now.clone().utc().toDate();
   span.duration = moment(span.end).diff(span.start, 'seconds');
   span.notes = params.notes;
+
+  findUserSpansForWeek(user, now)
+    .then(weeklySpans => handleClockOutExceptions(span, user, weeklySpans, now));
 
   return span.save().then(spanToResponse);
 }
