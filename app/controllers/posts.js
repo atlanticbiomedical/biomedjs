@@ -151,7 +151,7 @@ exports.upload = function(req, res, next) {
 	fs.readFile(path, function(err, data) {
 		var hash = md5(data);
 
-		fs.writeFile('/srv/biomed-site/images/' + hash, data, function(err) {
+		fs.writeFile('/opt/biomed-site/images/' + hash, data, function(err) {
 			if (err)
 				log.error("Error: %s", err);
 
